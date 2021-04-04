@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.cactusthorn.config</groupId>
+        <artifactId>root</artifactId>
+        <version>${revision}${changelist}</version>
+    </parent>
+
+    <artifactId>core</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Config :: Core</name>
+
+    <licenses>
+        <license>
+            <name>BSD 3-Clause License</name>
+            <url>https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Alexei Khatskevich</name>
+            <email>alexei.khatskevich@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/Gmugra/net.cactusthorn.config</url>
+        <connection>scm:git:https://github.com/Gmugra/net.cactusthorn.config.git</connection>
+        <developerConnection>scm:git:https://github.com/Gmugra/net.cactusthorn.config.git</developerConnection>
+    </scm>
+
+    <properties>
+        <pmd.skip>false</pmd.skip>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <configLocation>${project.parent.basedir}/checkstyle_checks.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

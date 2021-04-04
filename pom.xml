@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.cactusthorn.config</groupId>
+    <artifactId>root</artifactId>
+    <version>${revision}${changelist}</version>
+    <packaging>pom</packaging>
+
+    <name>Config :: Root</name>
+    <description>Parent POM</description>
+    <url>https://github.com/Gmugra/net.cactusthorn.config</url>
+
+    <licenses>
+        <license>
+            <name>BSD 3-Clause License</name>
+            <url>https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Alexei Khatskevich</name>
+            <email>alexei.khatskevich@gmail.com</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/Gmugra/net.cactusthorn.config</url>
+        <connection>scm:git:https://github.com/Gmugra/net.cactusthorn.config.git</connection>
+        <developerConnection>scm:git:https://github.com/Gmugra/net.cactusthorn.config.git</developerConnection>
+    </scm>
+
+    <properties>
+
+        <revision>0.10</revision>
+        <changelist>-SNAPSHOT</changelist>
+
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <jdk.version>1.8</jdk.version>
+        <require.version>3.5.0-beta-1</require.version>
+
+        <pmd.skip>true</pmd.skip>
+
+        <dependency.junit>5.7.0</dependency.junit>
+        <dependency.mockito>3.6.28</dependency.mockito>
+        <dependency.compile-testing>0.19</dependency.compile-testing>
+        <dependency.javapoet>1.13.0</dependency.javapoet>
+
+        <plugin.compiler>3.8.1</plugin.compiler>
+        <plugin.jar>3.2.0</plugin.jar>
+        <plugin.resources>3.2.0</plugin.resources>
+        <plugin.test>3.0.0-M5</plugin.test>
+        <plugin.clean>3.1.0</plugin.clean>
+        <plugin.install>3.0.0-M1</plugin.install>
+        <plugin.dependency>3.1.2</plugin.dependency>
+        <plugin.source>3.2.1</plugin.source>
+        <plugin.javadoc>3.2.0</plugin.javadoc>
+        <plugin.enforcer>3.0.0-M3</plugin.enforcer>
+        <plugin.deploy>3.0.0-M1</plugin.deploy>
+        <plugin.release>3.0.0-M1</plugin.release>
+        <plugin.flatten>1.2.5</plugin.flatten>
+        <plugin.jxr>3.0.0</plugin.jxr>
+
+        <plugin.checkstyle>3.1.1</plugin.checkstyle>
+            <dependency.checkstyle>8.41.1</dependency.checkstyle>
+        <plugin.jacoco>0.8.6</plugin.jacoco>
+        <plugin.pmd>3.14.0</plugin.pmd>
+        <plugin.spotbugs>4.2.2</plugin.spotbugs>
+            <dependency.spotbugs>4.2.2</dependency.spotbugs>
+
+    </properties>
+
+    <modules>
+        <module>core</module>
+    </modules>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${dependency.javapoet}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-api</artifactId>
+                <version>${dependency.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${dependency.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.testing.compile</groupId>
+                <artifactId>compile-testing</artifactId>
+                <version>${dependency.compile-testing}</version>
+                <scope>test</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                   </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <maxRank>15</maxRank>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotbugs-check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${plugin.dependency}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${plugin.compiler}</version>
+                    <configuration>
+                        <source>${jdk.version}</source>
+                        <target>${jdk.version}</target>
+                        <parameters>true</parameters>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${plugin.resources}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${plugin.test}</version>
+                    <configuration>
+                        <forkCount>2</forkCount>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${plugin.test}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>${plugin.clean}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>${plugin.install}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${plugin.javadoc}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>${plugin.deploy}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${plugin.release}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${plugin.flatten}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${plugin.jar}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Build-Time>${maven.build.timestamp}</Build-Time>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${plugin.source}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                            <manifestEntries>
+                                <Build-Time>${maven.build.timestamp}</Build-Time>
+                            </manifestEntries>
+                        </archive>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${plugin.enforcer}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-maven</id>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <message>Current version of Maven ${maven.version}: should be ${require.version}, or higher!</message>
+                                        <version>${require.version}</version>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                    <message>Current JDK version ${java.version}: should be ${jdk.version}, or higher!</message>
+                                        <version>${jdk.version}</version>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>${plugin.jxr}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${plugin.checkstyle}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${dependency.checkstyle}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${plugin.jacoco}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>${plugin.pmd}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>${plugin.spotbugs}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>${dependency.spotbugs}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <profiles>
+
+        <profile>
+            <id>only-eclipse</id>
+            <activation>
+                <property>
+                    <name>m2e.version</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.codehaus.mojo</groupId>
+                                                <artifactId>flatten-maven-plugin</artifactId>
+                                                <versionRange>${plugin.flatten}</versionRange>
+                                                <goals>
+                                                    <goal>flatten</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore />
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+
+        <profile>
+            <id>javadoc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <title>Coverage with JaCoCo</title>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+
+</project>
