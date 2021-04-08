@@ -79,6 +79,7 @@
 
     <modules>
         <module>core</module>
+        <module>compiler</module>
     </modules>
 
     <dependencies>
