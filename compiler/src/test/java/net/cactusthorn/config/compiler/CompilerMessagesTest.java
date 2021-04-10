@@ -12,13 +12,11 @@ import org.junit.jupiter.api.Test;
 
 public class CompilerMessagesTest {
 
-    @BeforeAll
-    static void setup() {
+    @BeforeAll static void setup() {
         Locale.setDefault(Locale.ENGLISH);
     }
 
-    @Test
-    public void testIt() {
+    @Test public void testIt() {
         assertEquals("Only interface can be annotated with @Config", msg(ONLY_INTERFACE));
     }
 }

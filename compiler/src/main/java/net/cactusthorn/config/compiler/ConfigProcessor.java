@@ -12,6 +12,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
 
@@ -28,16 +29,22 @@ public final class ConfigProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
+    private static final InterfaceValidator INTERFACE_VALIDATOR = new InterfaceValidator();
+    private MethodValidator methodValidator;
+
     @Override public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        methodValidator = new MethodValidator(processingEnv);
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Config.class);
             for (Element element : elements) {
-                //TODO implementation, next command is placeholder
-                System.out.println(element);
+                INTERFACE_VALIDATOR.validate(element);
+                TypeElement typeElement = (TypeElement) element;
+                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.METHOD)
+                        .forEach(methodValidator::validate);
             }
         } catch (ProcessorException e) {
             error(e.getMessage(), e.getElement());

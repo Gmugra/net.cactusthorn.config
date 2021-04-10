@@ -9,9 +9,12 @@ import static com.google.testing.compile.CompilationSubject.assertThat;
 
 public class ConfigProcessorTest {
 
-    @Test public void simple() {
-        Compilation compilation = Compiler.javac().withProcessors(new ConfigProcessor())
-                .compile(JavaFileObjects.forResource("test/Simple.java"));
+    private static Compiler compiler() {
+        return Compiler.javac().withProcessors(new ConfigProcessor());
+    }
+
+    @Test public void allCorrect() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 }
