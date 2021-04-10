@@ -5,10 +5,9 @@ import net.cactusthorn.config.core.Config;
 import java.util.Optional;
 import java.util.UUID;
 
-@Config interface Simple {
-    String value();
+@Config interface MethodWithParameter {
 
-    int intValue();
+    String CONST = "CONST";
 
-    Optional<UUID> uuid();
+    public String value(String param);
 }

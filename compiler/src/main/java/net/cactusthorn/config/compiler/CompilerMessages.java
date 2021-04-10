@@ -10,7 +10,18 @@ public final class CompilerMessages {
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle(BANDLE, Locale.getDefault());
 
     public enum Key {
-        ONLY_INTERFACE
+        ONLY_INTERFACE,
+        METHOD_MUST_EXIST,
+        METHOD_WITHOUT_PARAMETERS,
+        RETURN_VOID,
+        RETURN_INTERFACES,
+        RETURN_ABSTRACT,
+        RETURN_INTERFACE_ARG_EMPTY,
+        RETURN_INTERFACE_ARG_WILDCARD,
+        RETURN_INTERFACE_ARG_INTERFACE,
+        RETURN_STRING_CLASS,
+        RETURN_OPTIONAL_ARG_EMPTY,
+        RETURN_OPTIONAL_ARG_WILDCARD
     }
 
     private CompilerMessages() {
@@ -22,13 +33,5 @@ public final class CompilerMessages {
 
     public static String msg(Key key, Object argument) {
         return MessageFormat.format(MESSAGES.getString(key.name()), argument);
-    }
-
-    public static String msg(Key key, Object argument1, Object arguments2) {
-        return MessageFormat.format(MESSAGES.getString(key.name()), argument1, arguments2);
-    }
-
-    public static String msg(Key key, Object... arguments) {
-        return MessageFormat.format(MESSAGES.getString(key.name()), arguments);
     }
 }
