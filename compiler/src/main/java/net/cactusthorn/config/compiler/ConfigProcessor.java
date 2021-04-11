@@ -1,9 +1,15 @@
 package net.cactusthorn.config.compiler;
 
+import static net.cactusthorn.config.compiler.CompilerMessages.msg;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_MUST_EXIST;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFACE;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import net.cactusthorn.config.core.Config;
 
@@ -13,7 +19,9 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
 public final class ConfigProcessor extends AbstractProcessor {
@@ -29,27 +37,51 @@ public final class ConfigProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
-    private static final InterfaceValidator INTERFACE_VALIDATOR = new InterfaceValidator();
     private MethodValidator methodValidator;
+    private List<ExecutableElement> objectMethods;
 
     @Override public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         methodValidator = new MethodValidator(processingEnv);
+        objectMethods = ElementFilter
+                .methodsIn(processingEnv.getElementUtils().getTypeElement(Object.class.getName()).getEnclosedElements());
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Config.class);
             for (Element element : elements) {
-                INTERFACE_VALIDATOR.validate(element);
-                TypeElement typeElement = (TypeElement) element;
-                typeElement.getEnclosedElements().stream().filter(e -> e.getKind() == ElementKind.METHOD)
-                        .forEach(methodValidator::validate);
+                validateInterface(element);
+
+                // @formatter:off
+                Set<ExecutableElement> allMethodsElements =
+                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers((TypeElement) element))
+                     .stream()
+                     .filter(e -> !objectMethods.contains(e))
+                     .collect(Collectors.toSet());
+                // @formatter:on
+
+                validateMethodExist(element, allMethodsElements);
+
+                allMethodsElements.forEach(methodValidator::validate);
+                //ElementFilter.methodsIn(((TypeElement) element).getEnclosedElements()).forEach(methodValidator::validate);
             }
         } catch (ProcessorException e) {
             error(e.getMessage(), e.getElement());
         }
         return true;
+    }
+
+    private void validateInterface(Element element) {
+        if (element.getKind() != ElementKind.INTERFACE) {
+            throw new ProcessorException(msg(ONLY_INTERFACE), element);
+        }
+    }
+
+    private void validateMethodExist(Element element, Set<ExecutableElement> allMethodsElements) {
+        if (allMethodsElements.isEmpty()) {
+            throw new ProcessorException(msg(METHOD_MUST_EXIST), element);
+        }
     }
 
     private void error(String msg, Element element) {

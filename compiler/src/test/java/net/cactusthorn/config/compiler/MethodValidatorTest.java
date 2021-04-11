@@ -24,6 +24,11 @@ public class MethodValidatorTest {
         return Compiler.javac().withProcessors(new ConfigProcessor());
     }
 
+    @Test public void methodWithParameter() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/MethodWithParameter.java"));
+        assertThat(compilation).hadErrorContaining(msg(METHOD_WITHOUT_PARAMETERS));
+    }
+
     @Test public void voidMethod() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/VoidMethod.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_VOID));
