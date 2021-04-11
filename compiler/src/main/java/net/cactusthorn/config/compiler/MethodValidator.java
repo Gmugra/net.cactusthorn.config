@@ -17,6 +17,7 @@ import javax.lang.model.element.TypeElement;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
@@ -43,8 +44,11 @@ public class MethodValidator {
         // @formatter:on
     }
 
-    void validate(final Element methodElement) {
-        TypeMirror returnTypeMirror = ((ExecutableType) methodElement.asType()).getReturnType();
+    void validate(final ExecutableElement methodElement) {
+        if (!methodElement.getParameters().isEmpty()) {
+            throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), methodElement);
+        }
+        TypeMirror returnTypeMirror = methodElement.getReturnType();
         if (returnTypeMirror.getKind() == TypeKind.VOID) {
             throw new ProcessorException(msg(RETURN_VOID), methodElement);
         }
