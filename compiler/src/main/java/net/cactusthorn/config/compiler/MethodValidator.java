@@ -23,7 +23,7 @@ import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-public class MethodValidator {
+final class MethodValidator {
 
     static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class);
 

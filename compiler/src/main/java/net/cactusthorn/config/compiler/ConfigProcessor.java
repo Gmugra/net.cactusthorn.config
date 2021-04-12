@@ -4,6 +4,8 @@ import static net.cactusthorn.config.compiler.CompilerMessages.msg;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_MUST_EXIST;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFACE;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +25,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
+
+import com.squareup.javapoet.JavaFile;
 
 public final class ConfigProcessor extends AbstractProcessor {
 
@@ -53,9 +57,10 @@ public final class ConfigProcessor extends AbstractProcessor {
             for (Element element : elements) {
                 validateInterface(element);
 
+                TypeElement interfaceType = (TypeElement) element;
                 // @formatter:off
                 Set<ExecutableElement> allMethodsElements =
-                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers((TypeElement) element))
+                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceType))
                      .stream()
                      .filter(e -> !objectMethods.contains(e))
                      .collect(Collectors.toSet());
@@ -63,11 +68,19 @@ public final class ConfigProcessor extends AbstractProcessor {
 
                 validateMethodExist(element, allMethodsElements);
 
-                allMethodsElements.forEach(methodValidator::validate);
-                //ElementFilter.methodsIn(((TypeElement) element).getEnclosedElements()).forEach(methodValidator::validate);
+                List<MethodInfo> methodsInfo = new ArrayList<>();
+                allMethodsElements.forEach(m -> {
+                    methodValidator.validate(m);
+                    methodsInfo.add(new MethodInfo(m));
+                });
+
+                JavaFile configFile = new ConfigGenerator(interfaceType, methodsInfo).generate();
+                configFile.writeTo(processingEnv.getFiler());
             }
         } catch (ProcessorException e) {
             error(e.getMessage(), e.getElement());
+        } catch (IOException e) {
+            error("Can't generate source file: " + e.getMessage());
         }
         return true;
     }
@@ -86,5 +99,9 @@ public final class ConfigProcessor extends AbstractProcessor {
 
     private void error(String msg, Element element) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, element);
+    }
+
+    private void error(String msg) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg);
     }
 }
