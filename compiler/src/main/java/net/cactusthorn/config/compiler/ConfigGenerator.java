@@ -7,42 +7,32 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
-final class ConfigGenerator {
+import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 
-    private final TypeElement interfaceElement;
-    private final String packageName;
-    private final String className;
-    private final List<MethodInfo> methodsInfo;
+final class ConfigGenerator extends Generator {
+
+    static final String CLASSNAME_PREFIX = "Config$$";
 
     ConfigGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo) {
-        ClassName interfaceName = ClassName.get(interfaceElement);
-        this.interfaceElement = interfaceElement;
-        this.packageName = interfaceName.packageName();
-        this.className = "Config$$" + interfaceName.simpleName();
-        this.methodsInfo = methodsInfo;
+        super(interfaceElement, methodsInfo, CLASSNAME_PREFIX);
     }
 
-    JavaFile generate() {
-        TypeSpec.Builder classBuilder = classBuilder();
-        methodsInfo.forEach(mi -> addField(classBuilder, mi));
+    @Override JavaFile generate() {
+        TypeSpec.Builder classBuilder = classBuilder().addSuperinterface(interfaceElement().asType());
+        methodsInfo().forEach(mi -> addField(classBuilder, mi));
         addConstructor(classBuilder);
-        methodsInfo.forEach(mi -> addGetter(classBuilder, mi));
+        methodsInfo().forEach(mi -> addGetter(classBuilder, mi));
         addHashCode(classBuilder);
         addEquals(classBuilder);
         addToString(classBuilder);
 
-        return JavaFile.builder(packageName, classBuilder.build()).build();
-    }
-
-    private TypeSpec.Builder classBuilder() {
-        return TypeSpec.classBuilder(className).addModifiers(Modifier.PUBLIC, Modifier.FINAL).addSuperinterface(interfaceElement.asType());
+        return JavaFile.builder(packageName(), classBuilder.build()).build();
     }
 
     private void addField(TypeSpec.Builder classBuilder, MethodInfo methodInfo) {
@@ -52,8 +42,8 @@ final class ConfigGenerator {
 
     private void addConstructor(TypeSpec.Builder classBuilder) {
         MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder();
-        methodsInfo.forEach(mi -> constructorBuilder.addParameter(mi.returnTypeName(), mi.name(), Modifier.FINAL));
-        methodsInfo.forEach(mi -> constructorBuilder.addStatement("this.$N = $N", mi.name(), mi.name()));
+        methodsInfo().forEach(mi -> constructorBuilder.addParameter(mi.returnTypeName(), mi.name(), Modifier.FINAL));
+        methodsInfo().forEach(mi -> constructorBuilder.addStatement("this.$N = $N", mi.name(), mi.name()));
         classBuilder.addMethod(constructorBuilder.build());
     }
 
@@ -71,7 +61,7 @@ final class ConfigGenerator {
     }
 
     private void addHashCode(TypeSpec.Builder classBuilder) {
-        String parameters = methodsInfo.stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
+        String parameters = methodsInfo().stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
         // @formatter:off
         MethodSpec hashCode =
             MethodSpec.methodBuilder("hashCode")
@@ -84,6 +74,8 @@ final class ConfigGenerator {
         classBuilder.addMethod(hashCode);
     }
 
+    private static final String BUF_NAME = "buf$$buf";
+
     private void addToString(TypeSpec.Builder classBuilder) {
         // @formatter:off
         MethodSpec.Builder toStringBuilder =
@@ -91,18 +83,19 @@ final class ConfigGenerator {
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(String.class)
-            .addStatement("$T buf = new $T()", StringBuilder.class, StringBuilder.class)
-            .addStatement("buf.append($S)", "[");
+            .addStatement("$T $L = new $T()", StringBuilder.class, BUF_NAME, StringBuilder.class)
+            .addStatement("$L.append($S)", BUF_NAME, "[");
         // @formatter:on
-        for (int i = 0; i < methodsInfo.size(); i++) {
+        for (int i = 0; i < methodsInfo().size(); i++) {
             if (i != 0) {
-                toStringBuilder.addStatement("buf.append($S)", ", ");
+                toStringBuilder.addStatement("$L.append($S)", BUF_NAME, ", ");
             }
-            MethodInfo mi = methodsInfo.get(i);
-            toStringBuilder.addStatement("buf.append($S).append($S).append($T.valueOf($L))", mi.name(), "=", String.class, mi.name());
+            MethodInfo mi = methodsInfo().get(i);
+            toStringBuilder
+                .addStatement("$L.append($S).append($S).append($T.valueOf($L))", BUF_NAME, mi.name(), "=", String.class, mi.name());
         }
-        toStringBuilder.addStatement("buf.append($S)", "]");
-        toStringBuilder.addStatement("return buf.toString()");
+        toStringBuilder.addStatement("$L.append($S)", BUF_NAME, "]");
+        toStringBuilder.addStatement("return $L.toString()", BUF_NAME);
         classBuilder.addMethod(toStringBuilder.build());
     }
 
@@ -115,10 +108,10 @@ final class ConfigGenerator {
             .returns(boolean.class)
             .addParameter(ParameterSpec.builder(Object.class, "o").build())
             .addStatement("if (o == this) return true")
-            .addStatement("if (!(o instanceof $L)) return false", className)
-            .addStatement("$L other = ($L) o", className, className);
+            .addStatement("if (!(o instanceof $L)) return false", className())
+            .addStatement("$L other = ($L) o", className(), className());
         // @formatter:on
-        methodsInfo.forEach(mi -> {
+        methodsInfo().forEach(mi -> {
             if (mi.returnTypeName().isPrimitive()) {
                 equalsBuilder.addStatement("if (this.$L != other.$L()) return false", mi.name(), mi.name());
             } else {

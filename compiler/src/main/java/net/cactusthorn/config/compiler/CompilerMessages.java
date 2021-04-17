@@ -4,7 +4,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-final class CompilerMessages {
+public final class CompilerMessages {
 
     private static final String BANDLE = CompilerMessages.class.getName();
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle(BANDLE, Locale.getDefault());

@@ -11,6 +11,8 @@ import com.google.testing.compile.Compilation;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 
+import net.cactusthorn.config.compiler.methodvalidator.InterfaceTypeValidator;
+
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -51,7 +53,7 @@ public class MethodValidatorTest {
 
     @Test public void wrongInterface() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongInterface.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, MethodValidator.INTERFACES));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
     }
 
     @Test public void wrongInterfaceArgEmpty() {
@@ -91,6 +93,6 @@ public class MethodValidatorTest {
 
     @Test public void wrongOptionalArgWrongInterface() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalArgWrongInterface.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, MethodValidator.INTERFACES));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
     }
 }

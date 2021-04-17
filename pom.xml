@@ -80,6 +80,7 @@
     <modules>
         <module>core</module>
         <module>compiler</module>
+        <module>tests</module>
     </modules>
 
     <dependencies>

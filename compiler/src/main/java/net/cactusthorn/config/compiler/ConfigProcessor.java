@@ -8,11 +8,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import net.cactusthorn.config.compiler.methodvalidator.*;
 import net.cactusthorn.config.core.Config;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -23,12 +25,26 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
 import com.squareup.javapoet.JavaFile;
 
 public final class ConfigProcessor extends AbstractProcessor {
+
+    public static final Comparator<MethodInfo> METHODINFO_COMPARATOR = (mi1, mi2) -> {
+        if (mi1 == null && mi2 == null) {
+            return 0;
+        }
+        if (mi1 == null) {
+            return 1;
+        }
+        if (mi2 == null) {
+            return -1;
+        }
+        return mi1.name().compareTo(mi2.name());
+    };
 
     private static final Set<String> SUPPORTED_ANNOTATIONS = Collections
             .unmodifiableSet(new HashSet<>(Arrays.asList("net.cactusthorn.config.core.Config")));
@@ -41,14 +57,26 @@ public final class ConfigProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
-    private MethodValidator methodValidator;
+    private MethodValidator typeValidator;
+
     private List<ExecutableElement> objectMethods;
 
     @Override public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        methodValidator = new MethodValidator(processingEnv);
+
         objectMethods = ElementFilter
                 .methodsIn(processingEnv.getElementUtils().getTypeElement(Object.class.getName()).getEnclosedElements());
+
+        // @formatter:off
+        typeValidator =
+            MethodValidatorChain.builder(processingEnv, WithoutParametersValidator.class)
+            .next(ReturnVoidValidator.class)
+            .next(InterfaceTypeValidator.class)
+            .next(AbstractTypeValidator.class)
+            .next(OptionalTypeValidator.class)
+            .next(StringTypeValidator.class)
+            .build();
+        // @formatter:on
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -70,12 +98,19 @@ public final class ConfigProcessor extends AbstractProcessor {
 
                 List<MethodInfo> methodsInfo = new ArrayList<>();
                 allMethodsElements.forEach(m -> {
-                    methodValidator.validate(m);
-                    methodsInfo.add(new MethodInfo(m));
+                    TypeMirror returnTypeMirror = m.getReturnType();
+                    methodsInfo.add(typeValidator.validate(m, returnTypeMirror));
                 });
 
+                Collections.sort(methodsInfo, METHODINFO_COMPARATOR);
+
                 JavaFile configFile = new ConfigGenerator(interfaceType, methodsInfo).generate();
+                //System.out.println(configFile.toString());
                 configFile.writeTo(processingEnv.getFiler());
+
+                JavaFile configBuilderFile = new ConfigBuilderGenerator(interfaceType, methodsInfo).generate();
+                //System.out.println(configBuilderFile.toString());
+                configBuilderFile.writeTo(processingEnv.getFiler());
             }
         } catch (ProcessorException e) {
             error(e.getMessage(), e.getElement());
