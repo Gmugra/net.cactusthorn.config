@@ -24,6 +24,7 @@ public class GonfigBuilderGeneratedTest {
         properties.put("set", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("simpleEnum", "AAA");
         properties.put("sorted", "126,300");
+        properties.put("superInterface", "SI");
         properties.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("value", "simpleString");
 

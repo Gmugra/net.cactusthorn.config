@@ -26,17 +26,18 @@ import net.cactusthorn.config.core.ConfigBuilder;
 
 public final class ConfigBuilderGenerator extends Generator {
 
-    static final String CLASSNAME_PREFIX = "ConfigBuilder$$";
-
-    private final String configClassName;
+    private final ClassName configClass;
 
     ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo) {
-        super(interfaceElement, methodsInfo, CLASSNAME_PREFIX);
-        configClassName = ConfigGenerator.CLASSNAME_PREFIX + interfaceName().simpleName();
+        super(interfaceElement, methodsInfo, ConfigBuilder.BUILDER_CLASSNAME_PREFIX);
+        configClass = ClassName.get(packageName(), ConfigGenerator.CLASSNAME_PREFIX + interfaceName().simpleName());
     }
 
+    private static final ClassName CONFIG_BUILDER = ClassName.get(ConfigBuilder.class);
+
     @Override JavaFile generate() {
-        TypeSpec.Builder classBuilder = classBuilder().superclass(ConfigBuilder.class);
+        TypeName superClass = ParameterizedTypeName.get(CONFIG_BUILDER, configClass);
+        TypeSpec.Builder classBuilder = classBuilder().superclass(superClass);
         addEnum(classBuilder);
         addKey(classBuilder);
         addConstructor(classBuilder);
@@ -92,13 +93,14 @@ public final class ConfigBuilderGenerator extends Generator {
         MethodSpec.Builder buildBuilder =
             MethodSpec.methodBuilder("build")
             .addModifiers(Modifier.PUBLIC)
-            .returns(ClassName.get(packageName(), configClassName));
+            .addAnnotation(Override.class)
+            .returns(configClass);
         // @formatter:on
 
         methodsInfo().forEach(mi -> buildBuilder.addStatement("$T $L = $L", mi.returnTypeName(), mi.name(), convert(mi)));
 
         String parameters = methodsInfo().stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
-        buildBuilder.addStatement("return new $L($L)", configClassName, parameters);
+        buildBuilder.addStatement("return new $T($L)", configClass, parameters);
 
         classBuilder.addMethod(buildBuilder.build());
     }

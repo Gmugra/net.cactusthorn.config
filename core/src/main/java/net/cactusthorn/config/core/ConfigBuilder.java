@@ -10,7 +10,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConfigBuilder {
+public abstract class ConfigBuilder<C> {
+
+    public static final String BUILDER_CLASSNAME_PREFIX = "ConfigBuilder$$";
 
     private final Map<String, String> properties;
 
@@ -21,6 +23,8 @@ public class ConfigBuilder {
     protected Map<String, String> properties() {
         return properties;
     }
+
+    public abstract C build();
 
     protected <T> T get(Function<String, T> convert, String key) {
         String value = properties.get(key);

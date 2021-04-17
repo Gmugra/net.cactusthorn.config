@@ -4,7 +4,7 @@ import net.cactusthorn.config.core.Config;
 
 import java.util.*;
 
-@Config interface AllCorrect {
+@Config interface AllCorrect extends Super {
 
     enum FromStringEnum {
         AAA, BBB;
