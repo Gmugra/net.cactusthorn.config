@@ -27,6 +27,7 @@ public class GonfigGeneratedTest {
             new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))),
             AllCorrect.SimpleEnum.AAA,
             new TreeSet<>(Arrays.asList(126f)),
+            "SI",
             Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")),
             "simpleString"
             );
@@ -39,6 +40,7 @@ public class GonfigGeneratedTest {
             new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))),
             AllCorrect.SimpleEnum.AAA,
             new TreeSet<>(Arrays.asList(126f)),
+            "SI",
             Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")),
             "simpleString"
             );
@@ -47,7 +49,7 @@ public class GonfigGeneratedTest {
 
     @Test public void toStr() {
         assertEquals(
-                "[buf=ABC, ddd=125.0, fromStringEnum=BBB, intValue=124, list=Optional.empty, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
+                "[buf=ABC, ddd=125.0, fromStringEnum=BBB, intValue=124, list=Optional.empty, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
                 config.toString());
     }
 
@@ -91,6 +93,10 @@ public class GonfigGeneratedTest {
     @Test public void sorted() {
         assertEquals(1, config.sorted().size());
         assertEquals(126f, config.sorted().iterator().next());
+    }
+
+    @Test public void superInterface() {
+        assertEquals("SI", config.superInterface());
     }
 
     @Test public void uuid() {
