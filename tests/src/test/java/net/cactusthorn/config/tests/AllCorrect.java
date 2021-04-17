@@ -1,4 +1,4 @@
-package test;
+package net.cactusthorn.config.tests;
 
 import net.cactusthorn.config.core.Config;
 

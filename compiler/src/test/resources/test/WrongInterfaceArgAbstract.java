@@ -5,5 +5,5 @@ import java.util.List;
 
 @Config interface WrongInterfaceArgAbstract {
 
-    List<List<?>> map();
+    List<List<?>> list();
 }
