@@ -18,6 +18,7 @@ import com.squareup.javapoet.TypeName;
 import net.cactusthorn.config.compiler.InterfaceInfo;
 import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Key;
+import net.cactusthorn.config.core.Split;
 
 public class MethodInfo {
 
@@ -68,10 +69,10 @@ public class MethodInfo {
     private final ExecutableElement methodElement;
     private final TypeName returnTypeName;
     private final String name;
-    private final String split;
     private final Set<Disable.Feature> disabledFeatures;
 
     private String key;
+    private String split = Split.DEFAULT_SPLIT;
 
     private Optional<StringMethodInfo> returnStringMethod = Optional.empty();
     private Optional<Type> returnInterface = Optional.empty();
@@ -85,8 +86,6 @@ public class MethodInfo {
         key = name;
 
         disabledFeatures = findDisable();
-
-        split = ",";
     }
 
     private Set<Disable.Feature> findDisable() {
@@ -109,6 +108,7 @@ public class MethodInfo {
 
     public MethodInfo withInterfaceInfo(InterfaceInfo interfaceInfo) {
         key = findKey(interfaceInfo);
+        split = findSplit(interfaceInfo);
         return this;
     }
 
@@ -122,6 +122,14 @@ public class MethodInfo {
             return prefix + keyAnnotations[0].value() + Key.KEY_SEPARATOR + name;
         }
         return prefix + name;
+    }
+
+    private String findSplit(InterfaceInfo interfaceInfo) {
+        Split[] splitAnnotations = methodElement.getAnnotationsByType(Split.class);
+        if (splitAnnotations.length != 0) {
+            return splitAnnotations[0].value();
+        }
+        return interfaceInfo.split();
     }
 
     MethodInfo withOptional() {

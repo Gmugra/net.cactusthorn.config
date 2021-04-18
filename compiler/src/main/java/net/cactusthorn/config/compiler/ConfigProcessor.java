@@ -5,7 +5,6 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_MUST_E
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFACE;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,7 +24,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.tools.Diagnostic;
 
@@ -89,22 +87,16 @@ public final class ConfigProcessor extends AbstractProcessor {
                 InterfaceInfo interfaceInfo =  new InterfaceInfo(interfaceType);
 
                 // @formatter:off
-                Set<ExecutableElement> allMethodsElements =
+                List<MethodInfo> methodsInfo =
                      ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceType))
                      .stream()
                      .filter(e -> !objectMethods.contains(e))
-                     .collect(Collectors.toSet());
+                     .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo))
+                     .sorted(METHODINFO_COMPARATOR)
+                     .collect(Collectors.toList());
                 // @formatter:on
 
-                validateMethodExist(element, allMethodsElements);
-
-                List<MethodInfo> methodsInfo = new ArrayList<>();
-                allMethodsElements.forEach(m -> {
-                    TypeMirror returnTypeMirror = m.getReturnType();
-                    methodsInfo.add(typeValidator.validate(m, returnTypeMirror).withInterfaceInfo(interfaceInfo));
-                });
-
-                Collections.sort(methodsInfo, METHODINFO_COMPARATOR);
+                validateMethodExist(element, methodsInfo);
 
                 JavaFile configFile = new ConfigGenerator(interfaceType, methodsInfo).generate();
                 //System.out.println(configFile.toString());
@@ -128,8 +120,8 @@ public final class ConfigProcessor extends AbstractProcessor {
         }
     }
 
-    private void validateMethodExist(Element element, Set<ExecutableElement> allMethodsElements) {
-        if (allMethodsElements.isEmpty()) {
+    private void validateMethodExist(Element element, List<MethodInfo> methodsInfo) {
+        if (methodsInfo.isEmpty()) {
             throw new ProcessorException(msg(METHOD_MUST_EXIST), element);
         }
     }
