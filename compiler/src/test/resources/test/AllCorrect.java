@@ -1,10 +1,14 @@
 package test;
 
 import net.cactusthorn.config.core.Config;
+import net.cactusthorn.config.core.Prefix;
+import net.cactusthorn.config.core.Disable;
+import net.cactusthorn.config.core.Split;
+import net.cactusthorn.config.core.Key;
 
 import java.util.*;
 
-@Config interface AllCorrect {
+@Config @Prefix("prefix") @Split(";") interface AllCorrect {
 
     enum FromStringEnum {
         AAA, BBB;
@@ -28,7 +32,7 @@ import java.util.*;
 
     Optional<UUID> uuid();
 
-    Optional<List<Integer>> list();
+    @Split(",") Optional<List<Integer>> list();
 
     Set<UUID> set();
 
@@ -36,5 +40,13 @@ import java.util.*;
 
     StringBuilder buf();
 
-    Double ddd();
+    @Key("ddd") @Disable(Disable.Feature.PREFIX) Double ddd();
+
+    List<String> listNoOptional();
+
+    Optional<SortedSet<Float>> sortedOptional();
+
+    Optional<Set<Float>> setOptional();
+
+    Float boxedPrimitive();
 }
