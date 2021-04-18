@@ -1,6 +1,9 @@
 package net.cactusthorn.config.compiler.methodvalidator;
 
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,6 +16,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
 import net.cactusthorn.config.compiler.InterfaceInfo;
+import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Key;
 
 public class MethodInfo {
@@ -61,11 +65,11 @@ public class MethodInfo {
         }
     }
 
-
     private final ExecutableElement methodElement;
     private final TypeName returnTypeName;
     private final String name;
     private final String split;
+    private final Set<Disable.Feature> disabledFeatures;
 
     private String key;
 
@@ -80,7 +84,17 @@ public class MethodInfo {
 
         key = name;
 
+        disabledFeatures = findDisable();
+
         split = ",";
+    }
+
+    private Set<Disable.Feature> findDisable() {
+        Disable[] disableAnnotations = methodElement.getAnnotationsByType(Disable.class);
+        if (disableAnnotations.length != 0) {
+            return new HashSet<>(Arrays.asList(disableAnnotations[0].value()));
+        }
+        return Collections.emptySet();
     }
 
     MethodInfo withStringMethod(StringMethod stringMethod, TypeMirror stringMethodTM) {
@@ -99,11 +113,15 @@ public class MethodInfo {
     }
 
     private String findKey(InterfaceInfo interfaceInfo) {
+        String prefix = interfaceInfo.prefix();
+        if (disabledFeatures.contains(Disable.Feature.PREFIX)) {
+            prefix = "";
+        }
         Key[] keyAnnotations = methodElement.getAnnotationsByType(Key.class);
         if (keyAnnotations.length != 0) {
-            return interfaceInfo.prefix() + keyAnnotations[0].value() + Key.KEY_SEPARATOR + name;
+            return prefix + keyAnnotations[0].value() + Key.KEY_SEPARATOR + name;
         }
-        return interfaceInfo.prefix() + name;
+        return prefix + name;
     }
 
     MethodInfo withOptional() {
