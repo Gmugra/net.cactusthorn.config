@@ -18,6 +18,7 @@ public class WithPrefixTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("prefix.simple", "ABC");
         properties.put("prefix.abc.withKey", "XYZ");
+        properties.put("xyz.disabled", "DDD");
 
         config = ConfigFactory.create(WithPrefix.class, properties);
     }
@@ -28,5 +29,9 @@ public class WithPrefixTest {
 
     @Test public void withKey() {
         assertEquals("XYZ", config.withKey());
+    }
+
+    @Test public void disabled() {
+        assertEquals("DDD", config.disabled());
     }
 }
