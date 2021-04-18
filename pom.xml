@@ -74,6 +74,8 @@
         <plugin.pmd>3.14.0</plugin.pmd>
         <plugin.spotbugs>4.2.2</plugin.spotbugs>
             <dependency.spotbugs>4.2.2</dependency.spotbugs>
+        <plugin.coveralls>4.3.0</plugin.coveralls>
+            <dependency.jaxb>2.3.1</dependency.jaxb>
 
     </properties>
 
@@ -371,6 +373,24 @@
                             <groupId>com.github.spotbugs</groupId>
                             <artifactId>spotbugs</artifactId>
                             <version>${dependency.spotbugs}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.eluder.coveralls</groupId>
+                    <artifactId>coveralls-maven-plugin</artifactId>
+                    <version>${plugin.coveralls}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>javax.xml.bind</groupId>
+                            <artifactId>jaxb-api</artifactId>
+                            <version>${dependency.jaxb}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.glassfish.jaxb</groupId>
+                            <artifactId>jaxb-runtime</artifactId>
+                            <version>${dependency.jaxb}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
