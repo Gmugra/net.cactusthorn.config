@@ -12,6 +12,9 @@ import javax.lang.model.type.TypeMirror;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.TypeName;
 
+import net.cactusthorn.config.compiler.InterfaceInfo;
+import net.cactusthorn.config.core.Key;
+
 public class MethodInfo {
 
     public enum StringMethod {
@@ -58,19 +61,25 @@ public class MethodInfo {
         }
     }
 
-    private final String key;
-    private final String name;
+
+    private final ExecutableElement methodElement;
     private final TypeName returnTypeName;
+    private final String name;
     private final String split;
+
+    private String key;
 
     private Optional<StringMethodInfo> returnStringMethod = Optional.empty();
     private Optional<Type> returnInterface = Optional.empty();
     private boolean returnOptional = false;
 
     MethodInfo(ExecutableElement methodElement) {
-        name = methodElement.getSimpleName().toString();
+        this.methodElement = methodElement;
         returnTypeName = ClassName.get(methodElement.getReturnType());
+        name = methodElement.getSimpleName().toString();
+
         key = name;
+
         split = ",";
     }
 
@@ -82,6 +91,19 @@ public class MethodInfo {
     MethodInfo withInterface(Optional<Type> interfaceType) {
         returnInterface = interfaceType;
         return this;
+    }
+
+    public MethodInfo withInterfaceInfo(InterfaceInfo interfaceInfo) {
+        key = findKey(interfaceInfo);
+        return this;
+    }
+
+    private String findKey(InterfaceInfo interfaceInfo) {
+        Key[] keyAnnotations = methodElement.getAnnotationsByType(Key.class);
+        if (keyAnnotations.length != 0) {
+            return interfaceInfo.prefix() + keyAnnotations[0].value() + Key.KEY_SEPARATOR + name;
+        }
+        return interfaceInfo.prefix() + name;
     }
 
     MethodInfo withOptional() {

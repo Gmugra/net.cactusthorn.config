@@ -86,6 +86,8 @@ public final class ConfigProcessor extends AbstractProcessor {
                 validateInterface(element);
 
                 TypeElement interfaceType = (TypeElement) element;
+                InterfaceInfo interfaceInfo =  new InterfaceInfo(interfaceType);
+
                 // @formatter:off
                 Set<ExecutableElement> allMethodsElements =
                      ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceType))
@@ -99,7 +101,7 @@ public final class ConfigProcessor extends AbstractProcessor {
                 List<MethodInfo> methodsInfo = new ArrayList<>();
                 allMethodsElements.forEach(m -> {
                     TypeMirror returnTypeMirror = m.getReturnType();
-                    methodsInfo.add(typeValidator.validate(m, returnTypeMirror));
+                    methodsInfo.add(typeValidator.validate(m, returnTypeMirror).withInterfaceInfo(interfaceInfo));
                 });
 
                 Collections.sort(methodsInfo, METHODINFO_COMPARATOR);
