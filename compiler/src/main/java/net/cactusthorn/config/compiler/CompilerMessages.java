@@ -21,7 +21,8 @@ public final class CompilerMessages {
         RETURN_INTERFACE_ARG_INTERFACE,
         RETURN_STRING_CLASS,
         RETURN_OPTIONAL_ARG_EMPTY,
-        RETURN_OPTIONAL_ARG_WILDCARD
+        RETURN_OPTIONAL_ARG_WILDCARD,
+        RETURN_OPTIONAL_DEFAULT
     }
 
     private CompilerMessages() {

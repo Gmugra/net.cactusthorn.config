@@ -5,6 +5,7 @@ import net.cactusthorn.config.core.Prefix;
 import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Split;
 import net.cactusthorn.config.core.Key;
+import net.cactusthorn.config.core.Default;
 
 import java.util.*;
 
@@ -28,21 +29,21 @@ import java.util.*;
 
     String value();
 
-    int intValue();
+    @Default("100") int intValue();
 
     Optional<UUID> uuid();
 
     @Split(",") Optional<List<Integer>> list();
 
-    Set<UUID> set();
+    @Default("46400000-8cc0-11bd-b43e-10d46e4ef14d") Set<UUID> set();
 
-    SortedSet<Float> sorted();
+    @Default("10.5,11.5") SortedSet<Float> sorted();
 
     StringBuilder buf();
 
     @Key("ddd") @Disable(Disable.Feature.PREFIX) Double ddd();
 
-    List<String> listNoOptional();
+    @Default("A,B,C") List<String> listNoOptional();
 
     Optional<SortedSet<Float>> sortedOptional();
 
@@ -50,3 +51,4 @@ import java.util.*;
 
     Float boxedPrimitive();
 }
+

@@ -17,7 +17,7 @@ public class WithKeyTest {
     @BeforeAll static void setUp() {
         Map<String, String> properties = new HashMap<>();
         properties.put("simple", "ABC");
-        properties.put("abc.withKey", "XYZ");
+        properties.put("abc", "XYZ");
 
         config = ConfigFactory.create(WithKey.class, properties);
     }

@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.lang.reflect.Type;
-import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -32,12 +31,9 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
     public InterfaceTypeValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
-        // @formatter:off
         INTERFACES.forEach(c -> interfaces.put(processingEnv().getElementUtils().getTypeElement(c.getName()).asType(), c));
-        argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
-            .next(StringTypeValidator.class)
-            .build();
-        // @formatter:on
+        argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class).next(StringTypeValidator.class)
+                .build();
     }
 
     @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
@@ -49,17 +45,14 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (element.getKind() != ElementKind.INTERFACE) {
             return next(methodElement, typeMirror);
         }
-        TypeMirror inerfaceTypeMirror = element.asType();
         // @formatter:off
-        Optional<Type> interfaceType =
+        Type interfaceType =
             interfaces.entrySet().stream()
-            .filter(e -> processingEnv().getTypeUtils().isSameType(inerfaceTypeMirror, e.getKey()))
+            .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
             .map(e -> e.getValue())
-            .findAny();
+            .findAny()
+            .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), element));
         // @formatter:on
-        if (!interfaceType.isPresent()) {
-            throw new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), element);
-        }
         List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
         if (arguments.isEmpty()) {
             throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), element);

@@ -95,4 +95,9 @@ public class MethodValidatorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalArgWrongInterface.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
     }
+
+    @Test public void WrongOptionalDefaultAnnotation() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalDefaultAnnotation.java"));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_OPTIONAL_DEFAULT));
+    }
 }
