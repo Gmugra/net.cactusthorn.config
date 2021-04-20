@@ -17,8 +17,8 @@ public class WithPrefixTest {
     @BeforeAll static void setUp() {
         Map<String, String> properties = new HashMap<>();
         properties.put("prefix.simple", "ABC");
-        properties.put("prefix.abc.withKey", "XYZ");
-        properties.put("xyz.disabled", "DDD");
+        properties.put("prefix.abc", "XYZ");
+        properties.put("xyz", "DDD");
 
         config = ConfigFactory.create(WithPrefix.class, properties);
     }

@@ -20,6 +20,7 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -107,7 +108,11 @@ public final class ConfigProcessor extends AbstractProcessor {
                 configBuilderFile.writeTo(processingEnv.getFiler());
             }
         } catch (ProcessorException e) {
-            error(e.getMessage(), e.getElement());
+            if (e.getAnnotationMirror() != null) {
+                error(e.getMessage(), e.getElement(), e.getAnnotationMirror());
+            } else {
+                error(e.getMessage(), e.getElement());
+            }
         } catch (IOException e) {
             error("Can't generate source file: " + e.getMessage());
         }
@@ -124,6 +129,10 @@ public final class ConfigProcessor extends AbstractProcessor {
         if (methodsInfo.isEmpty()) {
             throw new ProcessorException(msg(METHOD_MUST_EXIST), element);
         }
+    }
+
+    private void error(String msg, Element element, AnnotationMirror annotationMirror) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, msg, element, annotationMirror);
     }
 
     private void error(String msg, Element element) {

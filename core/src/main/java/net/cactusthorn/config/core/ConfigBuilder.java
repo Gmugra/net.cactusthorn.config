@@ -34,6 +34,14 @@ public abstract class ConfigBuilder<C> {
         return convert.apply(value);
     }
 
+    protected <T> T getDefault(Function<String, T> convert, String key, String defaultValue) {
+        String value = properties.get(key);
+        if (value == null) {
+            return convert.apply(defaultValue);
+        }
+        return convert.apply(value);
+    }
+
     protected <T> Optional<T> getOptional(Function<String, T> convert, String key) {
         String value = properties.get(key);
         if (value == null) {
@@ -47,7 +55,15 @@ public abstract class ConfigBuilder<C> {
         if (value == null) {
             throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
         }
-        return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList());
+        return asList(convert, value, splitRegEx);
+    }
+
+    protected <T> List<T> getListDefault(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
+        String value = properties.get(key);
+        if (value == null) {
+            return asList(convert, defaultValue, splitRegEx);
+        }
+        return asList(convert, value, splitRegEx);
     }
 
     protected <T> Optional<List<T>> getOptionalList(Function<String, T> convert, String key, String splitRegEx) {
@@ -55,15 +71,23 @@ public abstract class ConfigBuilder<C> {
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.of(Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList()));
+        return Optional.of(asList(convert, value, splitRegEx));
     }
 
     protected <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + "is not found."); // TODO message
+            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
         }
-        return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toSet());
+        return asSet(convert, value, splitRegEx);
+    }
+
+    protected <T> Set<T> getSetDefault(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
+        String value = properties.get(key);
+        if (value == null) {
+            return asSet(convert, defaultValue, splitRegEx);
+        }
+        return asSet(convert, value, splitRegEx);
     }
 
     protected <T> Optional<Set<T>> getOptionalSet(Function<String, T> convert, String key, String splitRegEx) {
@@ -71,22 +95,38 @@ public abstract class ConfigBuilder<C> {
         if (value == null) {
             return Optional.empty();
         }
-        return Optional.of(Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toSet()));
+        return Optional.of(asSet(convert, value, splitRegEx));
     }
 
     protected <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + "is not found."); // TODO message
+            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
         }
-        return new TreeSet<>(Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList()));
+        return new TreeSet<>(asList(convert, value, splitRegEx));
+    }
+
+    protected <T> SortedSet<T> getSortedSetDefault(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
+        String value = properties.get(key);
+        if (value == null) {
+            return new TreeSet<>(asList(convert, defaultValue, splitRegEx));
+        }
+        return new TreeSet<>(asList(convert, value, splitRegEx));
     }
 
     protected <T> Optional<SortedSet<T>> getOptionalSortedSet(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + "is not found."); // TODO message
+            return Optional.empty();
         }
-        return Optional.of(new TreeSet<>(Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList())));
+        return Optional.of(new TreeSet<>(asList(convert, value, splitRegEx)));
+    }
+
+    private <T> List<T> asList(Function<String, T> convert, String value, String splitRegEx) {
+        return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList());
+    }
+
+    private <T> Set<T> asSet(Function<String, T> convert, String value, String splitRegEx) {
+        return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toSet());
     }
 }

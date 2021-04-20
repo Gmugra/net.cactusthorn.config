@@ -1,10 +1,8 @@
 package net.cactusthorn.config.compiler;
 
-import java.lang.reflect.Type;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,6 +38,7 @@ public final class ConfigBuilderGenerator extends Generator {
         TypeSpec.Builder classBuilder = classBuilder().superclass(superClass);
         addEnum(classBuilder);
         addKey(classBuilder);
+        addDefault(classBuilder);
         addConstructor(classBuilder);
         addBuild(classBuilder);
 
@@ -74,92 +73,94 @@ public final class ConfigBuilderGenerator extends Generator {
         classBuilder.addStaticBlock(blockBuilder.build());
     }
 
+    private static final String DEFAULTS_MAP_NAME = "DEFAULTS";
+
+    private void addDefault(TypeSpec.Builder classBuilder) {
+        ClassName methodsEnumName = ClassName.get(packageName(), className() + '.' + METHOD_ENUM_NAME);
+        TypeName mapTypeName = ParameterizedTypeName.get(MAP, methodsEnumName, STRING);
+
+        FieldSpec fieldSpec = FieldSpec.builder(mapTypeName, DEFAULTS_MAP_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL).build();
+
+        CodeBlock.Builder blockBuilder = CodeBlock.builder().addStatement("$L = new $T<>($L.class)", DEFAULTS_MAP_NAME, EnumMap.class,
+                METHOD_ENUM_NAME);
+        methodsInfo().forEach(mi -> mi.defaultValue()
+                .ifPresent(d -> blockBuilder.addStatement("$L.put($L.$L, $S)", DEFAULTS_MAP_NAME, METHOD_ENUM_NAME, mi.name(), d)));
+
+        classBuilder.addField(fieldSpec);
+        classBuilder.addStaticBlock(blockBuilder.build());
+    }
+
     private static final String PROPERTIES = "properties";
 
     private void addConstructor(TypeSpec.Builder classBuilder) {
-        // @formatter:off
-        MethodSpec.Builder constructorBuilder =
-            MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(MAP_STRING, PROPERTIES, Modifier.FINAL)
-            .addStatement("super($L)", PROPERTIES);
-        // @formatter:on
+        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
+                .addParameter(MAP_STRING, PROPERTIES, Modifier.FINAL).addStatement("super($L)", PROPERTIES);
 
         classBuilder.addMethod(constructorBuilder.build());
     }
 
     private void addBuild(TypeSpec.Builder classBuilder) {
-        // @formatter:off
-        MethodSpec.Builder buildBuilder =
-            MethodSpec.methodBuilder("build")
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Override.class)
-            .returns(configClass);
-        // @formatter:on
+        MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+                .returns(configClass);
 
         methodsInfo().forEach(mi -> buildBuilder.addStatement("$T $L = $L", mi.returnTypeName(), mi.name(), convert(mi)));
 
         String parameters = methodsInfo().stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
-        buildBuilder.addStatement("return new $T($L)", configClass, parameters);
 
-        classBuilder.addMethod(buildBuilder.build());
+        classBuilder.addMethod(buildBuilder.addStatement("return new $T($L)", configClass, parameters).build());
     }
 
     private CodeBlock convert(MethodInfo mi) {
-        String getMethod = findGetMethod(mi.returnOptional(), mi.returnInterface());
-        CodeBlock.Builder builder = CodeBlock.builder().add(getMethod + '(');
+        CodeBlock.Builder builder = findGetMethod(mi).add("(");
+        CodeBlock defaultValue = defaultValue(mi);
         if (mi.returnStringMethod().isPresent()) {
             MethodInfo.StringMethodInfo smi = mi.returnStringMethod().get();
             StringMethod sm = smi.stringMethod();
-            CodeBlock split = split(mi);
-            switch (sm) {
-            case STRING:
-                return builder.add("s -> s, ").add(key(mi)).add(split).add(")").build();
-            case CONSTRUCTOR:
-                return builder.add("s -> new $T(s), ", mi.returnTypeName()).add(key(mi)).add(split).add(")").build();
-            default:
-                return builder.add("$T::$L, ", smi.methodType(), sm.methodName().get()).add(key(mi)).add(split).add(")").build();
+            if (sm == StringMethod.STRING) {
+                builder.add("s -> s, ");
+            } else if (sm == StringMethod.CONSTRUCTOR) {
+                builder.add("s -> new $T(s), ", mi.returnTypeName());
+            } else {
+                builder.add("$T::$L, ", smi.methodType(), sm.methodName().get());
             }
+            return builder.add(key(mi)).add(split(mi)).add(defaultValue).add(")").build();
         }
-        TypeName simpleType = mi.returnTypeName().isPrimitive() ? mi.returnTypeName().box() : mi.returnTypeName();
-        return builder.add("$T::$L, ", simpleType, "valueOf").add(key(mi)).add(")").build();
+        return builder.add("$T::valueOf, ", mi.returnTypeName().box()).add(key(mi)).add(defaultValue).add(")").build();
     }
 
-    protected CodeBlock split(MethodInfo mi) {
-        if (mi.returnInterface().isPresent()) {
-            return CodeBlock.of(", $S", mi.split());
-        }
-        return CodeBlock.of("");
-    }
-
-    protected String findGetMethod(boolean optional, Optional<Type> returnInterface) {
-        if (optional) {
-            if (returnInterface.isPresent()) {
-                Type type = returnInterface.get();
-                if (type == List.class) {
+    protected CodeBlock.Builder findGetMethod(MethodInfo mi) {
+        if (mi.returnOptional()) {
+            return CodeBlock.builder().add(mi.returnInterface().map(t -> {
+                if (t == List.class) {
                     return "getOptionalList";
                 }
-                if (type == Set.class) {
+                if (t == Set.class) {
                     return "getOptionalSet";
                 }
                 return "getOptionalSortedSet";
-            }
-            return "getOptional";
+            }).orElse("getOptional"));
         }
-        if (returnInterface.isPresent()) {
-            Type type = returnInterface.get();
-            if (type == List.class) {
-                return "getList";
+        return CodeBlock.builder().add(mi.returnInterface().map(t -> {
+            if (t == List.class) {
+                return mi.defaultValue().map(d -> "getListDefault").orElse("getList");
             }
-            if (type == Set.class) {
-                return "getSet";
+            if (t == Set.class) {
+                return mi.defaultValue().map(d -> "getSetDefault").orElse("getSet");
             }
-            return "getSortedSet";
-        }
-        return "get";
+            return mi.defaultValue().map(d -> "getSortedSetDefault").orElse("getSortedSet");
+        }).orElse(mi.defaultValue().map(d -> "getDefault").orElse("get")));
     }
 
     private CodeBlock key(MethodInfo mi) {
         return CodeBlock.of("$L.get($L.$L)", KEYS_MAP_NAME, METHOD_ENUM_NAME, mi.name());
+    }
+
+    private CodeBlock split(MethodInfo mi) {
+        return mi.returnInterface().map(i -> CodeBlock.of(", $S", mi.split())).orElse(CodeBlock.of(""));
+    }
+
+    private CodeBlock defaultValue(MethodInfo mi) {
+        return mi.defaultValue().map(s -> CodeBlock.of(", $L.get($L.$L)", DEFAULTS_MAP_NAME, METHOD_ENUM_NAME, mi.name()))
+                .orElse(CodeBlock.of(""));
     }
 }
