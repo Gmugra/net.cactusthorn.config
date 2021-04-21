@@ -20,10 +20,6 @@ public abstract class ConfigBuilder<C> {
         this.properties = properties;
     }
 
-    protected Map<String, String> properties() {
-        return properties;
-    }
-
     public abstract C build();
 
     protected <T> T get(Function<String, T> convert, String key) {
