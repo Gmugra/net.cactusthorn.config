@@ -1,5 +1,8 @@
 package net.cactusthorn.config.core;
 
+import static net.cactusthorn.config.core.ApiMessages.*;
+import static net.cactusthorn.config.core.ApiMessages.Key.*;
+
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
@@ -12,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
 import net.cactusthorn.config.core.loader.Loader;
@@ -46,37 +50,30 @@ public final class ConfigFactory {
 
         public Builder setSource(Map<String, String> properties) {
             if (properties == null) {
-                throw new IllegalArgumentException("properties is null");
+                throw new IllegalArgumentException(isNull("properties"));
             }
             props = properties;
             return this;
         }
 
         public Builder addSource(URI... uri) {
-            if (uri == null) {
-                throw new IllegalArgumentException("uri is null");
-            }
-            if (uri.length == 0) {
-                throw new IllegalArgumentException("uri is empty");
-            }
-            for (URI u : uri) {
-                if (u != null) {
-                    uris.add(u);
-                }
-            }
-            return this;
+            return addSource(Function.identity(), uri);
         }
 
         public Builder addSource(String... uri) {
+            return addSource(URI::create, uri);
+        }
+
+        @SuppressWarnings("unchecked") private <T> Builder addSource(Function<T, URI> convert, T... uri) {
             if (uri == null) {
-                throw new IllegalArgumentException("uri is null");
+                throw new IllegalArgumentException(isNull("uri"));
             }
             if (uri.length == 0) {
-                throw new IllegalArgumentException("uri is empty");
+                throw new IllegalArgumentException(isEmpty("uri"));
             }
-            for (String u : uri) {
+            for (T u : uri) {
                 if (u != null) {
-                    uris.add(URI.create(u));
+                    uris.add(convert.apply(u));
                 }
             }
             return this;
@@ -86,7 +83,7 @@ public final class ConfigFactory {
             LinkedHashMap<URI, Loader> uriLoaders = new LinkedHashMap<>();
             for (URI uri : uris) {
                 Loader loader = loaders.stream().filter(l -> l.accept(uri)).findAny()
-                        .orElseThrow(() -> new UnsupportedOperationException("Loader for uri " + uri + " not found"));
+                        .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
                 uriLoaders.put(uri, loader);
             }
             return new ConfigFactory(props, uriLoaders);
@@ -102,7 +99,7 @@ public final class ConfigFactory {
             @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(forBuilder);
             return (T) builder.build();
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Can't invoke ConfigBuilder-class constructor for " + sourceInterface.getName(), e);
+            throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }
     }
 
@@ -120,7 +117,7 @@ public final class ConfigFactory {
 
     private <T> Map<String, String> load(Class<T> sourceInterface) {
         if (sourceInterface == null) {
-            throw new IllegalArgumentException("sourceInterface is null");
+            throw new IllegalArgumentException(isNull(sourceInterface));
         }
         Map<String, String> result = new HashMap<>();
         for (Map.Entry<URI, Loader> entry : uriLoaders.entrySet()) {
@@ -138,7 +135,7 @@ public final class ConfigFactory {
             Class<?> builderClass = Class.forName(builderClassName);
             return MethodHandles.publicLookup().findConstructor(builderClass, CONSTRUCTOR);
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Can't find ConfigBuilder-class for " + sourceInterface.getName(), e);
+            throw new IllegalArgumentException(msg(CANT_FIND_CONFIGBUILDER, sourceInterface.getName()), e);
         }
     }
 }

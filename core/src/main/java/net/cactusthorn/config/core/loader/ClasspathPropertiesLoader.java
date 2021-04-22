@@ -1,5 +1,8 @@
 package net.cactusthorn.config.core.loader;
 
+import static net.cactusthorn.config.core.ApiMessages.*;
+import static net.cactusthorn.config.core.ApiMessages.Key.*;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,7 +35,7 @@ public class ClasspathPropertiesLoader implements Loader {
             @SuppressWarnings({ "unchecked", "rawtypes" }) Map<String, String> result = (Map) properties;
             return Collections.unmodifiableMap(result);
         } catch (Exception e) {
-            LOG.info(String.format("Can't load resource \"%s\" : %s", uri.toString(), e.toString())); //TODO Message
+            LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
         }
     }

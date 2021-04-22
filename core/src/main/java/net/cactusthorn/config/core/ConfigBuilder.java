@@ -1,5 +1,8 @@
 package net.cactusthorn.config.core;
 
+import static net.cactusthorn.config.core.ApiMessages.*;
+import static net.cactusthorn.config.core.ApiMessages.Key.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,7 +28,7 @@ public abstract class ConfigBuilder<C> {
     protected <T> T get(Function<String, T> convert, String key) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
+            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
         return convert.apply(value);
     }
@@ -49,7 +52,7 @@ public abstract class ConfigBuilder<C> {
     protected <T> List<T> getList(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
+            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
         return asList(convert, value, splitRegEx);
     }
@@ -73,7 +76,7 @@ public abstract class ConfigBuilder<C> {
     protected <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
+            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
         return asSet(convert, value, splitRegEx);
     }
@@ -97,7 +100,7 @@ public abstract class ConfigBuilder<C> {
     protected <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx) {
         String value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException("Value for key " + key + " is not found."); // TODO message
+            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
         return new TreeSet<>(asList(convert, value, splitRegEx));
     }
