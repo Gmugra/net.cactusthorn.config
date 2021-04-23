@@ -95,7 +95,10 @@ The return type of the interface methods must either:
    - If this annotation is not present, default "splitter" is comma : `,`
 
 ### Property not found : `@Default` or `Optional`
-...
+There are three options for dealing with properties that are not found in sources:
+1. If method return type is not `Optional` and the method do not annotated with `@Default`, ConfigFactory.create will throw *RuntimeException* "property ... not found"
+2. If method return type is `Optional` ->  method will return `Optional.empty()`
+3. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
 
 ### Loaders
 ...
