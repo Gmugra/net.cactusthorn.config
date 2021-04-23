@@ -16,8 +16,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
+import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 
 public final class ConfigFactory {
@@ -25,12 +27,12 @@ public final class ConfigFactory {
     private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, Map.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
-    private final Config.LoadType loadType;
+    private final LoadStrategy loadStrategy;
     private final Map<String, String> props;
     private final LinkedHashMap<URI, Loader> uriLoaders;
 
-    private ConfigFactory(Config.LoadType loadType, Map<String, String> properties, LinkedHashMap<URI, Loader> uriLoaders) {
-        this.loadType = loadType;
+    private ConfigFactory(LoadStrategy loadStrategy, Map<String, String> properties, LinkedHashMap<URI, Loader> uriLoaders) {
+        this.loadStrategy = loadStrategy;
         this.props = properties;
         this.uriLoaders = uriLoaders;
     }
@@ -45,14 +47,14 @@ public final class ConfigFactory {
         private final LinkedHashSet<URI> uris = new LinkedHashSet<>();
 
         private Map<String, String> props = Collections.emptyMap();
-        private Config.LoadType load = Config.LoadType.MERGE;
+        private LoadStrategy loadStrategy = LoadStrategy.MERGE;
 
         private Builder() {
             loaders.add(new ClasspathPropertiesLoader());
         }
 
-        public Builder setLoadPolicy(Config.LoadType loadType) {
-            load = loadType;
+        public Builder setLoadStrategy(LoadStrategy strategy) {
+            loadStrategy = strategy;
             return this;
         }
 
@@ -94,7 +96,7 @@ public final class ConfigFactory {
                         .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
                 uriLoaders.put(uri, loader);
             }
-            return new ConfigFactory(load, props, uriLoaders);
+            return new ConfigFactory(loadStrategy, props, uriLoaders);
         }
     }
 
@@ -127,33 +129,13 @@ public final class ConfigFactory {
         if (sourceInterface == null) {
             throw new IllegalArgumentException(isNull(sourceInterface));
         }
-        if (loadType == Config.LoadType.FIRST) {
-            return loadFirst(sourceInterface);
-        }
-        return loadMerge(sourceInterface);
-    }
-
-    private <T> Map<String, String> loadFirst(Class<T> sourceInterface) {
-        for (Map.Entry<URI, Loader> entry : uriLoaders.entrySet()) {
-            Loader loader = entry.getValue();
-            Map<String, String> properties = loader.load(entry.getKey(), sourceInterface.getClassLoader());
-            if (!properties.isEmpty()) {
-                return properties;
-            }
-        }
-        return Collections.emptyMap();
-    }
-
-    private <T> Map<String, String> loadMerge(Class<T> sourceInterface) {
-        Map<String, String> result = new HashMap<>();
-        ArrayList<URI> keys = new ArrayList<>(uriLoaders.keySet());
-        for (int i = keys.size() - 1; i >= 0; i--) {
-            URI key = keys.get(i);
-            Loader loader = uriLoaders.get(key);
-            Map<String, String> properties = loader.load(key, sourceInterface.getClassLoader());
-            result.putAll(properties);
-        }
-        return result;
+        //TODO caching for properties by URI
+        // @formatter:off
+        return loadStrategy.combine(
+            uriLoaders.entrySet().stream()
+                .map(e -> e.getValue().load(e.getKey(), sourceInterface.getClassLoader()))
+                .collect(Collectors.toList()));
+        // @formatter:on
     }
 
     private <T> MethodHandle findBuilderConstructor(Class<T> sourceInterface) {
