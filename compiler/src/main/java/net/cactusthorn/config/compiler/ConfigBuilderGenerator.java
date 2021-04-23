@@ -1,10 +1,13 @@
 package net.cactusthorn.config.compiler;
 
+import static net.cactusthorn.config.compiler.ConfigGenerator.METHOD_ENUM_NAME;
+import static net.cactusthorn.config.compiler.ConfigGenerator.METHOD_ENUM;
+
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -36,21 +39,12 @@ public final class ConfigBuilderGenerator extends Generator {
     @Override JavaFile generate() {
         TypeName superClass = ParameterizedTypeName.get(CONFIG_BUILDER, configClass);
         TypeSpec.Builder classBuilder = classBuilder().superclass(superClass);
-        addEnum(classBuilder);
         addKey(classBuilder);
         addDefault(classBuilder);
         addConstructor(classBuilder);
         addBuild(classBuilder);
 
-        return JavaFile.builder(packageName(), classBuilder.build()).build();
-    }
-
-    private static final String METHOD_ENUM_NAME = "Method";
-
-    private void addEnum(TypeSpec.Builder classBuilder) {
-        TypeSpec.Builder enumBuilder = TypeSpec.enumBuilder(METHOD_ENUM_NAME).addModifiers(Modifier.PRIVATE);
-        methodsInfo().forEach(mi -> enumBuilder.addEnumConstant(mi.name()));
-        classBuilder.addType(enumBuilder.build());
+        return JavaFile.builder(packageName(), classBuilder.build()).addStaticImport(configClass, METHOD_ENUM_NAME).build();
     }
 
     private static final ClassName MAP = ClassName.get(Map.class);
@@ -60,7 +54,7 @@ public final class ConfigBuilderGenerator extends Generator {
     private static final String KEYS_MAP_NAME = "KEYS";
 
     private void addKey(TypeSpec.Builder classBuilder) {
-        ClassName methodsEnumName = ClassName.get(packageName(), className() + '.' + METHOD_ENUM_NAME);
+        ClassName methodsEnumName = ClassName.get(packageName(), METHOD_ENUM_NAME);
         TypeName mapTypeName = ParameterizedTypeName.get(MAP, methodsEnumName, STRING);
 
         FieldSpec fieldSpec = FieldSpec.builder(mapTypeName, KEYS_MAP_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL).build();
@@ -76,7 +70,7 @@ public final class ConfigBuilderGenerator extends Generator {
     private static final String DEFAULTS_MAP_NAME = "DEFAULTS";
 
     private void addDefault(TypeSpec.Builder classBuilder) {
-        ClassName methodsEnumName = ClassName.get(packageName(), className() + '.' + METHOD_ENUM_NAME);
+        ClassName methodsEnumName = ClassName.get(packageName(), METHOD_ENUM_NAME);
         TypeName mapTypeName = ParameterizedTypeName.get(MAP, methodsEnumName, STRING);
 
         FieldSpec fieldSpec = FieldSpec.builder(mapTypeName, DEFAULTS_MAP_NAME, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL).build();
@@ -103,11 +97,11 @@ public final class ConfigBuilderGenerator extends Generator {
         MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(configClass);
 
-        methodsInfo().forEach(mi -> buildBuilder.addStatement("$T $L = $L", mi.returnTypeName(), mi.name(), convert(mi)));
+        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", METHOD_ENUM, Object.class, HashMap.class);
 
-        String parameters = methodsInfo().stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
+        methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($L.$L, $L)", METHOD_ENUM_NAME, mi.name(), convert(mi)));
 
-        classBuilder.addMethod(buildBuilder.addStatement("return new $T($L)", configClass, parameters).build());
+        classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
     }
 
     private CodeBlock convert(MethodInfo mi) {
