@@ -117,4 +117,11 @@ public class ConfigFactoryTest {
         TestConfig testConfig = ConfigFactory.builder().addSource(uri).setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
+
+    @Test public void systemProperty() {
+        System.setProperty("testit", "config");
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
+                .create(TestConfig.class);
+        assertEquals("RESOURCE", testConfig.str());
+    }
 }
