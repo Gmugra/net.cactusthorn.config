@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class ClasspathPropertiesLoaderTest {
 
-    private static final ClasspathPropertiesLoader CPP = new ClasspathPropertiesLoader();
+    private static final Loader CPP = new ClasspathPropertiesLoader();
     private static final ClassLoader CL = ClasspathPropertiesLoaderTest.class.getClassLoader();
 
     @BeforeAll static void setUpLogger() {
