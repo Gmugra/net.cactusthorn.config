@@ -10,10 +10,15 @@ public final class ApiMessages {
     private static final ResourceBundle MESSAGES = ResourceBundle.getBundle(BANDLE, Locale.getDefault());
 
     public enum Key {
-        IS_NULL, IS_EMPTY, CANT_LOAD_RESOURCE, VALUE_NOT_FOUND, LOADER_NOT_FOUND, CANT_INVOKE_CONFIGBUILDER, CANT_FIND_CONFIGBUILDER
+        IS_NULL, IS_EMPTY, CANT_LOAD_RESOURCE, VALUE_NOT_FOUND, LOADER_NOT_FOUND, CANT_INVOKE_CONFIGBUILDER, CANT_FIND_CONFIGBUILDER,
+        WRONG_SOURCE_PARAM
     }
 
     private ApiMessages() {
+    }
+
+    public static String msg(Key key) {
+        return MESSAGES.getString(key.name());
     }
 
     public static String msg(Key key, Object argument) {

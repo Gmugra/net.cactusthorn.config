@@ -103,8 +103,31 @@ There are three options for dealing with properties that are not found in source
 ### Loaders
 ...
 
+### System properties and/or environment variable in sources URIs
+
+Syntax: {*name*}
+
+e.g.
+- `file:/{config-path}/my.properties`
+- `classpath:{config-path}/my.properties#{charset}`
+
 ### Loading strategies
-...
+ConfigFactory saves the sequence in which the sources URIs were added.
+```java
+MyConfig myConfig =
+    ConfigFactory.builder()
+        .setLoadStrategy(LoadStrategy.FIRST)
+        .addSource("file:/myconfig.properties", "classpath:config/myconfig.properties")
+        .build()
+        .create(MyConfig.class);
+```
+Loading strategies:
+- **FIRST** - only the first (in the sequence of adding) existing and not empty source will be used.
+- **MERGE** - merging all properties from first added to last added.
+- Default strategy is **MERGE**
+
+Manually added properties (which added using `setSource(Map<String, String> properties)` method) are highest priority always.
+So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
 ## FYI : Eclipse
 
