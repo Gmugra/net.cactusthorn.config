@@ -3,7 +3,9 @@ package net.cactusthorn.config.tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.UUID;
@@ -17,34 +19,20 @@ public class GonfigGeneratedTest {
     private static AllCorrect config2;
 
     @BeforeAll static void setUp() {
-        // @formatter:off
-        config = new Config$$AllCorrect(
-            new StringBuilder("ABC"),
-            125d,
-            AllCorrect.FromStringEnum.BBB,
-            124,
-            Optional.empty(),
-            new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))),
-            AllCorrect.SimpleEnum.AAA,
-            new TreeSet<>(Arrays.asList(126f)),
-            "SI",
-            Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")),
-            "simpleString"
-            );
-        config2 = new Config$$AllCorrect(
-            new StringBuilder("ABC"),
-            125d,
-            AllCorrect.FromStringEnum.BBB,
-            124,
-            Optional.empty(),
-            new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))),
-            AllCorrect.SimpleEnum.AAA,
-            new TreeSet<>(Arrays.asList(126f)),
-            "SI",
-            Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")),
-            "simpleString"
-            );
-        // @formatter:on
+        Map<Config$$AllCorrect.Method, Object> v1 = new HashMap<>();
+        v1.put(Config$$AllCorrect.Method.buf, new StringBuilder("ABC"));
+        v1.put(Config$$AllCorrect.Method.ddd, 125d);
+        v1.put(Config$$AllCorrect.Method.fromStringEnum, AllCorrect.FromStringEnum.BBB);
+        v1.put(Config$$AllCorrect.Method.intValue, 124);
+        v1.put(Config$$AllCorrect.Method.list, Optional.empty());
+        v1.put(Config$$AllCorrect.Method.set, new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))));
+        v1.put(Config$$AllCorrect.Method.simpleEnum, AllCorrect.SimpleEnum.AAA);
+        v1.put(Config$$AllCorrect.Method.sorted, new TreeSet<>(Arrays.asList(126f)));
+        v1.put(Config$$AllCorrect.Method.superInterface, "SI");
+        v1.put(Config$$AllCorrect.Method.uuid, Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
+        v1.put(Config$$AllCorrect.Method.value, "simpleString");
+        config = new Config$$AllCorrect(v1);
+        config2 = new Config$$AllCorrect(v1);
     }
 
     @Test public void toStr() {
@@ -58,7 +46,7 @@ public class GonfigGeneratedTest {
     }
 
     @Test public void hash() {
-        assertNotEquals(config.hashCode(), config2.hashCode());
+        assertEquals(config.hashCode(), config2.hashCode());
     }
 
     @Test public void buf() {

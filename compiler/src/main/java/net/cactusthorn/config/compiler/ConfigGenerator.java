@@ -1,16 +1,21 @@
 package net.cactusthorn.config.compiler;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
@@ -25,7 +30,8 @@ final class ConfigGenerator extends Generator {
 
     @Override JavaFile generate() {
         TypeSpec.Builder classBuilder = classBuilder().addSuperinterface(interfaceElement().asType());
-        methodsInfo().forEach(mi -> addField(classBuilder, mi));
+        addEnum(classBuilder);
+        addValues(classBuilder);
         addConstructor(classBuilder);
         methodsInfo().forEach(mi -> addGetter(classBuilder, mi));
         addHashCode(classBuilder);
@@ -35,15 +41,35 @@ final class ConfigGenerator extends Generator {
         return JavaFile.builder(packageName(), classBuilder.build()).build();
     }
 
-    private void addField(TypeSpec.Builder classBuilder, MethodInfo methodInfo) {
-        FieldSpec fieldSpec = FieldSpec.builder(methodInfo.returnTypeName(), methodInfo.name(), Modifier.PRIVATE, Modifier.FINAL).build();
+    static final String METHOD_ENUM_NAME = "Method";
+    static final ClassName METHOD_ENUM = ClassName.get("", METHOD_ENUM_NAME);
+
+    private void addEnum(TypeSpec.Builder classBuilder) {
+        TypeSpec.Builder enumBuilder = TypeSpec.enumBuilder(METHOD_ENUM_NAME).addModifiers(Modifier.PUBLIC);
+        methodsInfo().forEach(mi -> enumBuilder.addEnumConstant(mi.name()));
+        classBuilder.addType(enumBuilder.build());
+    }
+
+    private static final ClassName CONCURRENTHASHMAP = ClassName.get(ConcurrentHashMap.class);
+    private static final ClassName OBJECT = ClassName.get(Object.class);
+    private static final TypeName VALUES_MAP = ParameterizedTypeName.get(CONCURRENTHASHMAP, METHOD_ENUM, OBJECT);
+
+    private static final String VALUES_ATTR = "VALUES";
+
+    private void addValues(TypeSpec.Builder classBuilder) {
+        FieldSpec fieldSpec = FieldSpec.builder(VALUES_MAP, VALUES_ATTR, Modifier.PRIVATE, Modifier.FINAL)
+                .initializer("new ConcurrentHashMap<>()").build();
         classBuilder.addField(fieldSpec);
     }
 
+    private static final ClassName MAP = ClassName.get(Map.class);
+    private static final TypeName VALUES_PARAM_MAP = ParameterizedTypeName.get(MAP, METHOD_ENUM, OBJECT);
+
+    private static final String VALUES_PARAM = "values";
+
     private void addConstructor(TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder();
-        methodsInfo().forEach(mi -> constructorBuilder.addParameter(mi.returnTypeName(), mi.name(), Modifier.FINAL));
-        methodsInfo().forEach(mi -> constructorBuilder.addStatement("this.$N = $N", mi.name(), mi.name()));
+        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addParameter(VALUES_PARAM_MAP, VALUES_PARAM, Modifier.FINAL)
+                .addStatement("$L.putAll($L)", VALUES_ATTR, VALUES_PARAM);
         classBuilder.addMethod(constructorBuilder.build());
     }
 
@@ -54,14 +80,14 @@ final class ConfigGenerator extends Generator {
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
             .returns(methodInfo.returnTypeName())
-            .addStatement("return $N", methodInfo.name())
+            .addStatement("return ($T)VALUES.get(Method.$L)", methodInfo.returnTypeName(), methodInfo.name())
             .build();
         // @formatter:on
         classBuilder.addMethod(getter);
     }
 
     private void addHashCode(TypeSpec.Builder classBuilder) {
-        String parameters = methodsInfo().stream().map(mi -> mi.name()).collect(Collectors.joining(", "));
+        String parameters = methodsInfo().stream().map(mi -> mi.name() + "()").collect(Collectors.joining(", "));
         // @formatter:off
         MethodSpec hashCode =
             MethodSpec.methodBuilder("hashCode")
@@ -74,7 +100,7 @@ final class ConfigGenerator extends Generator {
         classBuilder.addMethod(hashCode);
     }
 
-    private static final String BUF_NAME = "buf$$buf";
+    private static final String BUF_NAME = "buf";
 
     private void addToString(TypeSpec.Builder classBuilder) {
         // @formatter:off
@@ -84,17 +110,17 @@ final class ConfigGenerator extends Generator {
             .addAnnotation(Override.class)
             .returns(String.class)
             .addStatement("$T $L = new $T()", StringBuilder.class, BUF_NAME, StringBuilder.class)
-            .addStatement("$L.append($S)", BUF_NAME, "[");
+            .addStatement("$L.append('[')", BUF_NAME);
         // @formatter:on
         for (int i = 0; i < methodsInfo().size(); i++) {
             if (i != 0) {
                 toStringBuilder.addStatement("$L.append($S)", BUF_NAME, ", ");
             }
             MethodInfo mi = methodsInfo().get(i);
-            toStringBuilder
-                .addStatement("$L.append($S).append($S).append($T.valueOf($L))", BUF_NAME, mi.name(), "=", String.class, mi.name());
+            toStringBuilder.addStatement("$L.append($L.$L).append('=').append($T.valueOf($L.get($L.$L)))", BUF_NAME, METHOD_ENUM, mi.name(),
+                    String.class, VALUES_ATTR, METHOD_ENUM, mi.name());
         }
-        toStringBuilder.addStatement("$L.append($S)", BUF_NAME, "]");
+        toStringBuilder.addStatement("$L.append(']')", BUF_NAME);
         toStringBuilder.addStatement("return $L.toString()", BUF_NAME);
         classBuilder.addMethod(toStringBuilder.build());
     }
@@ -113,9 +139,9 @@ final class ConfigGenerator extends Generator {
         // @formatter:on
         methodsInfo().forEach(mi -> {
             if (mi.returnTypeName().isPrimitive()) {
-                equalsBuilder.addStatement("if (this.$L != other.$L()) return false", mi.name(), mi.name());
+                equalsBuilder.addStatement("if (this.$L() != other.$L()) return false", mi.name(), mi.name());
             } else {
-                equalsBuilder.addStatement("if (!this.$L.equals(other.$L())) return false", mi.name(), mi.name());
+                equalsBuilder.addStatement("if (!this.$L().equals(other.$L())) return false", mi.name(), mi.name());
             }
         });
         equalsBuilder.addStatement("return true");
