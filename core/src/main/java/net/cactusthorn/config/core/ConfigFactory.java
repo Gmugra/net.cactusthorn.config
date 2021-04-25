@@ -23,6 +23,9 @@ import java.util.stream.Stream;
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
+import net.cactusthorn.config.core.loader.SystemEnvLoader;
+import net.cactusthorn.config.core.loader.SystemPropertiesLoader;
+import net.cactusthorn.config.core.loader.UrlPropertiesLoader;
 import net.cactusthorn.config.core.util.VariablesParser;
 
 public final class ConfigFactory {
@@ -85,6 +88,9 @@ public final class ConfigFactory {
 
         private Builder() {
             loaders.add(new ClasspathPropertiesLoader());
+            loaders.add(new SystemPropertiesLoader());
+            loaders.add(new SystemEnvLoader());
+            loaders.add(new UrlPropertiesLoader());
         }
 
         public Builder setLoadStrategy(LoadStrategy strategy) {

@@ -9,6 +9,8 @@ import java.util.SortedSet;
 
 @Config @Prefix("test") public interface TestConfig {
 
+    @Disable(PREFIX) @Default("ddd") String aaa();
+
     @Key("string") String str();
 
     @Disable(PREFIX) Optional<String> ostr();

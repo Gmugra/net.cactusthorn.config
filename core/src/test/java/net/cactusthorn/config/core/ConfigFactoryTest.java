@@ -13,6 +13,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.LoadStrategy;
+
 public class ConfigFactoryTest {
 
     @BeforeAll static void setUpLogger() {
@@ -122,6 +124,31 @@ public class ConfigFactoryTest {
         System.setProperty("testit", "config");
         TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
                 .create(TestConfig.class);
+        assertEquals("RESOURCE", testConfig.str());
+    }
+
+    @Test public void merge() {
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties", "classpath:test.properties")
+                .build().create(TestConfig.class);
+        assertEquals("bbb", testConfig.aaa());
+        assertEquals("RESOURCE", testConfig.str());
+    }
+
+    @Test public void merge2() {
+        System.setProperty("aaa", "PROP");
+        TestConfig testConfig = ConfigFactory.builder()
+                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .create(TestConfig.class);
+        assertEquals("PROP", testConfig.aaa());
+        assertEquals("RESOURCE", testConfig.str());
+    }
+
+    @Test public void first() {
+        System.setProperty("aaa", "PROP");
+        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .create(TestConfig.class);
+        assertEquals("ddd", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
 }

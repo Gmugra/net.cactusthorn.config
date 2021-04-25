@@ -7,6 +7,8 @@ import java.util.SortedSet;
 
 public final class ConfigTestConfig implements TestConfig {
 
+    private final String aaa;
+
     private final String str;
     private final Optional<String> ostr;
     private final Optional<String> ostr1;
@@ -31,10 +33,11 @@ public final class ConfigTestConfig implements TestConfig {
     private final SortedSet<String> dsort;
     private final SortedSet<String> dsort2;
 
-    ConfigTestConfig(String str, Optional<String> ostr, Optional<String> ostr1, String dstr, String dstr2, List<String> list,
+    ConfigTestConfig(String aaa, String str, Optional<String> ostr, Optional<String> ostr1, String dstr, String dstr2, List<String> list,
             Optional<List<String>> olist, Optional<List<String>> olist2, List<String> dlist, List<String> dlist2, Set<String> set,
             Optional<Set<String>> oset, Optional<Set<String>> oset2, Set<String> dset, Set<String> dset2, SortedSet<String> sort,
             Optional<SortedSet<String>> osort, Optional<SortedSet<String>> osort2, SortedSet<String> dsort, SortedSet<String> dsort2) {
+        this.aaa = aaa;
         this.str = str;
         this.ostr = ostr;
         this.ostr1 = ostr1;
@@ -58,6 +61,10 @@ public final class ConfigTestConfig implements TestConfig {
         this.osort2 = osort2;
         this.dsort = dsort;
         this.dsort2 = dsort2;
+    }
+
+    @Override public String aaa() {
+        return aaa;
     }
 
     @Override public String str() {
