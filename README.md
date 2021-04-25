@@ -50,7 +50,8 @@ And all what is need to get properties values, is to get the implementation usin
 ```java
 MyConfig myConfig =
     ConfigFactory.builder()
-        .addSource("classpath:config/myconfig.properties")
+        .addSource("file:./myconfig.properties")
+        .addSource("classpath:config/myconfig.properties", "system:properties")
         .build()
         .create(MyConfig.class);
 ```
@@ -88,7 +89,7 @@ The return type of the interface methods must either:
    - Can't be used for methods with `Optional` return type.
 1. `@Disable`
    - `@Target(METHOD)`
-   - Disable interface-level features for this method. For the moment only `PREFIX`
+   - Disable interface-level features for this method.
 1. `@Split`
    - `@Target({TYPE,METHOD})`
    - Set splitter regular expression for splitting value for collections.
@@ -100,7 +101,20 @@ There are three options for dealing with properties that are not found in source
 2. If method return type is `Optional` ->  method will return `Optional.empty()`
 3. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
 
-### Loaders
+### Standard Loaders
+1. System properties: `system:properties`
+1. Environment variables: `system:env`
+1. properties file from class-path : classpath:*relative-path-to-name*.properties[#charset]
+   - Default charset (if URI fragment not present) is **UTF-8**
+   - e.g. `classpath:config/my.properties#ISO-5589-1`
+1. properties file from any URI convertable to URL: *whatever-what-supported*.properties[#charset]
+   - Default charset (if URI fragment not present) is **UTF-8**
+   - e.g. the file from the application folder: `file:./my.properties`
+   - e.g. windows file: `file:///C:/my.properties`
+   - e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.properties`
+   - e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.properties`
+
+### Loader interface
 ...
 
 ### System properties and/or environment variable in sources URIs
@@ -126,7 +140,7 @@ Loading strategies:
 - **MERGE** - merging all properties from first added to last added.
 - Default strategy is **MERGE**
 
-Manually added properties (which added using `setSource(Map<String, String> properties)` method) are highest priority always.
+Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always.
 So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
 ## FYI : Eclipse

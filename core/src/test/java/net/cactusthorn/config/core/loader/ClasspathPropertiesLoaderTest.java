@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 public class ClasspathPropertiesLoaderTest {
 
-    private static final Loader CPP = new ClasspathPropertiesLoader();
+    private static final Loader LOADER = new ClasspathPropertiesLoader();
     private static final ClassLoader CL = ClasspathPropertiesLoaderTest.class.getClassLoader();
 
     @BeforeAll static void setUpLogger() {
@@ -28,37 +28,37 @@ public class ClasspathPropertiesLoaderTest {
     }
 
     @Test public void acceptSimple() {
-        assertTrue(CPP.accept(URI.create("classpath:a.properties")));
+        assertTrue(LOADER.accept(URI.create("classpath:a.properties")));
     }
 
     @Test public void acceptFragment() {
-        assertTrue(CPP.accept(URI.create("classpath:a.properties#ISO-8859-1")));
+        assertTrue(LOADER.accept(URI.create("classpath:a.properties#ISO-8859-1")));
     }
 
     @Test public void notAcceptNotOpaque() {
-        assertFalse(CPP.accept(URI.create("classpath://a.properties#ISO-8859-1")));
+        assertFalse(LOADER.accept(URI.create("classpath://a.properties#ISO-8859-1")));
     }
 
     @Test public void notAcceptNotProperties() {
-        assertFalse(CPP.accept(URI.create("classpath:a.xml#ISO-8859-1")));
+        assertFalse(LOADER.accept(URI.create("classpath:a.xml#ISO-8859-1")));
     }
 
     @Test public void notAcceptScheme() {
-        assertFalse(CPP.accept(URI.create("mail:a.xml#ISO-8859-1")));
+        assertFalse(LOADER.accept(URI.create("mail:a.xml#ISO-8859-1")));
     }
 
     @Test public void load() throws IOException {
-        Map<String, String> properties = CPP.load(URI.create("classpath:test.properties"), CL);
+        Map<String, String> properties = LOADER.load(URI.create("classpath:test.properties"), CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
     @Test public void loadWithFragment() throws IOException {
-        Map<String, String> properties = CPP.load(URI.create("classpath:test.properties#UTF-8"), CL);
+        Map<String, String> properties = LOADER.load(URI.create("classpath:test.properties#UTF-8"), CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
     @Test public void notLoad() throws IOException {
-        Map<String, String> properties = CPP.load(URI.create("classpath:notExists.properties"), CL);
+        Map<String, String> properties = LOADER.load(URI.create("classpath:notExists.properties"), CL);
         assertTrue(properties.isEmpty());
     }
 }

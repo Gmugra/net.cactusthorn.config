@@ -10,13 +10,15 @@ import java.util.SortedSet;
 public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
 
     private enum Method {
-        str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort, osort, osort2, dsort, dsort2
+        aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort, osort, osort2, dsort,
+        dsort2
     }
 
     private static final Map<Method, String> KEYS;
     static {
         KEYS = new EnumMap<>(Method.class);
 
+        KEYS.put(Method.aaa, "aaa");
         KEYS.put(Method.str, "test.string");
         KEYS.put(Method.ostr, "ostr");
         KEYS.put(Method.ostr1, "test.ostr1");
@@ -48,6 +50,7 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
 
     @Override public ConfigTestConfig build() {
 
+        String aaa = getDefault(s -> s, KEYS.get(Method.aaa), "ddd");
         String str = get(s -> s, KEYS.get(Method.str));
         Optional<String> ostr = getOptional(s -> s, KEYS.get(Method.ostr));
         Optional<String> ostr1 = getOptional(s -> s, KEYS.get(Method.ostr1));
@@ -72,7 +75,7 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         SortedSet<String> dsort = getSortedSetDefault(s -> s, KEYS.get(Method.dsort), ",", "A,A");
         SortedSet<String> dsort2 = getSortedSetDefault(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
 
-        return new ConfigTestConfig(str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort,
-                osort, osort2, dsort, dsort2);
+        return new ConfigTestConfig(aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2,
+                sort, osort, osort2, dsort, dsort2);
     }
 }
