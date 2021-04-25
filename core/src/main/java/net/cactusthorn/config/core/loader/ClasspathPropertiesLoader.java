@@ -18,11 +18,11 @@ public class ClasspathPropertiesLoader implements Loader {
 
     private static final Logger LOG = Logger.getLogger(ClasspathPropertiesLoader.class.getName());
 
-    private static final String CLASSPATH_SCHEME = "classpath";
+    private static final String SCHEME = "classpath";
     private static final String EXTENTION = ".properties";
 
     @Override public boolean accept(URI uri) {
-        return uri.isOpaque() && CLASSPATH_SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().endsWith(EXTENTION);
+        return uri.isOpaque() && SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().endsWith(EXTENTION);
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
