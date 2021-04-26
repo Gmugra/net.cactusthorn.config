@@ -12,7 +12,7 @@ public class SystemEnvLoader implements Loader {
         return uri.isOpaque() && SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().equals(PART);
     }
 
-    public Map<String, String> load(URI uri, ClassLoader classLoader) {
+    @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
         return System.getenv();
     }
 

@@ -100,7 +100,7 @@ It is possible to get loaded propeties without define config-interface. e.g.
 ```java
 ConfigHolder holder =
     ConfigFactory.builder()
-        .addSource("file:./myconfig.properties")
+        .setLoadStrategy(LoadStrategy.FIRST)
         .addSource("file:./myconfig.properties")
         .addSource("classpath:config/myconfig.properties", "system:properties")
         .build()
@@ -131,7 +131,28 @@ There are three options for dealing with properties that are not found in source
    - e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.properties`
 
 ### Loader interface
-...
+It's possible to implement custom loaders. 
+This give posibility to load property from specific sources (e.g. Database, ZooKeeper and so on) or to support alternative configuration file formats (e.g. JSON).
+
+e.g.
+```java
+public final class SinglePropertyLoader implements Loader {
+    @Override public boolean accept(URI uri) {
+        return uri.toString().equals("single:property");
+    }
+
+    @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
+        Map<String, String> result = new HashMap<>();
+        result.put("key", "value");
+        return result;
+    }
+}
+```
+```java
+ConfigFactory factory = ConfigFactory.builder().addLoader(new SinglePropertyLoader()).addSource("single:property").build();
+```
+
+FYI: Custom loaders are highest priority always: last added -> first used.
 
 ### System properties and/or environment variable in sources URIs
 

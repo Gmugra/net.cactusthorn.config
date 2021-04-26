@@ -17,7 +17,6 @@ public interface Loader {
      * Loads the given {@link URI uri}
      *
      * @param uri the {@link URI} from where to load the properties.
-     * @throws java.io.IOException if there is some I/O error during the load.
      * @return immutable Map, can't be null.
      */
     Map<String, String> load(URI uri, ClassLoader classLoader);

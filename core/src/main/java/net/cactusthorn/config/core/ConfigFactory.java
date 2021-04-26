@@ -10,11 +10,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -64,10 +63,10 @@ public final class ConfigFactory {
     private final LoadStrategy loadStrategy;
     private final Map<String, String> props;
     private final LinkedHashSet<UriTemplate> templates;
-    private final Set<Loader> loaders;
+    private final List<Loader> loaders;
 
     private ConfigFactory(LoadStrategy loadStrategy, Map<String, String> properties, LinkedHashSet<UriTemplate> templates,
-            Set<Loader> loaders) {
+            List<Loader> loaders) {
         this.loadStrategy = loadStrategy;
         this.props = properties;
         this.templates = templates;
@@ -80,7 +79,7 @@ public final class ConfigFactory {
 
     public static final class Builder {
 
-        private final Set<Loader> loaders = new HashSet<>();
+        private final LinkedList<Loader> loaders = new LinkedList<>();
         private final LinkedHashSet<UriTemplate> templates = new LinkedHashSet<>();
 
         private Map<String, String> props = Collections.emptyMap();
@@ -91,6 +90,11 @@ public final class ConfigFactory {
             loaders.add(new SystemPropertiesLoader());
             loaders.add(new SystemEnvLoader());
             loaders.add(new UrlPropertiesLoader());
+        }
+
+        public Builder addLoader(Loader loader) {
+            loaders.addFirst(loader);
+            return this;
         }
 
         public Builder setLoadStrategy(LoadStrategy strategy) {
