@@ -33,13 +33,16 @@ public final class ConfigFactory {
         private URI uri;
         private String template;
         private boolean variable = false;
+        private boolean cachable = true;
 
-        private UriTemplate(URI uri) {
+        private UriTemplate(URI uri, boolean cachable) {
             this.uri = uri;
+            this.cachable = cachable;
         }
 
-        private UriTemplate(String template) {
+        private UriTemplate(String template, boolean cachable) {
             this.template = template;
+            this.cachable = cachable;
             if (template.indexOf("{") != -1) {
                 variable = true;
             } else {
@@ -55,10 +58,16 @@ public final class ConfigFactory {
             values.putAll((Map) System.getProperties());
             return URI.create(new VariablesParser(template).replace(values));
         }
+
+        private boolean cachable() {
+            return cachable;
+        }
     }
 
     private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, ConfigHolder.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
+
+    private static final ConcurrentHashMap<URI, Map<String, String>> CACHE = new ConcurrentHashMap<>();
 
     private final LoadStrategy loadStrategy;
     private final Map<String, String> props;
@@ -111,11 +120,19 @@ public final class ConfigFactory {
         }
 
         public Builder addSource(URI... uri) {
-            return addSources(u -> new UriTemplate(u), uri);
+            return addSources(u -> new UriTemplate(u, true), uri);
+        }
+
+        public Builder addSourceNoCache(URI... uri) {
+            return addSources(u -> new UriTemplate(u, false), uri);
         }
 
         public Builder addSource(String... uri) {
-            return addSources(u -> new UriTemplate(u), uri);
+            return addSources(u -> new UriTemplate(u, true), uri);
+        }
+
+        public Builder addSourceNoCache(String... uri) {
+            return addSources(u -> new UriTemplate(u, false), uri);
         }
 
         @SuppressWarnings({ "unchecked" }) private <T> Builder addSources(Function<T, UriTemplate> mapper, T... uri) {
@@ -178,13 +195,18 @@ public final class ConfigFactory {
     }
 
     private Map<String, String> load(ClassLoader classLoader) {
-        // TODO caching for properties by URI
         List<Map<String, String>> values = new ArrayList<>();
         for (UriTemplate template : templates) {
             URI uri = template.uri();
-            Loader load = loaders.stream().filter(l -> l.accept(uri)).findFirst()
+            Loader loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
-            values.add(load.load(uri, classLoader));
+            Map<String, String> properties;
+            if (template.cachable()) {
+                properties = CACHE.computeIfAbsent(uri, u -> loader.load(u, classLoader));
+            } else {
+                properties = loader.load(uri, classLoader);
+            }
+            values.add(properties);
         }
         return loadStrategy.combine(values);
     }
