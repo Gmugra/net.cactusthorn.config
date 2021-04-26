@@ -117,7 +117,12 @@ public final class ConfigBuilderGenerator extends Generator {
             }
             return builder.add(key(mi)).add(split(mi)).add(defaultValue).add(")").build();
         }
-        return builder.add("$T::valueOf, ", mi.returnTypeName().box()).add(key(mi)).add(defaultValue).add(")").build();
+        if (mi.returnTypeName() == TypeName.CHAR) {
+            builder.add("s -> s.charAt(0), ");
+        } else {
+            builder.add("$T::valueOf, ", mi.returnTypeName().box());
+        }
+        return builder.add(key(mi)).add(defaultValue).add(")").build();
     }
 
     protected CodeBlock.Builder findGetMethod(MethodInfo mi) {

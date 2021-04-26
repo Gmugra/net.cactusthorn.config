@@ -37,4 +37,6 @@ import java.util.*;
     StringBuilder buf();
 
     Double ddd();
+
+    char myChar();
 }

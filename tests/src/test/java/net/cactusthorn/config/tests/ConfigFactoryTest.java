@@ -28,8 +28,13 @@ public class ConfigFactoryTest {
         properties.put("superInterface", "SI");
         properties.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("value", "simpleString");
+        properties.put("myChar", "YXZ");
 
         config = ConfigFactory.create(AllCorrect.class, properties);
+    }
+
+    @Test public void myChar() {
+        assertEquals('Y', config.myChar());
     }
 
     @Test public void sorted() {

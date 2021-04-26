@@ -65,9 +65,11 @@ app.units=DAYS:HOURS;MICROSECONDS
 
 ### Supported Return types
 The return type of the interface methods must either:
-1. Be a primitive type (except `char`)
+1. Be a primitive type
 1. Have a public constructor that accepts a single `String` argument
-1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument (e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-), [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-))
+1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
+   1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
+   1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2 or 3 above. The resulting collection is read-only.
 1. Be `Optional<T>`, where T satisfies 2, 3 or 4 above
@@ -96,7 +98,7 @@ The return type of the interface methods must either:
    - If this annotation is not present, default "splitter" is comma : `,`
 
 ### Direct access to properties
-It is possible to get loaded propeties without define config-interface. e.g.
+It's possible to get loaded propeties without define config-interface.
 ```java
 ConfigHolder holder =
     ConfigFactory.builder()
@@ -149,7 +151,11 @@ public final class SinglePropertyLoader implements Loader {
 }
 ```
 ```java
-ConfigFactory factory = ConfigFactory.builder().addLoader(new SinglePropertyLoader()).addSource("single:property").build();
+ConfigFactory factory =
+    ConfigFactory.builder()
+    .addLoader(new SinglePropertyLoader())
+    .addSource("single:property")
+    .build();
 ```
 
 FYI: Custom loaders are highest priority always: last added -> first used.
@@ -179,6 +185,9 @@ Loading strategies:
 
 Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always.
 So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
+
+### Caching
+...
 
 ## FYI : Eclipse
 
