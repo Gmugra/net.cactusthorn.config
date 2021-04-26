@@ -24,6 +24,7 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
 import net.cactusthorn.config.core.ConfigBuilder;
+import net.cactusthorn.config.core.ConfigHolder;
 
 public final class ConfigBuilderGenerator extends Generator {
 
@@ -49,7 +50,6 @@ public final class ConfigBuilderGenerator extends Generator {
 
     private static final ClassName MAP = ClassName.get(Map.class);
     private static final ClassName STRING = ClassName.get(String.class);
-    private static final TypeName MAP_STRING = ParameterizedTypeName.get(MAP, STRING, STRING);
 
     private static final String KEYS_MAP_NAME = "KEYS";
 
@@ -84,11 +84,9 @@ public final class ConfigBuilderGenerator extends Generator {
         classBuilder.addStaticBlock(blockBuilder.build());
     }
 
-    private static final String PROPERTIES = "properties";
-
     private void addConstructor(TypeSpec.Builder classBuilder) {
         MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(MAP_STRING, PROPERTIES, Modifier.FINAL).addStatement("super($L)", PROPERTIES);
+                .addParameter(ConfigHolder.class, "configHolder", Modifier.FINAL).addStatement("super(configHolder)");
 
         classBuilder.addMethod(constructorBuilder.build());
     }
@@ -136,13 +134,13 @@ public final class ConfigBuilderGenerator extends Generator {
         }
         return CodeBlock.builder().add(mi.returnInterface().map(t -> {
             if (t == List.class) {
-                return mi.defaultValue().map(d -> "getListDefault").orElse("getList");
+                return "getList";
             }
             if (t == Set.class) {
-                return mi.defaultValue().map(d -> "getSetDefault").orElse("getSet");
+                return "getSet";
             }
-            return mi.defaultValue().map(d -> "getSortedSetDefault").orElse("getSortedSet");
-        }).orElse(mi.defaultValue().map(d -> "getDefault").orElse("get")));
+            return "getSortedSet";
+        }).orElse("get"));
     }
 
     private CodeBlock key(MethodInfo mi) {

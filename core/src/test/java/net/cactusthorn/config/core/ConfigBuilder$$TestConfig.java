@@ -44,36 +44,36 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         KEYS.put(Method.dsort2, "test.dsort2");
     }
 
-    public ConfigBuilder$$TestConfig(final Map<String, String> properties) {
-        super(properties);
+    public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
+        super(configHolder);
     }
 
     @Override public ConfigTestConfig build() {
 
-        String aaa = getDefault(s -> s, KEYS.get(Method.aaa), "ddd");
+        String aaa = get(s -> s, KEYS.get(Method.aaa), "ddd");
         String str = get(s -> s, KEYS.get(Method.str));
         Optional<String> ostr = getOptional(s -> s, KEYS.get(Method.ostr));
         Optional<String> ostr1 = getOptional(s -> s, KEYS.get(Method.ostr1));
-        String dstr = getDefault(s -> s, KEYS.get(Method.dstr), "A");
-        String dstr2 = getDefault(s -> s, KEYS.get(Method.dstr2), "B");
+        String dstr = get(s -> s, KEYS.get(Method.dstr), "A");
+        String dstr2 = get(s -> s, KEYS.get(Method.dstr2), "B");
 
         List<String> list = getList(s -> s, KEYS.get(Method.list), ",");
         Optional<List<String>> olist = getOptionalList(s -> s, KEYS.get(Method.olist), ",");
         Optional<List<String>> olist2 = getOptionalList(s -> s, KEYS.get(Method.olist2), ",");
-        List<String> dlist = getListDefault(s -> s, KEYS.get(Method.dlist), ",", "A,A");
-        List<String> dlist2 = getListDefault(s -> s, KEYS.get(Method.dlist2), ",", "B,B");
+        List<String> dlist = getList(s -> s, KEYS.get(Method.dlist), ",", "A,A");
+        List<String> dlist2 = getList(s -> s, KEYS.get(Method.dlist2), ",", "B,B");
 
         Set<String> set = getSet(s -> s, KEYS.get(Method.set), ",");
         Optional<Set<String>> oset = getOptionalSet(s -> s, KEYS.get(Method.oset), ",");
         Optional<Set<String>> oset2 = getOptionalSet(s -> s, KEYS.get(Method.oset2), ",");
-        Set<String> dset = getSetDefault(s -> s, KEYS.get(Method.dset), ",", "A,A");
-        Set<String> dset2 = getSetDefault(s -> s, KEYS.get(Method.dset2), ",", "B,B");
+        Set<String> dset = getSet(s -> s, KEYS.get(Method.dset), ",", "A,A");
+        Set<String> dset2 = getSet(s -> s, KEYS.get(Method.dset2), ",", "B,B");
 
         SortedSet<String> sort = getSortedSet(s -> s, KEYS.get(Method.sort), ",");
         Optional<SortedSet<String>> osort = getOptionalSortedSet(s -> s, KEYS.get(Method.osort), ",");
         Optional<SortedSet<String>> osort2 = getOptionalSortedSet(s -> s, KEYS.get(Method.osort2), ",");
-        SortedSet<String> dsort = getSortedSetDefault(s -> s, KEYS.get(Method.dsort), ",", "A,A");
-        SortedSet<String> dsort2 = getSortedSetDefault(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
+        SortedSet<String> dsort = getSortedSet(s -> s, KEYS.get(Method.dsort), ",", "A,A");
+        SortedSet<String> dsort2 = getSortedSet(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
 
         return new ConfigTestConfig(aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2,
                 sort, osort, osort2, dsort, dsort2);

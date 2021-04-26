@@ -95,6 +95,22 @@ The return type of the interface methods must either:
    - Set splitter regular expression for splitting value for collections.
    - If this annotation is not present, default "splitter" is comma : `,`
 
+### Direct access to properties
+It is possible to get loaded propeties without define config-interface. e.g.
+```java
+ConfigHolder holder =
+    ConfigFactory.builder()
+        .addSource("file:./myconfig.properties")
+        .addSource("file:./myconfig.properties")
+        .addSource("classpath:config/myconfig.properties", "system:properties")
+        .build()
+        .configHolder();
+
+Integer intValue = holder.getInt("myIntKey");
+char ch = holder.getChar("characterKey");
+Optional<List<UUID>> list = holder.getOptionalList(UUID::fromString, "listKey", ",");
+```
+
 ### Property not found : `@Default` or `Optional`
 There are three options for dealing with properties that are not found in sources:
 1. If method return type is not `Optional` and the method do not annotated with `@Default`, ConfigFactory.create will throw *RuntimeException* "property ... not found"

@@ -58,7 +58,7 @@ public final class ConfigFactory {
         }
     }
 
-    private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, Map.class);
+    private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, ConfigHolder.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
     private final LoadStrategy loadStrategy;
@@ -131,41 +131,56 @@ public final class ConfigFactory {
     }
 
     @SuppressWarnings("unchecked") public <T> T create(Class<T> sourceInterface) {
-        Map<String, String> forBuilder = new HashMap<>();
-        forBuilder.putAll(load(sourceInterface));
-        forBuilder.putAll(props); // Map with properties is always has highest priority
-        MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findBuilderConstructor);
+        ConfigHolder configHolder = configHolder(sourceInterface.getClassLoader());
         try {
-            @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(forBuilder);
+            MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findBuilderConstructor);
+            @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(configHolder);
             return (T) builder.build();
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }
     }
 
+    public ConfigHolder configHolder(ClassLoader classLoader) {
+        Map<String, String> forBuilder = new HashMap<>();
+        forBuilder.putAll(load(classLoader));
+        forBuilder.putAll(props); // Map with properties is always has highest priority
+        return new ConfigHolder(forBuilder);
+    }
+
+    public ConfigHolder configHolder() {
+        return configHolder(ConfigFactory.class.getClassLoader());
+    }
+
     public static <T> T create(Class<T> sourceInterface, Map<String, String> properties) {
+        if (sourceInterface == null) {
+            throw new IllegalArgumentException(isNull(sourceInterface));
+        }
         return ConfigFactory.builder().setSource(properties).build().create(sourceInterface);
     }
 
     public static <T> T create(Class<T> sourceInterface, URI... uri) {
+        if (sourceInterface == null) {
+            throw new IllegalArgumentException(isNull(sourceInterface));
+        }
         return ConfigFactory.builder().addSource(uri).build().create(sourceInterface);
     }
 
     public static <T> T create(Class<T> sourceInterface, String... uri) {
+        if (sourceInterface == null) {
+            throw new IllegalArgumentException(isNull(uri));
+        }
         return ConfigFactory.builder().addSource(uri).build().create(sourceInterface);
     }
 
-    private <T> Map<String, String> load(Class<T> sourceInterface) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
+    private Map<String, String> load(ClassLoader classLoader) {
         // TODO caching for properties by URI
         List<Map<String, String>> values = new ArrayList<>();
         for (UriTemplate template : templates) {
             URI uri = template.uri();
             Loader load = loaders.stream().filter(l -> l.accept(uri)).findFirst()
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
-            values.add(load.load(uri, sourceInterface.getClassLoader()));
+            values.add(load.load(uri, classLoader));
         }
         return loadStrategy.combine(values);
     }
