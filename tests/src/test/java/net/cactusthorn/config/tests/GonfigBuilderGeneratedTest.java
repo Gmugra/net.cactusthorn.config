@@ -10,6 +10,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.ConfigFactory;
+
 public class GonfigBuilderGeneratedTest {
 
     private static AllCorrect config;
@@ -28,8 +30,7 @@ public class GonfigBuilderGeneratedTest {
         properties.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("value", "simpleString");
 
-        ConfigBuilder$$AllCorrect builder = new ConfigBuilder$$AllCorrect(properties);
-        config = builder.build();
+        config = ConfigFactory.create(AllCorrect.class, properties);
     }
 
     @Test public void buf() {
