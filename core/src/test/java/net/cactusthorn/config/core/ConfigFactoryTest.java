@@ -66,12 +66,12 @@ public class ConfigFactoryTest {
 
     @Test public void classpath() {
         URI uri = URI.create("classpath:config/testconfig.properties");
-        TestConfig testConfig = ConfigFactory.create(TestConfig.class, uri);
+        TestConfig testConfig = ConfigFactory.createNoCache(TestConfig.class, uri);
         assertEquals("RESOURCE", testConfig.str());
     }
 
     @Test public void classpathFromString() {
-        TestConfig testConfig = ConfigFactory.create(TestConfig.class, "classpath:config/testconfig.properties");
+        TestConfig testConfig = ConfigFactory.createNoCache(TestConfig.class, "classpath:config/testconfig.properties");
         assertEquals("RESOURCE", testConfig.str());
     }
 
@@ -107,6 +107,14 @@ public class ConfigFactoryTest {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (URI[]) null));
     }
 
+    @Test public void stringInterfaceNull4() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.createNoCache((Class<?>) null, (String[]) null));
+    }
+
+    @Test public void stringInterfaceNull5() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.createNoCache((Class<?>) null, (URI[]) null));
+    }
+
     @Test public void stringArrNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (String[]) null));
     }
@@ -121,27 +129,27 @@ public class ConfigFactoryTest {
 
     @Test public void unknownBuilder() {
         assertThrows(IllegalArgumentException.class,
-                () -> ConfigFactory.create(ConfigFactoryTest.class, "classpath:config/testconfig.properties"));
+                () -> ConfigFactory.createNoCache(ConfigFactoryTest.class, URI.create("classpath:config/testconfig.properties")));
     }
 
     @Test public void classpathAndMap() {
         URI uri = URI.create("classpath:config/testconfig.properties");
         Map<String, String> properties = new HashMap<>();
         properties.put("test.string", "TEST");
-        TestConfig testConfig = ConfigFactory.builder().addSource(uri).setSource(properties).build().create(TestConfig.class);
+        TestConfig testConfig = ConfigFactory.builder().addSourceNoCache(uri).setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 
     @Test public void systemProperty() {
         System.setProperty("testit", "config");
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
+        TestConfig testConfig = ConfigFactory.builder().addSourceNoCache("classpath:{testit}/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
     @Test public void merge() {
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties", "classpath:test.properties")
-                .build().create(TestConfig.class);
+        TestConfig testConfig = ConfigFactory.builder()
+                .addSourceNoCache("classpath:config/testconfig.properties", "classpath:test.properties").build().create(TestConfig.class);
         assertEquals("bbb", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
@@ -149,7 +157,7 @@ public class ConfigFactoryTest {
     @Test public void merge2() {
         System.setProperty("aaa", "PROP");
         TestConfig testConfig = ConfigFactory.builder()
-                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .addSourceNoCache("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("PROP", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
@@ -158,7 +166,7 @@ public class ConfigFactoryTest {
     @Test public void first() {
         System.setProperty("aaa", "PROP");
         TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
-                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .addSourceNoCache("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("ddd", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());

@@ -189,9 +189,23 @@ public final class ConfigFactory {
 
     public static <T> T create(Class<T> sourceInterface, String... uri) {
         if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(uri));
+            throw new IllegalArgumentException(isNull(sourceInterface));
         }
         return ConfigFactory.builder().addSource(uri).build().create(sourceInterface);
+    }
+
+    public static <T> T createNoCache(Class<T> sourceInterface, URI... uri) {
+        if (sourceInterface == null) {
+            throw new IllegalArgumentException(isNull(sourceInterface));
+        }
+        return ConfigFactory.builder().addSourceNoCache(uri).build().create(sourceInterface);
+    }
+
+    public static <T> T createNoCache(Class<T> sourceInterface, String... uri) {
+        if (sourceInterface == null) {
+            throw new IllegalArgumentException(isNull(sourceInterface));
+        }
+        return ConfigFactory.builder().addSourceNoCache(uri).build().create(sourceInterface);
     }
 
     private Map<String, String> load(ClassLoader classLoader) {
