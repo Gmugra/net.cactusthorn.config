@@ -95,6 +95,18 @@ public class ConfigFactoryTest {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (String) null));
     }
 
+    @Test public void stringInterfaceNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (String) null));
+    }
+
+    @Test public void stringInterfaceNull2() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (Map<String, String>) null));
+    }
+
+    @Test public void stringInterfaceNull3() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (URI[]) null));
+    }
+
     @Test public void stringArrNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (String[]) null));
     }
