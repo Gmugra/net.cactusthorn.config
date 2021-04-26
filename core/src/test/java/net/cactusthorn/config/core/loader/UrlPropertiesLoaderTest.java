@@ -66,7 +66,6 @@ public class UrlPropertiesLoaderTest {
         }
         URI uri = file.toUri();
         uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
-        System.out.println(uri);
         Map<String, String> properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
     }
