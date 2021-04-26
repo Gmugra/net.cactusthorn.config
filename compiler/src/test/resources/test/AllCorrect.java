@@ -50,5 +50,7 @@ import java.util.*;
     Optional<Set<Float>> setOptional();
 
     Float boxedPrimitive();
+
+    char myChar();
 }
 

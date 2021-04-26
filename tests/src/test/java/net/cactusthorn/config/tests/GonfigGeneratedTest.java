@@ -31,13 +31,14 @@ public class GonfigGeneratedTest {
         v1.put(Config$$AllCorrect.Method.superInterface, "SI");
         v1.put(Config$$AllCorrect.Method.uuid, Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
         v1.put(Config$$AllCorrect.Method.value, "simpleString");
+        v1.put(Config$$AllCorrect.Method.myChar, 'Y');
         config = new Config$$AllCorrect(v1);
         config2 = new Config$$AllCorrect(v1);
     }
 
     @Test public void toStr() {
         assertEquals(
-                "[buf=ABC, ddd=125.0, fromStringEnum=BBB, intValue=124, list=Optional.empty, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
+                "[buf=ABC, ddd=125.0, fromStringEnum=BBB, intValue=124, list=Optional.empty, myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
                 config.toString());
     }
 
