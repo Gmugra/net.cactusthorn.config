@@ -67,7 +67,7 @@ public final class ConfigFactory {
     private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, ConfigHolder.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
-    private static final ConcurrentHashMap<URI, Map<String, String>> CACHE = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<URI, Map<String, String>> cache = new ConcurrentHashMap<>();
 
     private final LoadStrategy loadStrategy;
     private final Map<String, String> props;
@@ -88,6 +88,8 @@ public final class ConfigFactory {
 
     public static final class Builder {
 
+        private static final MethodType DEFAULT_CONSTRUCTOR = MethodType.methodType(void.class);
+
         private final LinkedList<Loader> loaders = new LinkedList<>();
         private final LinkedHashSet<UriTemplate> templates = new LinkedHashSet<>();
 
@@ -102,11 +104,29 @@ public final class ConfigFactory {
         }
 
         public Builder addLoader(Loader loader) {
+            if (loader == null) {
+                throw new IllegalArgumentException(isNull("loader"));
+            }
             loaders.addFirst(loader);
             return this;
         }
 
+        public Builder addLoader(Class<? extends Loader> loaderClass) {
+            if (loaderClass == null) {
+                throw new IllegalArgumentException(isNull("loaderClass"));
+            }
+            try {
+                MethodHandle methodHandle = MethodHandles.publicLookup().findConstructor(loaderClass, DEFAULT_CONSTRUCTOR);
+                return addLoader((Loader) methodHandle.invoke());
+            } catch (Throwable e) {
+                throw new IllegalArgumentException(e);
+            }
+        }
+
         public Builder setLoadStrategy(LoadStrategy strategy) {
+            if (strategy == null) {
+                throw new IllegalArgumentException(isNull("strategy"));
+            }
             loadStrategy = strategy;
             return this;
         }
@@ -173,41 +193,6 @@ public final class ConfigFactory {
         return configHolder(ConfigFactory.class.getClassLoader());
     }
 
-    public static <T> T create(Class<T> sourceInterface, Map<String, String> properties) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
-        return ConfigFactory.builder().setSource(properties).build().create(sourceInterface);
-    }
-
-    public static <T> T create(Class<T> sourceInterface, URI... uri) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
-        return ConfigFactory.builder().addSource(uri).build().create(sourceInterface);
-    }
-
-    public static <T> T create(Class<T> sourceInterface, String... uri) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
-        return ConfigFactory.builder().addSource(uri).build().create(sourceInterface);
-    }
-
-    public static <T> T createNoCache(Class<T> sourceInterface, URI... uri) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
-        return ConfigFactory.builder().addSourceNoCache(uri).build().create(sourceInterface);
-    }
-
-    public static <T> T createNoCache(Class<T> sourceInterface, String... uri) {
-        if (sourceInterface == null) {
-            throw new IllegalArgumentException(isNull(sourceInterface));
-        }
-        return ConfigFactory.builder().addSourceNoCache(uri).build().create(sourceInterface);
-    }
-
     private Map<String, String> load(ClassLoader classLoader) {
         List<Map<String, String>> values = new ArrayList<>();
         for (UriTemplate template : templates) {
@@ -216,7 +201,7 @@ public final class ConfigFactory {
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
             Map<String, String> properties;
             if (template.cachable()) {
-                properties = CACHE.computeIfAbsent(uri, u -> loader.load(u, classLoader));
+                properties = cache.computeIfAbsent(uri, u -> loader.load(u, classLoader));
             } else {
                 properties = loader.load(uri, classLoader);
             }

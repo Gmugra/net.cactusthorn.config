@@ -18,8 +18,7 @@ public class WithKeyTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("simple", "ABC");
         properties.put("abc", "XYZ");
-
-        config = ConfigFactory.create(WithKey.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(WithKey.class);
     }
 
     @Test public void simple() {

@@ -18,8 +18,7 @@ public class SplitOnMethodTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("list", "A,B,C");
         properties.put("list2", "X:Y;Z");
-
-        config = ConfigFactory.create(SplitOnMethod.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(SplitOnMethod.class);
     }
 
     @Test public void list() {

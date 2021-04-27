@@ -18,8 +18,7 @@ public class SplitOnInterfaceTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("list", "A:B;C");
         properties.put("list2", "Z,Z,Z");
-
-        config = ConfigFactory.create(SplitOnInterface.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(SplitOnInterface.class);
     }
 
     @Test public void list() {

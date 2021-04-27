@@ -19,8 +19,7 @@ public class WithPrefixTest {
         properties.put("prefix.simple", "ABC");
         properties.put("prefix.abc", "XYZ");
         properties.put("xyz", "DDD");
-
-        config = ConfigFactory.create(WithPrefix.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(WithPrefix.class);
     }
 
     @Test public void simple() {
