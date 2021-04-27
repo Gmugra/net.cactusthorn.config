@@ -29,8 +29,7 @@ public class ConfigFactoryTest {
         properties.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("value", "simpleString");
         properties.put("myChar", "YXZ");
-
-        config = ConfigFactory.create(AllCorrect.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(AllCorrect.class);
     }
 
     @Test public void myChar() {

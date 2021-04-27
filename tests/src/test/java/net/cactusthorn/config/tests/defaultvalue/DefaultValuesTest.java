@@ -2,9 +2,6 @@ package net.cactusthorn.config.tests.defaultvalue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +12,7 @@ public class DefaultValuesTest {
     private static DefaultValues config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
-        config = ConfigFactory.create(DefaultValues.class, properties);
+        config = ConfigFactory.builder().build().create(DefaultValues.class);
     }
 
     @Test public void str() {

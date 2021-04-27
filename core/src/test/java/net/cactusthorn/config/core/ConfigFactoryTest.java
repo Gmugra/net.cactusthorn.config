@@ -32,7 +32,7 @@ public class ConfigFactoryTest {
         properties.put("test.list", "A,B,C");
         properties.put("test.set", "A,B,C,C");
         properties.put("test.sort", "A,B,C,C");
-        TestConfig testConfig = ConfigFactory.create(TestConfig.class, properties);
+        TestConfig testConfig = ConfigFactory.builder().setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 
@@ -41,7 +41,8 @@ public class ConfigFactoryTest {
         properties.put("test.string", "TEST");
         properties.put("test.set", "A,B,C,C");
         properties.put("test.sort", "A,B,C,C");
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, properties));
+        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
     @Test public void setNoDefault() {
@@ -49,7 +50,8 @@ public class ConfigFactoryTest {
         properties.put("test.string", "TEST");
         properties.put("test.list", "A,B,C");
         properties.put("test.sort", "A,B,C,C");
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, properties));
+        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
     @Test public void sortNoDefault() {
@@ -57,99 +59,40 @@ public class ConfigFactoryTest {
         properties.put("test.string", "TEST");
         properties.put("test.list", "A,B,C");
         properties.put("test.set", "A,B,C,C");
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, properties));
-    }
-
-    @Test public void mapEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (Map<String, String>) null));
+        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
     @Test public void classpath() {
         URI uri = URI.create("classpath:config/testconfig.properties");
-        TestConfig testConfig = ConfigFactory.createNoCache(TestConfig.class, uri);
+        TestConfig testConfig = ConfigFactory.builder().addSource(uri).build().create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
     @Test public void classpathFromString() {
-        TestConfig testConfig = ConfigFactory.createNoCache(TestConfig.class, "classpath:config/testconfig.properties");
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
+                .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
-    }
-
-    @Test public void classNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(null, "classpath:config/testconfig.properties"));
-    }
-
-    @Test public void uriNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (URI) null));
-    }
-
-    @Test public void uriArrNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (URI[]) null));
-    }
-
-    @Test public void uriEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, new URI[0]));
-    }
-
-    @Test public void stringNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (String) null));
-    }
-
-    @Test public void stringInterfaceNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (String) null));
-    }
-
-    @Test public void stringInterfaceNull2() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (Map<String, String>) null));
-    }
-
-    @Test public void stringInterfaceNull3() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create((Class<?>) null, (URI[]) null));
-    }
-
-    @Test public void stringInterfaceNull4() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.createNoCache((Class<?>) null, (String[]) null));
-    }
-
-    @Test public void stringInterfaceNull5() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.createNoCache((Class<?>) null, (URI[]) null));
-    }
-
-    @Test public void stringArrNull() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, (String[]) null));
-    }
-
-    @Test public void stringEmpty() {
-        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.create(TestConfig.class, new String[0]));
-    }
-
-    @Test public void unknownLoader() {
-        assertThrows(UnsupportedOperationException.class, () -> ConfigFactory.create(TestConfig.class, "mailto:this"));
-    }
-
-    @Test public void unknownBuilder() {
-        assertThrows(IllegalArgumentException.class,
-                () -> ConfigFactory.createNoCache(ConfigFactoryTest.class, URI.create("classpath:config/testconfig.properties")));
     }
 
     @Test public void classpathAndMap() {
         URI uri = URI.create("classpath:config/testconfig.properties");
         Map<String, String> properties = new HashMap<>();
         properties.put("test.string", "TEST");
-        TestConfig testConfig = ConfigFactory.builder().addSourceNoCache(uri).setSource(properties).build().create(TestConfig.class);
+        TestConfig testConfig = ConfigFactory.builder().addSource(uri).setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 
     @Test public void systemProperty() {
         System.setProperty("testit", "config");
-        TestConfig testConfig = ConfigFactory.builder().addSourceNoCache("classpath:{testit}/testconfig.properties").build()
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
     @Test public void merge() {
-        TestConfig testConfig = ConfigFactory.builder()
-                .addSourceNoCache("classpath:config/testconfig.properties", "classpath:test.properties").build().create(TestConfig.class);
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties", "classpath:test.properties")
+                .build().create(TestConfig.class);
         assertEquals("bbb", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
@@ -157,7 +100,7 @@ public class ConfigFactoryTest {
     @Test public void merge2() {
         System.setProperty("aaa", "PROP");
         TestConfig testConfig = ConfigFactory.builder()
-                .addSourceNoCache("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("PROP", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
@@ -166,9 +109,43 @@ public class ConfigFactoryTest {
     @Test public void first() {
         System.setProperty("aaa", "PROP");
         TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
-                .addSourceNoCache("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
+                .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("ddd", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
+    }
+
+    @Test public void setSourceNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setSource(null));
+    }
+
+    @Test public void addSourceUriNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource((URI[]) null));
+    }
+
+    @Test public void addSourceStrNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource((String[]) null));
+    }
+
+    @Test public void addSourceUriEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource(new URI[0]));
+    }
+
+    @Test public void addSourceStrEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource(new String[0]));
+    }
+
+    @Test public void addSourceStrNullElement() {
+        ConfigFactory.builder().addSource(new String[] { null });
+    }
+
+    @Test public void loaderNotFound() {
+        ConfigFactory factory = ConfigFactory.builder().addSource("system:yyy").build();
+        assertThrows(UnsupportedOperationException.class, () -> factory.create(TestConfig.class));
+    }
+
+    @Test public void unknownBuilder() {
+        ConfigFactory factory = ConfigFactory.builder().build();
+        assertThrows(IllegalArgumentException.class, () -> factory.create(String.class));
     }
 }

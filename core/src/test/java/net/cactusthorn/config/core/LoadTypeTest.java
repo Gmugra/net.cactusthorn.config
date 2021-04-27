@@ -27,8 +27,9 @@ public class LoadTypeTest {
     }
 
     @Test public void merge() {
-        TestConfig testConfig = ConfigFactory.create(TestConfig.class, "classpath:config/testconfig.properties",
-                "classpath:config/testconfig2.properties");
+        TestConfig testConfig = ConfigFactory.builder()
+                .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties").build()
+                .create(TestConfig.class);
         assertEquals("SSSSSSSS", testConfig.dstr());
     }
 
@@ -67,5 +68,9 @@ public class LoadTypeTest {
     @Test public void firstNotExists() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
                 .addSource("classpath:config/notExists.properties").build().create(TestConfig.class));
+    }
+
+    @Test public void setLoadStrategyNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setLoadStrategy(null));
     }
 }

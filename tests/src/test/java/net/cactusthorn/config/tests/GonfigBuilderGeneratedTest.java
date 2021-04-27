@@ -31,7 +31,7 @@ public class GonfigBuilderGeneratedTest {
         properties.put("value", "simpleString");
         properties.put("myChar", "YXZ");
 
-        config = ConfigFactory.create(AllCorrect.class, properties);
+        config = ConfigFactory.builder().setSource(properties).build().create(AllCorrect.class);
     }
 
     @Test public void buf() {

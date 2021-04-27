@@ -1,6 +1,7 @@
 package net.cactusthorn.config.core.loader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -13,7 +14,7 @@ import net.cactusthorn.config.core.ConfigHolder;
 
 public class CustomLoaderTest {
 
-    static final class TestLoader implements Loader {
+    public static final class TestLoader implements Loader {
         @Override public boolean accept(URI uri) {
             return uri.toString().equals("system:properties");
         }
@@ -25,6 +26,16 @@ public class CustomLoaderTest {
         }
     }
 
+    static final class NotPublic implements Loader {
+        @Override public boolean accept(URI uri) {
+            return uri.toString().equals("system:properties");
+        }
+
+        @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
+            return null;
+        }
+    }
+
     @Test public void standard() {
         System.setProperty("testKey", "realValue");
         ConfigHolder holder = ConfigFactory.builder().addSourceNoCache("system:properties").build().configHolder();
@@ -33,7 +44,27 @@ public class CustomLoaderTest {
 
     @Test public void custom() {
         System.setProperty("testKey", "realValue");
-        ConfigHolder holder = ConfigFactory.builder().addLoader(new TestLoader()).addSourceNoCache("system:properties").build().configHolder();
+        ConfigHolder holder = ConfigFactory.builder().addLoader(new TestLoader()).addSourceNoCache("system:properties").build()
+                .configHolder();
         assertEquals("FromTestLoader", holder.getString("testKey"));
+    }
+
+    @Test public void customAsClass() {
+        System.setProperty("testKey", "realValue");
+        ConfigHolder holder = ConfigFactory.builder().addLoader(TestLoader.class).addSourceNoCache("system:properties").build()
+                .configHolder();
+        assertEquals("FromTestLoader", holder.getString("testKey"));
+    }
+
+    @Test public void cantInvoke() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addLoader(NotPublic.class));
+    }
+
+    @Test public void addLoaderNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addLoader((Loader) null));
+    }
+
+    @Test public void addLoaderClassNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addLoader((Class<? extends Loader>) null));
     }
 }
