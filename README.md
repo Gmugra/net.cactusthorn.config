@@ -119,7 +119,7 @@ There are three options for dealing with properties that are not found in source
 2. If method return type is `Optional` ->  method will return `Optional.empty()`
 3. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
 
-### Standard Loaders
+### Standard loaders
 1. System properties: `system:properties`
 1. Environment variables: `system:env`
 1. properties file from class-path : classpath:*relative-path-to-name*.properties[#charset]
@@ -127,13 +127,13 @@ There are three options for dealing with properties that are not found in source
    - e.g. `classpath:config/my.properties#ISO-5589-1`
 1. properties file from any URI convertable to URL: *whatever-what-supported*.properties[#charset]
    - Default charset (if URI fragment not present) is **UTF-8**
-   - e.g. the file from the application folder: `file:./my.properties`
-   - e.g. windows file: `file:///C:/my.properties`
+   - e.g. the file from the working directory: `file:./my.properties`
+   - e.g. Windows file: `file:///C:/my.properties`
    - e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.properties`
    - e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.properties`
 
-### Loader interface
-It's possible to implement custom loaders. 
+### Custom loaders
+It's possible to implement custom loaders using `Loader` interface.
 This give posibility to load property from specific sources (e.g. Database, ZooKeeper and so on) or to support alternative configuration file formats (e.g. JSON).
 
 e.g.
@@ -158,7 +158,7 @@ ConfigFactory factory =
     .build();
 ```
 
-FYI: Custom loaders are highest priority always: last added -> first used.
+FYI: Custom loaders always have the highest priority: last added -> first used.
 
 ### System properties and/or environment variable in sources URIs
 
@@ -167,6 +167,8 @@ Syntax: {*name*}
 e.g.
 - `file:/{config-path}/my.properties`
 - `classpath:{config-path}/my.properties#{charset}`
+
+FYI: If a system property or environment variable does not exist, an *empty string* will be used as the value.
 
 ### Loading strategies
 ConfigFactory saves the sequence in which the sources URIs were added.
@@ -187,11 +189,12 @@ Manually added properties (which added using `ConfigFactory.Builder.setSource(Ma
 So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
 ### Caching
-...
+By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
+To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`
 
 ## FYI : Eclipse
 
-It does not have annotation-processing enabled by default. To do this, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
+It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See LICENSE file included for the details.
