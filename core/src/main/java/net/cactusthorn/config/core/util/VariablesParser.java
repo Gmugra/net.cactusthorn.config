@@ -1,10 +1,8 @@
 package net.cactusthorn.config.core.util;
 
-import static java.text.CharacterIterator.DONE;
 import static net.cactusthorn.config.core.ApiMessages.*;
 import static net.cactusthorn.config.core.ApiMessages.Key.WRONG_SOURCE_PARAM;
 
-import java.text.StringCharacterIterator;
 import java.util.Map;
 
 public final class VariablesParser {
@@ -26,35 +24,30 @@ public final class VariablesParser {
         if (values == null) {
             throw new IllegalArgumentException(isNull("values"));
         }
-        StringBuilder buf = new StringBuilder();
-        StringCharacterIterator it = new StringCharacterIterator(source);
-        for (char c = it.first(); c != DONE; c = it.next()) {
-            if (c == '{') {
-                String variable = processVariable(it);
-                buf.append(values.getOrDefault(variable, ""));
-            } else {
-                buf.append(c);
-            }
-        }
-        return buf.toString();
-    }
 
-    private String processVariable(StringCharacterIterator it) {
+        StringBuilder result = new StringBuilder();
 
-        StringBuilder variable = new StringBuilder();
-
-        char c = it.next();
-        do {
-            if (c == '{') {
+        int pos = 0;
+        int start = source.indexOf('{');
+        while (start >= 0) {
+            result.append(source.substring(pos, start));
+            pos = source.indexOf('}', start + 1);
+            if (pos == -1) {
                 throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
             }
-            if (c == '}') {
-                return variable.toString().trim();
+            String variable = source.substring(start + 1, pos);
+            if (variable.indexOf('{') != -1) {
+                throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
             }
-            variable.append(c);
-            c = it.next();
-        } while (c != DONE);
-
-        throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
+            String value = values.getOrDefault(variable, "");
+            result.append(value);
+            pos++;
+            start = source.indexOf('{', pos);
+        }
+        result.append(source.substring(pos));
+        if (result.indexOf("}") != -1) {
+            throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
+        }
+        return result.toString();
     }
 }
