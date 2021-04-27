@@ -97,6 +97,23 @@ The return type of the interface methods must either:
    - Set splitter regular expression for splitting value for collections.
    - If this annotation is not present, default "splitter" is comma : `,`
 
+### Interfaces inheritance
+Interfaces inheritance is supported.
+e.g.
+```java
+interface MyRoot {
+    @Key(rootVal) String value();
+}
+```
+```java
+@Config
+interface MyConfig extends MyRoot {
+    int intValue();
+}
+```
+- There is no limit to the number and "depth" of super-interfaces.
+- Interface level annotations (e.g. `@Prefix`) on super-interfaces will be ignored.
+
 ### Direct access to properties
 It's possible to get loaded propeties without define config-interface.
 ```java
@@ -190,7 +207,7 @@ So, loaded by URIs properties merged with manually added properties, independent
 
 ### Caching
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
-To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`
+To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
 
 ## FYI : Eclipse
 
