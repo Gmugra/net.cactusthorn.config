@@ -21,7 +21,15 @@ public class VariablesParserTest {
         values.put("1bbb1", "B");
         values.put("2c2", "C");
 
-        assertEquals("aaaBcccC", new VariablesParser("a{AA}aa{1bbb1}ccc{ 2c2 }").replace(values));
+        assertEquals("aaaBcccC", new VariablesParser("a{AA}aa{1bbb1}ccc{2c2}").replace(values));
+    }
+
+    @Test public void replaceVaraibles2() {
+        Map<String, String> values = new HashMap<>();
+        values.put("1bbb1", "B");
+        values.put("2c2", "C");
+
+        assertEquals("yyBcccCxx", new VariablesParser("{AA}yy{1bbb1}ccc{2c2}xx").replace(values));
     }
 
     @Test public void sourceNull() {
@@ -41,6 +49,11 @@ public class VariablesParserTest {
 
     @Test public void wrongVarStart() {
         Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser("aaa{fff{f}").replace(Collections.emptyMap()));
+        assertEquals(msg(WRONG_SOURCE_PARAM), e.getMessage());
+    }
+
+    @Test public void wrongVarEnd() {
+        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser("aaafff}f").replace(Collections.emptyMap()));
         assertEquals(msg(WRONG_SOURCE_PARAM), e.getMessage());
     }
 
