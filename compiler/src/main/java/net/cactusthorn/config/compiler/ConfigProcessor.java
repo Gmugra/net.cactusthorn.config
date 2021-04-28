@@ -73,6 +73,7 @@ public final class ConfigProcessor extends AbstractProcessor {
             .next(InterfaceTypeValidator.class)
             .next(AbstractTypeValidator.class)
             .next(OptionalTypeValidator.class)
+            .next(ConverterValidator.class)
             .next(StringTypeValidator.class)
             .build();
         // @formatter:on

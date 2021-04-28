@@ -100,4 +100,9 @@ public class MethodValidatorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalDefaultAnnotation.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_OPTIONAL_DEFAULT));
     }
+
+    @Test public void converter() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/ConfigConverter.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
 }

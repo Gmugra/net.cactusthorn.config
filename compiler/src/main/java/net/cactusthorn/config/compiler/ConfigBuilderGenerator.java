@@ -5,12 +5,14 @@ import static net.cactusthorn.config.compiler.ConfigGenerator.METHOD_ENUM;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
@@ -95,8 +97,19 @@ public final class ConfigBuilderGenerator extends Generator {
         MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(configClass);
 
-        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", METHOD_ENUM, Object.class, HashMap.class);
+        Set<TypeMirror> converters = new HashSet<>();
 
+        methodsInfo().forEach(mi -> {
+            if (mi.returnConverter().isPresent()) {
+                TypeMirror converter = mi.returnConverter().get();
+                if (!converters.contains(converter)) {
+                    converters.add(converter);
+                    buildBuilder.addStatement("CONVERTERS.computeIfAbsent($T.class, c -> new $T())", converter, converter);
+                }
+            }
+        });
+
+        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", METHOD_ENUM, Object.class, HashMap.class);
         methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($L.$L, $L)", METHOD_ENUM_NAME, mi.name(), convert(mi)));
 
         classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
@@ -105,7 +118,10 @@ public final class ConfigBuilderGenerator extends Generator {
     private CodeBlock convert(MethodInfo mi) {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
-        if (mi.returnStringMethod().isPresent()) {
+        if (mi.returnConverter().isPresent()) {
+            builder.add("s -> convert($T.class, s), ", mi.returnConverter().get());
+            return builder.add(key(mi)).add(split(mi)).add(defaultValue).add(")").build();
+        } else if (mi.returnStringMethod().isPresent()) {
             MethodInfo.StringMethodInfo smi = mi.returnStringMethod().get();
             StringMethod sm = smi.stringMethod();
             if (sm == StringMethod.STRING) {

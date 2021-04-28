@@ -4,11 +4,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+
+import net.cactusthorn.config.core.converter.Converter;
 
 public abstract class ConfigBuilder<C> {
 
     public static final String BUILDER_CLASSNAME_PREFIX = "ConfigBuilder$$";
+
+    protected static final ConcurrentHashMap<Class<?>, Converter<?>> CONVERTERS = new ConcurrentHashMap<>();
 
     private final ConfigHolder configHolder;
 
@@ -17,6 +22,10 @@ public abstract class ConfigBuilder<C> {
     }
 
     public abstract C build();
+
+    @SuppressWarnings("unchecked") protected <T> T convert(Class<?> clazz, String value) {
+        return (T) CONVERTERS.get(clazz).convert(value);
+    }
 
     protected <T> T get(Function<String, T> convert, String key) {
         return configHolder.get(convert, key);
