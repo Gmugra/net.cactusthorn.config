@@ -209,8 +209,28 @@ So, loaded by URIs properties merged with manually added properties, independent
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
 To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
 
-## FYI : Eclipse
+### Logging
+The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
+That's because one of the requirements is that external libraries must not be used, and JUL is only option in this case.
+However, JUL is rarely chosen for productive use, so, in the application which is using this library, it need to care about to redirect JUL calls to the logging API which is using in the application.
 
+e.g., in case of [SLF4J](http://www.slf4j.org/), which is, looks like, the most popular at the moment, you need next dependency:
+```xml
+<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>jul-to-slf4j</artifactId>
+	<version>1.7.30</version>
+</dependency>
+```
+and e.g. this code somewhere at start of the application:
+```java
+// java.util.logging -> SLF4j
+org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger();
+org.slf4j.bridge.SLF4JBridgeHandler.install();
+java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
+```
+
+## FYI : Eclipse
 It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
 
 ## LICENSE
