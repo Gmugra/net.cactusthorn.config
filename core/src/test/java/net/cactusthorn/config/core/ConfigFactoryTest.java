@@ -32,6 +32,7 @@ public class ConfigFactoryTest {
         properties.put("test.list", "A,B,C");
         properties.put("test.set", "A,B,C,C");
         properties.put("test.sort", "A,B,C,C");
+        properties.put("test.url", "https://google.com");
         TestConfig testConfig = ConfigFactory.builder().setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }

@@ -1,5 +1,6 @@
 package net.cactusthorn.config.core;
 
+import java.net.URL;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -7,11 +8,13 @@ import java.util.Set;
 import java.util.List;
 import java.util.SortedSet;
 
+import net.cactusthorn.config.core.converter.URLConverter;
+
 public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
 
     private enum Method {
         aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort, osort, osort2, dsort,
-        dsort2
+        dsort2, url
     }
 
     private static final Map<Method, String> KEYS;
@@ -42,6 +45,8 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         KEYS.put(Method.osort2, "test.osort2");
         KEYS.put(Method.dsort, "test.dsort");
         KEYS.put(Method.dsort2, "test.dsort2");
+        
+        KEYS.put(Method.url, "test.url");
     }
 
     public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
@@ -49,6 +54,7 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
     }
 
     @Override public ConfigTestConfig build() {
+        CONVERTERS.computeIfAbsent(URLConverter.class, c -> new URLConverter());
 
         String aaa = get(s -> s, KEYS.get(Method.aaa), "ddd");
         String str = get(s -> s, KEYS.get(Method.str));
@@ -75,7 +81,9 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         SortedSet<String> dsort = getSortedSet(s -> s, KEYS.get(Method.dsort), ",", "A,A");
         SortedSet<String> dsort2 = getSortedSet(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
 
+        Optional<URL> url = getOptional(s -> convert(URLConverter.class, s), KEYS.get(Method.url));
+
         return new ConfigTestConfig(aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2,
-                sort, osort, osort2, dsort, dsort2);
+                sort, osort, osort2, dsort, dsort2, url);
     }
 }
