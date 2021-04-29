@@ -45,8 +45,8 @@ interface MyConfig {
     Optional<Set<TimeUnit>> units();
 }
 ```
-Based on this interface annotation-processor will generate implementation.
-And all what is need to get properties values, is to get the implementation using factory, e.g.:
+Based on this interface the annotations-processor will generate the implementation.
+And all you need to do to get property values is to get an implementation using the `ConfigFactory`, e.g.:
 ```java
 MyConfig myConfig =
     ConfigFactory.builder()
@@ -62,17 +62,6 @@ app.number=10
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
 app.units=DAYS:HOURS;MICROSECONDS 
 ```
-
-### Supported Return types
-The return type of the interface methods must either:
-1. Be a primitive type
-1. Have a public constructor that accepts a single `String` argument
-1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
-   1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
-   1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
-   1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2 or 3 above. The resulting collection is read-only.
-1. Be `Optional<T>`, where T satisfies 2, 3 or 4 above
 
 ### Annotations
 
@@ -96,6 +85,45 @@ The return type of the interface methods must either:
    - `@Target({TYPE,METHOD})`
    - Set splitter regular expression for splitting value for collections.
    - If this annotation is not present, default "splitter" is comma : `,`
+1. `@ConverterClass`
+   - `@Target(METHOD)` 
+   - apply custom converter implementation
+
+### Supported method return types
+The return type of the interface methods must either:
+1. Be a primitive type
+1. Have a public constructor that accepts a single `String` argument
+1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
+   1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
+   1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
+   1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
+1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2 or 3 above. The resulting collection is read-only.
+1. Be `Optional<T>`, where T satisfies 2, 3 or 4 above
+
+### Custom converters
+If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
+The `@ConverterClass` annotation allows to specify a customized conversion logic implementing the `Converter` interface:
+```java
+public class URLConverter implements Converter<URL> {
+    @Override public URL convert(String value) {
+        try {
+            return new URL(value);
+        } catch (MalformedURLException mue) {
+            throw new IllegalArgumentException(mue.getMessage(), mue);
+        }
+    }
+}
+```
+```java
+@Config public interface MyConfigWithConverter {
+    @ConverterClass(URLConverter.class) @Default("https://github.com") URL theUrl();
+
+    @ConverterClass(URLConverter.class) Optional<URL> mayBeUrl();
+
+    @ConverterClass(URLConverter.class) Optional<List<URL>> urls();
+}
+```
+FYI: Custom converter implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ### Interfaces inheritance
 Interfaces inheritance is supported.
@@ -114,6 +142,10 @@ interface MyConfig extends MyRoot {
 - There is no limit to the number and "depth" of super-interfaces.
 - Interface level annotations (e.g. `@Prefix`) on super-interfaces will be ignored.
 
+### The `ConfigFactory`
+The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
+Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
+
 ### Direct access to properties
 It's possible to get loaded propeties without define config-interface.
 ```java
@@ -131,10 +163,11 @@ Optional<List<UUID>> list = holder.getOptionalList(UUID::fromString, "listKey", 
 ```
 
 ### Property not found : `@Default` or `Optional`
-There are three options for dealing with properties that are not found in sources:
-1. If method return type is not `Optional` and the method do not annotated with `@Default`, ConfigFactory.create will throw *RuntimeException* "property ... not found"
-2. If method return type is `Optional` ->  method will return `Optional.empty()`
-3. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
+There are three ways for dealing with properties that are not found in sources:
+1. If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
+1. If method return type is `Optional` ->  method will return `Optional.empty()`
+1. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
+FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
 ### Standard loaders
 1. System properties: `system:properties`
@@ -151,8 +184,7 @@ There are three options for dealing with properties that are not found in source
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
-This give posibility to load property from specific sources (e.g. Database, ZooKeeper and so on) or to support alternative configuration file formats (e.g. JSON).
-
+This makes it possible to load properties from specific sources (e.g. Database, ZooKeeper and so on) or to support alternative configuration file formats (e.g. JSON).
 e.g.
 ```java
 public final class SinglePropertyLoader implements Loader {
@@ -174,8 +206,9 @@ ConfigFactory factory =
     .addSource("single:property")
     .build();
 ```
-
-FYI: Custom loaders always have the highest priority: last added -> first used.
+FYI:
+   - Custom loaders always have the highest priority: last added -> first used.
+   - Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ### System properties and/or environment variable in sources URIs
 
