@@ -52,6 +52,7 @@
         <dependency.mockito>3.6.28</dependency.mockito>
         <dependency.compile-testing>0.19</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
+        <dependency.errorprone>2.6.0</dependency.errorprone>
 
         <plugin.compiler>3.8.1</plugin.compiler>
         <plugin.jar>3.2.0</plugin.jar>
@@ -109,6 +110,12 @@
                 <groupId>com.squareup</groupId>
                 <artifactId>javapoet</artifactId>
                 <version>${dependency.javapoet}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.errorprone</groupId>
+                <artifactId>error_prone_annotations</artifactId>
+                <version>${dependency.errorprone}</version>
             </dependency>
 
             <dependency>
