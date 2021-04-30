@@ -67,6 +67,8 @@
         <plugin.release>3.0.0-M1</plugin.release>
         <plugin.flatten>1.2.5</plugin.flatten>
         <plugin.jxr>3.0.0</plugin.jxr>
+        <plugin.gpg>1.6</plugin.gpg>
+        <plugin.nexus-staging>1.6.8</plugin.nexus-staging>
 
         <plugin.checkstyle>3.1.1</plugin.checkstyle>
             <dependency.checkstyle>8.41.1</dependency.checkstyle>
@@ -264,6 +266,17 @@
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>${plugin.release}</version>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${plugin.gpg}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>${plugin.nexus-staging}</version>
                 </plugin>
 
                 <plugin>
@@ -495,6 +508,65 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+
+        <profile>
+            <id>github</id>
+
+            <distributionManagement>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub Gmugra Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/Gmugra/net.cactusthorn.config</url>
+                </repository>
+            </distributionManagement>
+
+        </profile>
+
+        <profile>
+            <id>ossrh</id>
+
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+             </distributionManagement>
+
+            <build>
+                <plugins>
+
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+
+                </plugins>
+            </build>
+
         </profile>
 
     </profiles>
