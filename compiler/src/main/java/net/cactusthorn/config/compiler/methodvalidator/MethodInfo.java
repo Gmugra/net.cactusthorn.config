@@ -74,6 +74,7 @@ public final class MethodInfo {
     private Optional<StringMethodInfo> returnStringMethod = Optional.empty();
     private Optional<Type> returnInterface = Optional.empty();
     private boolean returnOptional = false;
+    private Optional<TypeMirror> returnConverter = Optional.empty();
 
     MethodInfo(ExecutableElement methodElement) {
         annotations = new Annotations(methodElement);
@@ -96,6 +97,11 @@ public final class MethodInfo {
 
     MethodInfo withOptional() {
         returnOptional = true;
+        return this;
+    }
+
+    MethodInfo withConverter(TypeMirror converterType) {
+        returnConverter = Optional.of(converterType);
         return this;
     }
 
@@ -129,6 +135,10 @@ public final class MethodInfo {
 
     public Optional<StringMethodInfo> returnStringMethod() {
         return returnStringMethod;
+    }
+
+    public Optional<TypeMirror> returnConverter() {
+        return returnConverter;
     }
 
     public String split() {

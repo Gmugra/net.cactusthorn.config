@@ -32,8 +32,12 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
     public InterfaceTypeValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
         INTERFACES.forEach(c -> interfaces.put(processingEnv().getElementUtils().getTypeElement(c.getName()).asType(), c));
-        argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class).next(StringTypeValidator.class)
+        // @formatter:off
+        argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
+                .next(ConverterValidator.class)
+                .next(StringTypeValidator.class)
                 .build();
+        // @formatter:on
     }
 
     @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {

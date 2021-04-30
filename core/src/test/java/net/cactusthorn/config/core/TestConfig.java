@@ -2,10 +2,14 @@ package net.cactusthorn.config.core;
 
 import static net.cactusthorn.config.core.Disable.Feature.*;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+
+import net.cactusthorn.config.core.converter.ConverterClass;
+import net.cactusthorn.config.core.converter.URLConverter;
 
 @Config @Prefix("test") public interface TestConfig {
 
@@ -50,4 +54,6 @@ import java.util.SortedSet;
     @Default("A,A") SortedSet<String> dsort();
 
     @Default("B,B") SortedSet<String> dsort2();
+
+    @ConverterClass(URLConverter.class) Optional<URL> url();
 }

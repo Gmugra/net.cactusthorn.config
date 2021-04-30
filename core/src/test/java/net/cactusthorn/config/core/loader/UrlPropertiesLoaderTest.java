@@ -42,7 +42,7 @@ public class UrlPropertiesLoaderTest {
     }
 
     @Test public void notAcceptException() {
-        assertFalse(LOADER.accept(URI.create("classpath:a.xml")));
+        assertFalse(LOADER.accept(URI.create("github.com/a.properties")));
     }
 
     @Test public void notAcceptException2() {
