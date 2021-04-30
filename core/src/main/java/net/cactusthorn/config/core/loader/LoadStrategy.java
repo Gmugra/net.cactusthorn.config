@@ -1,14 +1,11 @@
 package net.cactusthorn.config.core.loader;
 
-import com.google.errorprone.annotations.Immutable;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-@Immutable
 public enum LoadStrategy {
     // @formatter:off
     FIRST(l -> l.stream().filter(m -> !m.isEmpty()).findFirst().orElse(Collections.emptyMap())),
