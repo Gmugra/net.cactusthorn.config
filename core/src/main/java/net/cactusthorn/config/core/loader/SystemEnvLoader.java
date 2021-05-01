@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SystemEnvLoader implements Loader {
+public final class SystemEnvLoader implements Loader {
 
     private static final String SCHEME = "system";
     private static final String PART = "env";
