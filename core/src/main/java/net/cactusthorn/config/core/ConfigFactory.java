@@ -7,11 +7,12 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.net.URI;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,10 +73,10 @@ public final class ConfigFactory {
     private final LoadStrategy loadStrategy;
     private final Map<String, String> props;
     private final LinkedHashSet<UriTemplate> templates;
-    private final List<Loader> loaders;
+    private final Deque<Loader> loaders;
 
     private ConfigFactory(LoadStrategy loadStrategy, Map<String, String> properties, LinkedHashSet<UriTemplate> templates,
-            List<Loader> loaders) {
+            Deque<Loader> loaders) {
         this.loadStrategy = loadStrategy;
         this.props = properties;
         this.templates = templates;
@@ -90,7 +91,7 @@ public final class ConfigFactory {
 
         private static final MethodType DEFAULT_CONSTRUCTOR = MethodType.methodType(void.class);
 
-        private final LinkedList<Loader> loaders = new LinkedList<>();
+        private final ArrayDeque<Loader> loaders = new ArrayDeque<>();
         private final LinkedHashSet<UriTemplate> templates = new LinkedHashSet<>();
 
         private Map<String, String> props = Collections.emptyMap();

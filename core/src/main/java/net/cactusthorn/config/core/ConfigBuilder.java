@@ -23,7 +23,7 @@ public abstract class ConfigBuilder<C> {
 
     public abstract C build();
 
-    @SuppressWarnings("unchecked") protected <T> T convert(Class<?> clazz, String value) {
+    @SuppressWarnings("unchecked") protected <T> T convert(Class<? extends Converter<T>> clazz, String value) {
         return (T) CONVERTERS.get(clazz).convert(value);
     }
 

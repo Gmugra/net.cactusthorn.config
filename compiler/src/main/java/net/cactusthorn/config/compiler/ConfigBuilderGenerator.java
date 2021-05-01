@@ -133,7 +133,7 @@ public final class ConfigBuilderGenerator extends Generator {
             }
             return builder.add(key(mi)).add(split(mi)).add(defaultValue).add(")").build();
         }
-        if (mi.returnTypeName() == TypeName.CHAR) {
+        if (mi.returnTypeName().equals(TypeName.CHAR)) {
             builder.add("s -> s.charAt(0), ");
         } else {
             builder.add("$T::valueOf, ", mi.returnTypeName().box());

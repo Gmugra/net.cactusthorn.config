@@ -18,7 +18,7 @@ public enum LoadStrategy {
     });
     // @formatter:on
 
-    private Function<List<Map<String, String>>, Map<String, String>> strategy;
+    private final Function<List<Map<String, String>>, Map<String, String>> strategy;
 
     LoadStrategy(Function<List<Map<String, String>>, Map<String, String>> strategy) {
         this.strategy = strategy;
