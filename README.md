@@ -3,7 +3,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-[![Build Status](https://travis-ci.com/Gmugra/net.cactusthorn.config.svg?branch=main)](https://travis-ci.com/Gmugra/net.cactusthorn.config) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![Build Status](https://travis-ci.com/Gmugra/net.cactusthorn.config.svg?branch=main)](https://travis-ci.com/Gmugra/net.cactusthorn.config) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.10)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
 
@@ -61,6 +61,44 @@ app.val=ABC
 app.number=10
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
 app.units=DAYS:HOURS;MICROSECONDS 
+```
+
+### Maven/Gradle
+
+Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config):
+
+In order to use the library in a project, it's need to add the dependency to the pom.xml:
+```xml
+<dependency>
+    <groupId>net.cactusthorn.config</groupId>
+    <artifactId>core</artifactId>
+    <version>0.10</version>
+</dependency>
+```
+It's also need to include the compiler used to convert annotated "source"-interfaces into the code:
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.8.1</version>
+    <configuration>
+         <annotationProcessorPaths>
+              <path>
+                  <groupId>net.cactusthorn.config</groupId>
+                  <artifactId>compiler</artifactId>
+                  <version>0.10</version>
+              </path>
+         </annotationProcessorPaths>
+    </configuration>
+</plugin>
+
+```
+FYI: With this configuration, Maven will output the generated code into `target/generated-sources/annotations`.
+
+Same with Gradle:
+```
+compile 'net.cactusthorn.config:core:0.10'
+annotationProcessor 'net.cactusthorn.config:compiler:0.10'
 ```
 
 ### Annotations
@@ -268,3 +306,4 @@ It does not have annotation-processing enabled by default. To get it, you must i
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See LICENSE file included for the details.
+
