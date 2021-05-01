@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.LoadStrategy;
 
-public class LoadTypeTest {
+public class LoadStrategyTest {
 
     @BeforeAll static void setUpLogger() {
         Logger rootLogger = LogManager.getLogManager().getLogger("");
@@ -72,5 +72,31 @@ public class LoadTypeTest {
 
     @Test public void setLoadStrategyNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setLoadStrategy(null));
+    }
+
+    @Test public void firstIgnoreCaseHolder() {
+        Map<String, String> manual = new HashMap<>();
+        manual.put("test.String", "STR");
+        ConfigHolder holder = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE).setSource(manual).build()
+                .configHolder();
+        assertEquals("STR", holder.getString("test.strinG"));
+    }
+
+    @Test public void firstIgnoreCase() {
+        Map<String, String> manual = new HashMap<>();
+        manual.put("test.String", "STR");
+        manual.put("TEST.LIST", "qq,ss");
+        manual.put("tEst.SET", "a,v,x");
+        manual.put("tEst.sort", "a,v,v");
+        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE).setSource(manual).build()
+                .create(TestConfig.class);
+        assertEquals("STR", testConfig.str());
+    }
+
+    @Test public void mergeIgnoreCase() {
+        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYCASEINSENSITIVE)
+                .addSource("classpath:config/testconfigIgnoreKeyCase.properties", "classpath:config/testconfig.properties").build()
+                .create(TestConfig.class);
+        assertEquals("IGNORECASE", testConfig.str());
     }
 }

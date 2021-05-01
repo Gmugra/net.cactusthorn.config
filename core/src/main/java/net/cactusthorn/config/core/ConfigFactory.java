@@ -10,7 +10,6 @@ import java.lang.invoke.MethodType;
 import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,12 +30,10 @@ public final class ConfigFactory {
     private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, ConfigHolder.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
-    private final Map<String, String> props;
     private final Loaders loaders;
 
-    private ConfigFactory(Loaders loaders, Map<String, String> properties) {
+    private ConfigFactory(Loaders loaders) {
         this.loaders = loaders;
-        this.props = properties;
     }
 
     public static Builder builder() {
@@ -124,8 +121,8 @@ public final class ConfigFactory {
         }
 
         public ConfigFactory build() {
-            Loaders allLoaders = new Loaders(loadStrategy, templates, loaders);
-            return new ConfigFactory(allLoaders, props);
+            Loaders allLoaders = new Loaders(loadStrategy, templates, loaders, props);
+            return new ConfigFactory(allLoaders);
         }
     }
 
@@ -141,10 +138,7 @@ public final class ConfigFactory {
     }
 
     public ConfigHolder configHolder(ClassLoader classLoader) {
-        Map<String, String> forBuilder = new HashMap<>();
-        forBuilder.putAll(loaders.load(classLoader));
-        forBuilder.putAll(props); // Map with properties is always has highest priority
-        return new ConfigHolder(forBuilder);
+        return new ConfigHolder(loaders.load(classLoader));
     }
 
     public ConfigHolder configHolder() {

@@ -40,7 +40,7 @@ public final class UrlPropertiesLoader implements Loader {
             Properties properties = new Properties();
             properties.load(buffer);
             @SuppressWarnings({ "unchecked", "rawtypes" }) Map<String, String> result = (Map) properties;
-            return Collections.unmodifiableMap(result);
+            return result;
         } catch (Exception e) {
             LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
