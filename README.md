@@ -271,6 +271,8 @@ MyConfig myConfig =
 Loading strategies:
 - **FIRST** - only the first (in the sequence of adding) existing and not empty source will be used.
 - **MERGE** - merging all properties from first added to last added.
+- **FIRST_KEYCASEINSENSITIVE** - same with **FIRST**, but property keys are case insensitive
+- **MERGE_KEYCASEINSENSITIVE** - same with **MERGE**, but property keys are case insensitive
 - Default strategy is **MERGE**
 
 Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always.

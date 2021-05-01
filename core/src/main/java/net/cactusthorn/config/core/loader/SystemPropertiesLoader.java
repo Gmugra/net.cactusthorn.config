@@ -1,7 +1,6 @@
 package net.cactusthorn.config.core.loader;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +14,7 @@ public final class SystemPropertiesLoader implements Loader {
     }
 
     @Override @SuppressWarnings({ "unchecked", "rawtypes" }) public Map<String, String> load(URI uri, ClassLoader classLoader) {
-        return Collections.unmodifiableMap(new HashMap<>((Map) System.getProperties()));
+        return new HashMap<>((Map) System.getProperties());
     }
 
 }

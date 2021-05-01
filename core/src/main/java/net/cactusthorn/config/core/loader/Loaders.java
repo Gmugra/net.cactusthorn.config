@@ -56,11 +56,13 @@ public final class Loaders {
     private final LoadStrategy loadStrategy;
     private final LinkedHashSet<UriTemplate> templates;
     private final Deque<Loader> loaders;
+    private final Map<String, String> properties;
 
-    public Loaders(LoadStrategy loadStrategy, LinkedHashSet<UriTemplate> templates, Deque<Loader> loaders) {
+    public Loaders(LoadStrategy loadStrategy, LinkedHashSet<UriTemplate> templates, Deque<Loader> loaders, Map<String, String> properties) {
         this.loadStrategy = loadStrategy;
         this.templates = templates;
         this.loaders = loaders;
+        this.properties = properties;
     }
 
     public Map<String, String> load(ClassLoader classLoader) {
@@ -69,14 +71,14 @@ public final class Loaders {
             URI uri = template.uri();
             Loader loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
-            Map<String, String> properties;
+            Map<String, String> uriProperties;
             if (template.cachable()) {
-                properties = cache.computeIfAbsent(uri, u -> loader.load(u, classLoader));
+                uriProperties = cache.computeIfAbsent(uri, u -> loader.load(u, classLoader));
             } else {
-                properties = loader.load(uri, classLoader);
+                uriProperties = loader.load(uri, classLoader);
             }
-            values.add(properties);
+            values.add(uriProperties);
         }
-        return loadStrategy.combine(values);
+        return loadStrategy.combine(values, properties);
     }
 }

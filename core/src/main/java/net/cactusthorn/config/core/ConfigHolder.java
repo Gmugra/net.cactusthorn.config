@@ -3,7 +3,6 @@ package net.cactusthorn.config.core;
 import static net.cactusthorn.config.core.ApiMessages.msg;
 import static net.cactusthorn.config.core.ApiMessages.Key.VALUE_NOT_FOUND;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -19,7 +18,7 @@ public final class ConfigHolder {
     private final Map<String, String> properties;
 
     ConfigHolder(Map<String, String> properties) {
-        this.properties = Collections.unmodifiableMap(properties);
+        this.properties = properties;
     }
 
     public Map<String, String> getProperties() {
