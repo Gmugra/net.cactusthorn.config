@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class UrlPropertiesLoader implements Loader {
+public final class UrlPropertiesLoader implements Loader {
 
     private static final Logger LOG = Logger.getLogger(UrlPropertiesLoader.class.getName());
 

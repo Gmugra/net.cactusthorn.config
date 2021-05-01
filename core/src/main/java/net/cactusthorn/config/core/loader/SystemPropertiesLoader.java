@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SystemPropertiesLoader implements Loader {
+public final class SystemPropertiesLoader implements Loader {
 
     private static final String SCHEME = "system";
     private static final String PART = "properties";
