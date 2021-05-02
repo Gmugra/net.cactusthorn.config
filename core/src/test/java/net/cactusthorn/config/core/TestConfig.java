@@ -2,14 +2,14 @@ package net.cactusthorn.config.core;
 
 import static net.cactusthorn.config.core.Disable.Feature.*;
 
-import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 
 import net.cactusthorn.config.core.converter.ConverterClass;
-import net.cactusthorn.config.core.converter.URLConverter;
+import net.cactusthorn.config.core.converter.DurationConverter;
 
 @Config @Prefix("test") public interface TestConfig {
 
@@ -55,5 +55,5 @@ import net.cactusthorn.config.core.converter.URLConverter;
 
     @Default("B,B") SortedSet<String> dsort2();
 
-    @ConverterClass(URLConverter.class) Optional<URL> url();
+    @ConverterClass(DurationConverter.class) Optional<Duration> duration();
 }

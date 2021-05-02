@@ -1,6 +1,6 @@
 package net.cactusthorn.config.core;
 
-import java.net.URL;
+import java.time.Duration;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -8,13 +8,14 @@ import java.util.Set;
 import java.util.List;
 import java.util.SortedSet;
 
+import net.cactusthorn.config.core.converter.DurationConverter;
 import net.cactusthorn.config.core.converter.URLConverter;
 
 public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
 
     private enum Method {
         aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort, osort, osort2, dsort,
-        dsort2, url
+        dsort2, duration
     }
 
     private static final Map<Method, String> KEYS;
@@ -46,7 +47,7 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         KEYS.put(Method.dsort, "test.dsort");
         KEYS.put(Method.dsort2, "test.dsort2");
         
-        KEYS.put(Method.url, "test.url");
+        KEYS.put(Method.duration, "test.duration");
     }
 
     public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
@@ -81,9 +82,9 @@ public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
         SortedSet<String> dsort = getSortedSet(s -> s, KEYS.get(Method.dsort), ",", "A,A");
         SortedSet<String> dsort2 = getSortedSet(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
 
-        Optional<URL> url = getOptional(s -> convert(URLConverter.class, s), KEYS.get(Method.url));
+        Optional<Duration> duration = getOptional(s -> convert(DurationConverter.class, s), KEYS.get(Method.duration));
 
         return new ConfigTestConfig(aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2,
-                sort, osort, osort2, dsort, dsort2, url);
+                sort, osort, osort2, dsort, dsort2, duration);
     }
 }
