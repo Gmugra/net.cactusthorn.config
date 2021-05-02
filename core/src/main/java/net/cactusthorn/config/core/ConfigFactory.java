@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
+import net.cactusthorn.config.core.loader.ClasspathXMLLoader;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.SystemEnvLoader;
 import net.cactusthorn.config.core.loader.SystemPropertiesLoader;
 import net.cactusthorn.config.core.loader.UrlPropertiesLoader;
+import net.cactusthorn.config.core.loader.UrlXMLLoader;
 
 public final class ConfigFactory {
 
@@ -55,6 +57,8 @@ public final class ConfigFactory {
             loaders.add(new SystemPropertiesLoader());
             loaders.add(new SystemEnvLoader());
             loaders.add(new UrlPropertiesLoader());
+            loaders.add(new ClasspathXMLLoader());
+            loaders.add(new UrlXMLLoader());
         }
 
         public Builder addLoader(Loader loader) {
