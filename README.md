@@ -50,12 +50,12 @@ And all you need to do to get property values is to get an implementation using 
 ```java
 MyConfig myConfig =
     ConfigFactory.builder()
-        .addSource("file:./myconfig.properties")
+        .addSource("file:./myconfig.xml")
         .addSource("classpath:config/myconfig.properties", "system:properties")
         .build()
         .create(MyConfig.class);
 ```
-The interface before is waiting "myconfig.properties":
+e.g. "myconfig.properties":
 ```java
 app.val=ABC
 app.number=10
@@ -219,6 +219,14 @@ FYI: The `@Default` annotation can't be used with a method that returns `Optiona
    - e.g. Windows file: `file:///C:/my.properties`
    - e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.properties`
    - e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.properties`
+1. XML file from class-path : classpath:*relative-path-to-name*.xml[#charset]
+   - XML format: [properties.dtd](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) or [OWNER](http://owner.aeonbits.org/docs/xml-support/)
+   - Default charset (if URI fragment not present) is **UTF-8**
+   - e.g. `classpath:config/my.xml#ISO-5589-1`
+1. XML file from any URI convertable to URL: *whatever-what-supported*.xml[#charset]
+   - XML format: [properties.dtd](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) or [OWNER](http://owner.aeonbits.org/docs/xml-support/)
+   - Default charset (if URI fragment not present) is **UTF-8**
+   - e.g. `file:./my.xml`
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
