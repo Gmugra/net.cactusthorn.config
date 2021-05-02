@@ -2,7 +2,12 @@ package net.cactusthorn.config.core;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Handler;
@@ -89,6 +94,26 @@ public class ConfigFactoryTest {
         TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
+    }
+
+    @Test public void userHome() throws IOException {
+        Path userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
+        Path file = userHome.resolve("standard-properties.xml");
+        try (InputStream stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
+            Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
+        }
+        ConfigHolder holder = ConfigFactory.builder().addSource("file:~/standard-properties.xml").build().configHolder();
+        assertEquals("foobar", holder.getString("server.http.hostname"));
+    }
+
+    @Test public void userHomeURI() throws IOException {
+        Path userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
+        Path file = userHome.resolve("standard-properties.xml");
+        try (InputStream stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
+            Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
+        }
+        ConfigHolder holder = ConfigFactory.builder().addSource(URI.create("file:~/standard-properties.xml")).build().configHolder();
+        assertEquals("foobar", holder.getString("server.http.hostname"));
     }
 
     @Test public void merge() {
