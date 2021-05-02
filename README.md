@@ -266,6 +266,11 @@ e.g.
 
 FYI: If a system property or environment variable does not exist, an *empty string* will be used as the value.
 
+Special use-case *user home directory*: The URIs with `file:~/` (e.g. `file:~/my.xml` or `jar:file:~/some.jar!/your.properties`) always correctly resolved to user home directory independent from OS.
+- e.g. in Windows, URI `file:~/my.xml` will be replaced to `file:///C:/Users/UerName/my.xml`.
+
+same
+
 ### Loading strategies
 ConfigFactory saves the sequence in which the sources URIs were added.
 ```java

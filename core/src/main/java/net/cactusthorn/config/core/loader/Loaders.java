@@ -23,17 +23,17 @@ public final class Loaders {
         private boolean cachable = true;
 
         public UriTemplate(URI uri, boolean cachable) {
-            this.uri = uri;
+            this.uri = replaceUserHome(uri);
             this.cachable = cachable;
         }
 
         public UriTemplate(String template, boolean cachable) {
-            this.template = template;
+            this.template = replaceUserHome(template);
             this.cachable = cachable;
             if (template.indexOf("{") != -1) {
                 variable = true;
             } else {
-                uri = URI.create(template);
+                uri = URI.create(this.template);
             }
         }
 
@@ -48,6 +48,27 @@ public final class Loaders {
 
         private boolean cachable() {
             return cachable;
+        }
+
+        private static final String USERHOME_PREFIX = "file:~/";
+
+        private URI replaceUserHome(URI u) {
+            String tmp = replaceUserHome(u.toString());
+            return URI.create(tmp);
+        }
+
+        private String replaceUserHome(String str) {
+            if (str.indexOf(USERHOME_PREFIX) == -1) {
+                return str;
+            }
+            String userHome = userHome().toString();
+            return str.replace(USERHOME_PREFIX, userHome);
+        }
+
+        private static final String USER_HOME = "user.home";
+
+        private URI userHome() {
+            return java.nio.file.Paths.get(System.getProperty(USER_HOME)).toUri();
         }
     }
 
