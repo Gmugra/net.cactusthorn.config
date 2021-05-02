@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 public class URLConverterTest {
 
-    static URLConverter converter = new URLConverter();
+    static Converter<URL> converter = new URLConverter();
 
     @Test public void correct() throws MalformedURLException {
         URL url = converter.convert("https://github.com");

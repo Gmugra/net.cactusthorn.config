@@ -142,26 +142,26 @@ The return type of the interface methods must either:
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
 The `@ConverterClass` annotation allows to specify a customized conversion logic implementing the `Converter` interface:
 ```java
-public class URLConverter implements Converter<URL> {
-    @Override public URL convert(String value) {
-        try {
-            return new URL(value);
-        } catch (MalformedURLException mue) {
-            throw new IllegalArgumentException(mue.getMessage(), mue);
-        }
+public class DurationConverter implements Converter<Duration> {
+    @Override public Duration convert(String value) {
+        ...
     }
 }
 ```
+Usage:
 ```java
 @Config public interface MyConfigWithConverter {
-    @ConverterClass(URLConverter.class) @Default("https://github.com") URL theUrl();
+    @ConverterClass(DurationConverter.class) @Default("10 millisecond") Duration theDuration();
 
-    @ConverterClass(URLConverter.class) Optional<URL> mayBeUrl();
+    @ConverterClass(DurationConverter.class) Optional<Duration> mayBeDuration();
 
-    @ConverterClass(URLConverter.class) Optional<List<URL>> urls();
+    @ConverterClass(DurationConverter.class) Optional<List<Duration>> durations();
 }
 ```
 FYI: Custom converter implementation must be stateless and must have a default(no-argument) `public` constructor.
+
+Converter implementations shipped with the library:
+1. `DurationConverter` from [OWNER](http://owner.aeonbits.org/docs/type-conversion/)
 
 ### Interfaces inheritance
 Interfaces inheritance is supported.
@@ -267,7 +267,7 @@ e.g.
 FYI: If a system property or environment variable does not exist, an *empty string* will be used as the value.
 
 Special use-case *user home directory*: The URIs with `file:~/` (e.g. `file:~/my.xml` or `jar:file:~/some.jar!/your.properties`) always correctly resolved to user home directory independent from OS.
-- e.g. in Windows, URI `file:~/my.xml` will be replaced to `file:///C:/Users/UerName/my.xml`.
+- e.g. in Windows, URI `file:~/my.xml` will be replaced to `file:///C:/Users/UserName/my.xml`.
 
 same
 

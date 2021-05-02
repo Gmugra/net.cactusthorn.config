@@ -1,6 +1,6 @@
 package net.cactusthorn.config.core;
 
-import java.net.URL;
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,13 +34,13 @@ public final class ConfigTestConfig implements TestConfig {
     private final SortedSet<String> dsort;
     private final SortedSet<String> dsort2;
 
-    private final Optional<URL> url;
+    private final Optional<Duration> duration;
 
     ConfigTestConfig(String aaa, String str, Optional<String> ostr, Optional<String> ostr1, String dstr, String dstr2, List<String> list,
             Optional<List<String>> olist, Optional<List<String>> olist2, List<String> dlist, List<String> dlist2, Set<String> set,
             Optional<Set<String>> oset, Optional<Set<String>> oset2, Set<String> dset, Set<String> dset2, SortedSet<String> sort,
             Optional<SortedSet<String>> osort, Optional<SortedSet<String>> osort2, SortedSet<String> dsort, SortedSet<String> dsort2,
-            Optional<URL> url) {
+            Optional<Duration> duration) {
         this.aaa = aaa;
         this.str = str;
         this.ostr = ostr;
@@ -66,7 +66,7 @@ public final class ConfigTestConfig implements TestConfig {
         this.dsort = dsort;
         this.dsort2 = dsort2;
 
-        this.url = url;
+        this.duration = duration;
     }
 
     @Override public String aaa() {
@@ -153,7 +153,7 @@ public final class ConfigTestConfig implements TestConfig {
         return dsort2;
     }
 
-    @Override public Optional<URL> url() {
-        return url;
+    @Override public Optional<Duration> duration() {
+        return duration;
     }
 }
