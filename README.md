@@ -135,8 +135,9 @@ The return type of the interface methods must either:
    1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
    1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2 or 3 above. The resulting collection is read-only.
-1. Be `Optional<T>`, where T satisfies 2, 3 or 4 above
+1. Be `java.net.URL` or `java.net.URI` or `java.time.Instant`
+1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
+1. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
 ### Custom converters
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.

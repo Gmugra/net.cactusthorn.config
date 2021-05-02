@@ -34,6 +34,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         INTERFACES.forEach(c -> interfaces.put(processingEnv().getElementUtils().getTypeElement(c.getName()).asType(), c));
         // @formatter:off
         argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
+                .next(DefaultConvertorValidator.class)
                 .next(ConverterValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
