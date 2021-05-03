@@ -2,8 +2,11 @@ package net.cactusthorn.config.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -26,8 +29,12 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     private static final String PROPS_DTD_URI = "http://java.sun.com/dtd/properties.dtd";
     private static final String PROPS_DTD;
     static {
-        PROPS_DTD = new BufferedReader(new InputStreamReader(XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd")))
-                .lines().collect(Collectors.joining("\n"));
+        try (InputStream is = XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+            PROPS_DTD = reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private boolean isJavaPropertiesFormat = false;
