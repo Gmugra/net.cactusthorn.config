@@ -105,4 +105,9 @@ public class MethodValidatorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/ConfigConverter.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
+
+    @Test public void defaultConverter() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/ConfigDefaultConverters.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
 }
