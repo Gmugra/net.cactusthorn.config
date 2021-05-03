@@ -86,12 +86,12 @@ public final class ConfigProcessor extends AbstractProcessor {
             for (Element element : elements) {
                 validateInterface(element);
 
-                TypeElement interfaceType = (TypeElement) element;
-                InterfaceInfo interfaceInfo =  new InterfaceInfo(interfaceType);
+                TypeElement interfaceTypeElement = (TypeElement) element;
+                InterfaceInfo interfaceInfo = new InterfaceInfo(processingEnv, interfaceTypeElement);
 
                 // @formatter:off
                 List<MethodInfo> methodsInfo =
-                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceType))
+                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceTypeElement))
                      .stream()
                      .filter(e -> !objectMethods.contains(e))
                      .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo))
@@ -101,12 +101,12 @@ public final class ConfigProcessor extends AbstractProcessor {
 
                 validateMethodExist(element, methodsInfo);
 
-                JavaFile configFile = new ConfigGenerator(interfaceType, methodsInfo).generate();
-                //System.out.println(configFile.toString());
+                JavaFile configFile = new ConfigGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+                // System.out.println(configFile.toString());
                 configFile.writeTo(processingEnv.getFiler());
 
-                JavaFile configBuilderFile = new ConfigBuilderGenerator(interfaceType, methodsInfo).generate();
-                //System.out.println(configBuilderFile.toString());
+                JavaFile configBuilderFile = new ConfigBuilderGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+                // System.out.println(configBuilderFile.toString());
                 configBuilderFile.writeTo(processingEnv.getFiler());
             }
         } catch (ProcessorException e) {

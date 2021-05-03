@@ -6,6 +6,8 @@ import java.util.*;
 
 @Config interface AllCorrect extends Super {
 
+    long serialVersionUID = 123L;
+
     enum FromStringEnum {
         AAA, BBB;
 

@@ -32,8 +32,8 @@ public final class ConfigBuilderGenerator extends Generator {
 
     private final ClassName configClass;
 
-    ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo) {
-        super(interfaceElement, methodsInfo, ConfigBuilder.BUILDER_CLASSNAME_PREFIX);
+    ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
+        super(interfaceElement, methodsInfo, ConfigBuilder.BUILDER_CLASSNAME_PREFIX, interfaceInfo);
         configClass = ClassName.get(packageName(), ConfigGenerator.CLASSNAME_PREFIX + interfaceName().simpleName());
     }
 

@@ -292,6 +292,21 @@ Loading strategies:
 Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always.
 So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
+### java.io.Serializable
+"config"-interface can extends (directly or over super-interface) `java.io.Serializable`.
+In this case generated class will also get `private static final long serialVersionUID` attribute.
+```java
+@Config 
+public interface MyConfig extends java.io.Serializable {
+    long serialVersionUID = 100L;
+
+    String val();
+}
+```
+The interface (as in the example before) can, optionally, contains `long serialVersionUID` constant.
+If the constant is present, the value will be used for the `private static final long serialVersionUID` attribute in the generated class.
+Otherwise generated class will be generated with `private static final long serialVersionUID = 0L`.
+
 ### Caching
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
 To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.

@@ -24,12 +24,13 @@ final class ConfigGenerator extends Generator {
 
     static final String CLASSNAME_PREFIX = "Config$$";
 
-    ConfigGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo) {
-        super(interfaceElement, methodsInfo, CLASSNAME_PREFIX);
+    ConfigGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
+        super(interfaceElement, methodsInfo, CLASSNAME_PREFIX, interfaceInfo);
     }
 
     @Override JavaFile generate() {
         TypeSpec.Builder classBuilder = classBuilder().addSuperinterface(interfaceElement().asType());
+        addSerialVersionUID(classBuilder);
         addEnum(classBuilder);
         addValues(classBuilder);
         addConstructor(classBuilder);
@@ -43,6 +44,14 @@ final class ConfigGenerator extends Generator {
 
     static final String METHOD_ENUM_NAME = "Method";
     static final ClassName METHOD_ENUM = ClassName.get("", METHOD_ENUM_NAME);
+
+    private void addSerialVersionUID(TypeSpec.Builder classBuilder) {
+        interfaceInfo().serialVersionUID().ifPresent(svuid -> {
+            FieldSpec fieldSpec = FieldSpec.builder(TypeName.LONG, "serialVersionUID", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                    .initializer("$LL", svuid).build();
+            classBuilder.addField(fieldSpec);
+        });
+    }
 
     private void addEnum(TypeSpec.Builder classBuilder) {
         TypeSpec.Builder enumBuilder = TypeSpec.enumBuilder(METHOD_ENUM_NAME).addModifiers(Modifier.PUBLIC);
