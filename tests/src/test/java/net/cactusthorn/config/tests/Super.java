@@ -1,6 +1,8 @@
 package net.cactusthorn.config.tests;
 
-public interface Super {
+import java.io.Serializable;
+
+public interface Super extends Serializable {
 
     String superInterface();
 }

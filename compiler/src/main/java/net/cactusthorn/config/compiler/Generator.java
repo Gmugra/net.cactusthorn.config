@@ -18,13 +18,15 @@ public abstract class Generator {
     private final String packageName;
     private final String className;
     private final List<MethodInfo> methodsInfo;
+    private final InterfaceInfo interfaceInfo;
 
-    Generator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, String classNamePrefix) {
+    Generator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, String classNamePrefix, InterfaceInfo interfaceInfo) {
         interfaceName = ClassName.get(interfaceElement);
         this.interfaceElement = interfaceElement;
         this.packageName = interfaceName.packageName();
         this.className = classNamePrefix + interfaceName.simpleName();
         this.methodsInfo = methodsInfo;
+        this.interfaceInfo = interfaceInfo;
     }
 
     abstract JavaFile generate();
@@ -51,5 +53,9 @@ public abstract class Generator {
 
     protected List<MethodInfo> methodsInfo() {
         return methodsInfo;
+    }
+
+    protected InterfaceInfo interfaceInfo() {
+        return interfaceInfo;
     }
 }
