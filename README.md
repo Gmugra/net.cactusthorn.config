@@ -3,7 +3,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.10)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.10)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
 
@@ -27,19 +27,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@Config 
+@Config
 @Prefix("app")
 interface MyConfig {
 
     @Default("unknown")
     String val();
-    
+
     @Key("number")
     int intVal();
-    
+
     @Disable(PREFIX)
     List<UUID> ids();
-    
+
     @Split("[:;]")
     @Default("DAYS:HOURS")
     Optional<Set<TimeUnit>> units();
@@ -60,7 +60,7 @@ e.g. "myconfig.properties":
 app.val=ABC
 app.number=10
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
-app.units=DAYS:HOURS;MICROSECONDS 
+app.units=DAYS:HOURS;MICROSECONDS
 ```
 
 ### Maven/Gradle
@@ -124,7 +124,7 @@ annotationProcessor 'net.cactusthorn.config:compiler:0.10'
    - Set splitter regular expression for splitting value for collections.
    - If this annotation is not present, default "splitter" is comma : `,`
 1. `@ConverterClass`
-   - `@Target(METHOD)` 
+   - `@Target(METHOD)`
    - apply custom converter implementation
 
 ### Supported method return types
@@ -270,8 +270,6 @@ FYI: If a system property or environment variable does not exist, an *empty stri
 Special use-case *user home directory*: The URIs with `file:~/` (e.g. `file:~/my.xml` or `jar:file:~/some.jar!/your.properties`) always correctly resolved to user home directory independent from OS.
 - e.g. in Windows, URI `file:~/my.xml` will be replaced to `file:///C:/Users/UserName/my.xml`.
 
-same
-
 ### Loading strategies
 ConfigFactory saves the sequence in which the sources URIs were added.
 ```java
@@ -296,7 +294,7 @@ So, loaded by URIs properties merged with manually added properties, independent
 "config"-interface can extends (directly or over super-interface) `java.io.Serializable`.
 In this case generated class will also get `private static final long serialVersionUID` attribute.
 ```java
-@Config 
+@Config
 public interface MyConfig extends java.io.Serializable {
     long serialVersionUID = 100L;
 

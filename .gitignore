@@ -8,9 +8,6 @@
 # discard ignoring GitHub settings
 !/.github/
 
-# discard ignoring Travis CI configuration
-!.travis.yml
-
 # Log file
 *.log
 
