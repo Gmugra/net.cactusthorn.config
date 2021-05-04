@@ -1,0 +1,40 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        java: [ '8', '11' ]
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: ${{ matrix.java }}
+        distribution: 'adopt'
+        architecture: x64
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-m2
+
+    - name: Build
+      run: mvn -B -V -DskipTests=true -Dmaven.javadoc.skip=true package
+
+    - name: Coveralls
+      run: mvn -B -V -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -Pcoverage verify coveralls:report
