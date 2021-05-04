@@ -37,4 +37,4 @@ jobs:
       run: mvn -B -V -DskipTests=true -Dmaven.javadoc.skip=true package
 
     - name: Coveralls
-      run: mvn -B -V -Pcoverage verify coveralls:report
+      run: mvn -B -V -DrepoToken=${{ secrets.COVERALLS_TOKEN }} -Pcoverage verify coveralls:report
