@@ -1,90 +1,58 @@
 package net.cactusthorn.config.core;
 
-import java.time.Duration;
-import java.util.EnumMap;
+import java.lang.Object;
+import java.lang.Override;
+import java.lang.String;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.List;
-import java.util.SortedSet;
-
 import net.cactusthorn.config.core.converter.DurationConverter;
-import net.cactusthorn.config.core.converter.URLConverter;
 
-public class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
+public final class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
+  private static final Map<String, String> DEFAULTS;
 
-    private enum Method {
-        aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2, sort, osort, osort2, dsort,
-        dsort2, duration
-    }
+  static {
+    DEFAULTS = new HashMap<>();
+    DEFAULTS.put("aaa", "ddd");
+    DEFAULTS.put("dlist", "A,A");
+    DEFAULTS.put("dlist2", "B,B");
+    DEFAULTS.put("dset", "A,A");
+    DEFAULTS.put("dset2", "B,B");
+    DEFAULTS.put("dsort", "A,A");
+    DEFAULTS.put("dsort2", "B,B");
+    DEFAULTS.put("dstr", "A");
+    DEFAULTS.put("dstr2", "B");
+  }
 
-    private static final Map<Method, String> KEYS;
-    static {
-        KEYS = new EnumMap<>(Method.class);
+  public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
+    super(configHolder);
+  }
 
-        KEYS.put(Method.aaa, "aaa");
-        KEYS.put(Method.str, "test.string");
-        KEYS.put(Method.ostr, "ostr");
-        KEYS.put(Method.ostr1, "test.ostr1");
-        KEYS.put(Method.dstr, "test.dstr");
-        KEYS.put(Method.dstr2, "test.dstr2");
-
-        KEYS.put(Method.list, "test.list");
-        KEYS.put(Method.olist, "test.olist");
-        KEYS.put(Method.olist2, "test.olist2");
-        KEYS.put(Method.dlist, "test.dlist");
-        KEYS.put(Method.dlist2, "test.dlist2");
-
-        KEYS.put(Method.set, "test.set");
-        KEYS.put(Method.oset, "test.oset");
-        KEYS.put(Method.oset2, "test.oset2");
-        KEYS.put(Method.dset, "test.dset");
-        KEYS.put(Method.dset2, "test.dset2");
-
-        KEYS.put(Method.sort, "test.sort");
-        KEYS.put(Method.osort, "test.osort");
-        KEYS.put(Method.osort2, "test.osort2");
-        KEYS.put(Method.dsort, "test.dsort");
-        KEYS.put(Method.dsort2, "test.dsort2");
-        
-        KEYS.put(Method.duration, "test.duration");
-    }
-
-    public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
-        super(configHolder);
-    }
-
-    @Override public ConfigTestConfig build() {
-        CONVERTERS.computeIfAbsent(URLConverter.class, c -> new URLConverter());
-
-        String aaa = get(s -> s, KEYS.get(Method.aaa), "ddd");
-        String str = get(s -> s, KEYS.get(Method.str));
-        Optional<String> ostr = getOptional(s -> s, KEYS.get(Method.ostr));
-        Optional<String> ostr1 = getOptional(s -> s, KEYS.get(Method.ostr1));
-        String dstr = get(s -> s, KEYS.get(Method.dstr), "A");
-        String dstr2 = get(s -> s, KEYS.get(Method.dstr2), "B");
-
-        List<String> list = getList(s -> s, KEYS.get(Method.list), ",");
-        Optional<List<String>> olist = getOptionalList(s -> s, KEYS.get(Method.olist), ",");
-        Optional<List<String>> olist2 = getOptionalList(s -> s, KEYS.get(Method.olist2), ",");
-        List<String> dlist = getList(s -> s, KEYS.get(Method.dlist), ",", "A,A");
-        List<String> dlist2 = getList(s -> s, KEYS.get(Method.dlist2), ",", "B,B");
-
-        Set<String> set = getSet(s -> s, KEYS.get(Method.set), ",");
-        Optional<Set<String>> oset = getOptionalSet(s -> s, KEYS.get(Method.oset), ",");
-        Optional<Set<String>> oset2 = getOptionalSet(s -> s, KEYS.get(Method.oset2), ",");
-        Set<String> dset = getSet(s -> s, KEYS.get(Method.dset), ",", "A,A");
-        Set<String> dset2 = getSet(s -> s, KEYS.get(Method.dset2), ",", "B,B");
-
-        SortedSet<String> sort = getSortedSet(s -> s, KEYS.get(Method.sort), ",");
-        Optional<SortedSet<String>> osort = getOptionalSortedSet(s -> s, KEYS.get(Method.osort), ",");
-        Optional<SortedSet<String>> osort2 = getOptionalSortedSet(s -> s, KEYS.get(Method.osort2), ",");
-        SortedSet<String> dsort = getSortedSet(s -> s, KEYS.get(Method.dsort), ",", "A,A");
-        SortedSet<String> dsort2 = getSortedSet(s -> s, KEYS.get(Method.dsort2), ",", "B,B");
-
-        Optional<Duration> duration = getOptional(s -> convert(DurationConverter.class, s), KEYS.get(Method.duration));
-
-        return new ConfigTestConfig(aaa, str, ostr, ostr1, dstr, dstr2, list, olist, olist2, dlist, dlist2, set, oset, oset2, dset, dset2,
-                sort, osort, osort2, dsort, dsort2, duration);
-    }
+  @Override
+  public ConfigTestConfig build() {
+    CONVERTERS.computeIfAbsent(DurationConverter.class, c -> new DurationConverter());
+    Map<String,Object> values = new HashMap<>();
+    values.put("aaa", get(s -> s, "aaa", DEFAULTS.get("aaa")));
+    values.put("test.dlist", getList(s -> s, "test.dlist", ",", DEFAULTS.get("dlist")));
+    values.put("test.dlist2", getList(s -> s, "test.dlist2", ",", DEFAULTS.get("dlist2")));
+    values.put("test.dset", getSet(s -> s, "test.dset", ",", DEFAULTS.get("dset")));
+    values.put("test.dset2", getSet(s -> s, "test.dset2", ",", DEFAULTS.get("dset2")));
+    values.put("test.dsort", getSortedSet(s -> s, "test.dsort", ",", DEFAULTS.get("dsort")));
+    values.put("test.dsort2", getSortedSet(s -> s, "test.dsort2", ",", DEFAULTS.get("dsort2")));
+    values.put("test.dstr", get(s -> s, "test.dstr", DEFAULTS.get("dstr")));
+    values.put("test.dstr2", get(s -> s, "test.dstr2", DEFAULTS.get("dstr2")));
+    values.put("test.duration", getOptional(s -> convert(DurationConverter.class, s), "test.duration"));
+    values.put("test.list", getList(s -> s, "test.list", ","));
+    values.put("test.olist", getOptionalList(s -> s, "test.olist", ","));
+    values.put("test.olist2", getOptionalList(s -> s, "test.olist2", ","));
+    values.put("test.oset", getOptionalSet(s -> s, "test.oset", ","));
+    values.put("test.oset2", getOptionalSet(s -> s, "test.oset2", ","));
+    values.put("test.osort", getOptionalSortedSet(s -> s, "test.osort", ","));
+    values.put("test.osort2", getOptionalSortedSet(s -> s, "test.osort2", ","));
+    values.put("ostr", getOptional(s -> s, "ostr"));
+    values.put("test.ostr1", getOptional(s -> s, "test.ostr1"));
+    values.put("test.set", getSet(s -> s, "test.set", ","));
+    values.put("test.sort", getSortedSet(s -> s, "test.sort", ","));
+    values.put("test.string", get(s -> s, "test.string"));
+    return new ConfigTestConfig(values);
+  }
 }

@@ -19,19 +19,19 @@ public class GonfigGeneratedTest {
     private static AllCorrect config2;
 
     @BeforeAll static void setUp() {
-        Map<Config$$AllCorrect.Method, Object> v1 = new HashMap<>();
-        v1.put(Config$$AllCorrect.Method.buf, new StringBuilder("ABC"));
-        v1.put(Config$$AllCorrect.Method.ddd, 125d);
-        v1.put(Config$$AllCorrect.Method.fromStringEnum, AllCorrect.FromStringEnum.BBB);
-        v1.put(Config$$AllCorrect.Method.intValue, 124);
-        v1.put(Config$$AllCorrect.Method.list, Optional.empty());
-        v1.put(Config$$AllCorrect.Method.set, new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))));
-        v1.put(Config$$AllCorrect.Method.simpleEnum, AllCorrect.SimpleEnum.AAA);
-        v1.put(Config$$AllCorrect.Method.sorted, new TreeSet<>(Arrays.asList(126f)));
-        v1.put(Config$$AllCorrect.Method.superInterface, "SI");
-        v1.put(Config$$AllCorrect.Method.uuid, Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
-        v1.put(Config$$AllCorrect.Method.value, "simpleString");
-        v1.put(Config$$AllCorrect.Method.myChar, 'Y');
+        Map<String, Object> v1 = new HashMap<>();
+        v1.put("buf", new StringBuilder("ABC"));
+        v1.put("ddd", 125d);
+        v1.put("fromStringEnum", AllCorrect.FromStringEnum.BBB);
+        v1.put("intValue", 124);
+        v1.put("list", Optional.empty());
+        v1.put("set", new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))));
+        v1.put("simpleEnum", AllCorrect.SimpleEnum.AAA);
+        v1.put("sorted", new TreeSet<>(Arrays.asList(126f)));
+        v1.put("superInterface", "SI");
+        v1.put("uuid", Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
+        v1.put("value", "simpleString");
+        v1.put("myChar", 'Y');
         config = new Config$$AllCorrect(v1);
         config2 = new Config$$AllCorrect(v1);
     }
