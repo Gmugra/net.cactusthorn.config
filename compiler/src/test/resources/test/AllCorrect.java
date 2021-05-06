@@ -1,5 +1,6 @@
 package test;
 
+import net.cactusthorn.config.core.Accessible;
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.Prefix;
 import net.cactusthorn.config.core.Disable;
@@ -10,7 +11,7 @@ import net.cactusthorn.config.core.Default;
 import java.io.Serializable;
 import java.util.*;
 
-@Config @Prefix("prefix") @Split(";") interface AllCorrect extends Serializable {
+@Config @Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
 
     long serialVersionUID = 100L;
 

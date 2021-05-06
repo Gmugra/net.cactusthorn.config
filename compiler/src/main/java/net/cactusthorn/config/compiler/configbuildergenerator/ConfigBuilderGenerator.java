@@ -33,7 +33,6 @@ public final class ConfigBuilderGenerator extends Generator {
         TypeName superClass = ParameterizedTypeName.get(CONFIG_BUILDER, configClass);
         TypeSpec.Builder classBuilder = classBuilder().superclass(superClass);
         PARTS.forEach(p -> p.addPart(classBuilder, this));
-
         return JavaFile.builder(packageName(), classBuilder.build()).build();
     }
 }

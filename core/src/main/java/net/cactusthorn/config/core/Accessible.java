@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface Accessible {
-    Set<String> getKeys();
+    Set<String> keys();
 
-    Object getProperty(String key);
+    Object get(String key);
 
-    Map<String, Object> getProperties();
+    Map<String, Object> asMap();
 }
