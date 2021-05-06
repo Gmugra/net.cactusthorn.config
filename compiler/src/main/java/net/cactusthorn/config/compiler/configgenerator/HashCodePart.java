@@ -6,14 +6,14 @@ import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec.Builder;
+import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 
 final class HashCodePart implements GeneratorPart {
 
-    @Override public void addPart(Builder classBuilder, Generator generator) {
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         String parameters = generator.methodsInfo().stream().map(mi -> mi.name() + "()").collect(Collectors.joining(", "));
         // @formatter:off
         MethodSpec hashCode =

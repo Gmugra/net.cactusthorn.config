@@ -5,7 +5,6 @@ import javax.lang.model.element.Modifier;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
-import com.squareup.javapoet.TypeSpec.Builder;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
@@ -13,7 +12,7 @@ import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 
 final class GettersPart implements GeneratorPart {
 
-    @Override public void addPart(Builder classBuilder, Generator generator) {
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         generator.methodsInfo().forEach(mi -> addGetter(classBuilder, mi));
     }
 

@@ -4,14 +4,14 @@ import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeSpec.Builder;
+import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 
 final class EqualsPart implements GeneratorPart {
 
-    @Override public void addPart(Builder classBuilder, Generator generator) {
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         // @formatter:off
         MethodSpec.Builder equalsBuilder =
             MethodSpec.methodBuilder("equals")

@@ -12,7 +12,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec.Builder;
+import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
@@ -22,7 +22,7 @@ import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
 
 public class BuildPart implements GeneratorPart {
 
-    @Override public void addPart(Builder classBuilder, Generator generator) {
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         ClassName configClass = ClassName.get(generator.packageName(),
                 ConfigGenerator.CLASSNAME_PREFIX + generator.interfaceName().simpleName());
 
