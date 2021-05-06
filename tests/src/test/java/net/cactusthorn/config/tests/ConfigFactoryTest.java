@@ -1,6 +1,7 @@
 package net.cactusthorn.config.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,5 +42,20 @@ public class ConfigFactoryTest {
         Iterator<Float> it = config.sorted().iterator();
         assertEquals(126f, it.next());
         assertEquals(300f, it.next());
+    }
+
+    @Test public void accessibleKeys() {
+        assertEquals(12, config.keys().size());
+        assertThrows(UnsupportedOperationException.class, () -> config.keys().clear());
+    }
+
+    @Test public void accessibleGet() {
+        assertEquals("simpleString", config.get("value"));
+    }
+
+    @Test public void accessibleAsMap() {
+        assertEquals(12, config.asMap().size());
+        assertEquals("simpleString", config.asMap().get("value"));
+        assertThrows(UnsupportedOperationException.class, () -> config.asMap().clear());
     }
 }

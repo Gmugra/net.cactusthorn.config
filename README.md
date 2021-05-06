@@ -308,6 +308,17 @@ The interface (as in the example before) can, optionally, contains `long serialV
 If the constant is present, the value will be used for the `private static final long serialVersionUID` attribute in the generated class.
 Otherwise generated class will be generated with `private static final long serialVersionUID = 0L`.
 
+### net.cactusthorn.config.core.Accessible
+"config"-interface can extends (directly or over super-interface) `net.cactusthorn.config.core.Accessible`.
+In this case generated class will also get methods for this interface:
+```java
+    Set<String> keys();
+
+    Object get(String key);
+
+    Map<String, Object> asMap();
+```
+
 ## Miscellaneous
 
 ### Caching
