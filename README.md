@@ -12,60 +12,10 @@ The inspiring idea for the project comes from [OWNER](https://github.com/lviggia
 1. Required at least Java 8, as result it support "more fresh" language features e.g. `java.util.Optional`
 1. There is not goal, to provide *all* features of *OWNER*
 
-### Basic usage
+## Basics
 
-To access properties you need to define a convenient Java interface, e.g. :
-```java
-package my.superapp;
-
-import static net.cactusthorn.config.core.Disable.Feature.*
-import net.cactusthorn.config.core.*
-
-import java.util.concurrent.TimeUnit;
-import java.util.Set;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-@Config
-@Prefix("app")
-interface MyConfig {
-
-    @Default("unknown")
-    String val();
-
-    @Key("number")
-    int intVal();
-
-    @Disable(PREFIX)
-    List<UUID> ids();
-
-    @Split("[:;]")
-    @Default("DAYS:HOURS")
-    Optional<Set<TimeUnit>> units();
-}
-```
-Based on this interface the annotations-processor will generate the implementation.
-And all you need to do to get property values is to get an implementation using the `ConfigFactory`, e.g.:
-```java
-MyConfig myConfig =
-    ConfigFactory.builder()
-        .addSource("file:./myconfig.xml")
-        .addSource("classpath:config/myconfig.properties", "system:properties")
-        .build()
-        .create(MyConfig.class);
-```
-e.g. "myconfig.properties":
-```java
-app.val=ABC
-app.number=10
-ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
-app.units=DAYS:HOURS;MICROSECONDS
-```
-
-### Maven/Gradle
-
-Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config):
+### Installing
+Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config).
 
 In order to use the library in a project, it's need to add the dependency to the pom.xml:
 ```xml
@@ -91,7 +41,6 @@ It's also need to include the compiler used to convert annotated "source"-interf
          </annotationProcessorPaths>
     </configuration>
 </plugin>
-
 ```
 FYI: With this configuration, Maven will output the generated code into `target/generated-sources/annotations`.
 
@@ -99,6 +48,56 @@ Same with Gradle:
 ```
 compile 'net.cactusthorn.config:core:0.10'
 annotationProcessor 'net.cactusthorn.config:compiler:0.10'
+```
+
+### Basic usage
+
+To access properties you need to define a convenient Java interface, e.g. :
+```java
+package my.superapp;
+
+import static net.cactusthorn.config.core.Disable.Feature.*
+import net.cactusthorn.config.core.*
+
+import java.util.concurrent.TimeUnit;
+import java.util.Set;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Config
+@Prefix("app")
+interface MyConfig {
+
+    @Default("unknown") String val();
+
+    @Key("number") int intVal();
+
+    @Disable(PREFIX) Optional<List<UUID>> ids();
+
+    @Split("[:;]") @Default("DAYS:HOURS") Set<TimeUnit> units();
+}
+```
+- An interface must be annotated with `@Config`.
+- An interface must contain at least one method declaration (but methods decalaration can be also in super interface(s)).
+- All methods must be without parameters
+
+Based on this interface the annotations-processor will generate the implementation.
+And all you need to do to get property values is to get an implementation using the `ConfigFactory`, e.g.:
+```java
+MyConfig myConfig =
+    ConfigFactory.builder()
+        .addSource("file:./myconfig.xml")
+        .addSource("classpath:config/myconfig.properties", "system:properties")
+        .build()
+        .create(MyConfig.class);
+```
+e.g. "myconfig.properties":
+```java
+app.val=ABC
+app.number=10
+ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
+app.units=DAYS:HOURS;MICROSECONDS
 ```
 
 ### Annotations
@@ -126,6 +125,36 @@ annotationProcessor 'net.cactusthorn.config:compiler:0.10'
 1. `@ConverterClass`
    - `@Target(METHOD)`
    - apply custom converter implementation
+
+### Direct access to properties
+It's possible to get loaded propeties without define config-interface.
+```java
+ConfigHolder holder =
+    ConfigFactory.builder()
+        .setLoadStrategy(LoadStrategy.FIRST)
+        .addSource("file:./myconfig.properties")
+        .addSource("classpath:config/myconfig.properties", "system:properties")
+        .build()
+        .configHolder();
+
+String val = holder.get(Function.identity(), "app.val", "unknown");
+int intVal = holder.getInt("app.number");
+Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
+```
+
+### Property not found : `@Default` or `Optional`
+There are three ways for dealing with properties that are not found in sources:
+1. If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
+1. If method return type is `Optional` ->  method will return `Optional.empty()`
+1. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
+FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
+
+### The `ConfigFactory`
+The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
+Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
+
+## Type conversion
 
 ### Supported method return types
 The return type of the interface methods must either:
@@ -164,49 +193,7 @@ FYI: Custom converter implementation must be stateless and must have a default(n
 Converter implementations shipped with the library:
 1. `DurationConverter` from [OWNER](http://owner.aeonbits.org/docs/type-conversion/)
 
-### Interfaces inheritance
-Interfaces inheritance is supported.
-e.g.
-```java
-interface MyRoot {
-    @Key(rootVal) String value();
-}
-```
-```java
-@Config
-interface MyConfig extends MyRoot {
-    int intValue();
-}
-```
-- There is no limit to the number and "depth" of super-interfaces.
-- Interface level annotations (e.g. `@Prefix`) on super-interfaces will be ignored.
-
-### The `ConfigFactory`
-The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
-Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
-
-### Direct access to properties
-It's possible to get loaded propeties without define config-interface.
-```java
-ConfigHolder holder =
-    ConfigFactory.builder()
-        .setLoadStrategy(LoadStrategy.FIRST)
-        .addSource("file:./myconfig.properties")
-        .addSource("classpath:config/myconfig.properties", "system:properties")
-        .build()
-        .configHolder();
-
-Integer intValue = holder.getInt("myIntKey");
-char ch = holder.getChar("characterKey");
-Optional<List<UUID>> list = holder.getOptionalList(UUID::fromString, "listKey", ",");
-```
-
-### Property not found : `@Default` or `Optional`
-There are three ways for dealing with properties that are not found in sources:
-1. If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
-1. If method return type is `Optional` ->  method will return `Optional.empty()`
-1. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
-FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
+## Loaders
 
 ### Standard loaders
 1. System properties: `system:properties`
@@ -249,7 +236,7 @@ public final class SinglePropertyLoader implements Loader {
 ```java
 ConfigFactory factory =
     ConfigFactory.builder()
-    .addLoader(new SinglePropertyLoader())
+    .addLoader(SinglePropertyLoader.class)
     .addSource("single:property")
     .build();
 ```
@@ -257,10 +244,8 @@ FYI:
    - Custom loaders always have the highest priority: last added -> first used.
    - Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
-### System properties and/or environment variable in sources URIs
-
+### System properties and/or environment variables in sources URIs
 Syntax: {*name*}
-
 e.g.
 - `file:/{config-path}/my.properties`
 - `classpath:{config-path}/my.properties#{charset}`
@@ -287,8 +272,26 @@ Loading strategies:
 - **MERGE_KEYCASEINSENSITIVE** - same with **MERGE**, but property keys are case insensitive
 - Default strategy is **MERGE**
 
-Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always.
-So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
+Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
+
+## Interfaces
+
+### Interfaces inheritance
+Interfaces inheritance is supported.
+e.g.
+```java
+interface MyRoot {
+    @Key(rootVal) String value();
+}
+```
+```java
+@Config
+interface MyConfig extends MyRoot {
+    int intValue();
+}
+```
+- There is no limit to the number and "depth" of super-interfaces.
+- Interface level annotations (e.g. `@Prefix`) on super-interfaces will be ignored.
 
 ### java.io.Serializable
 "config"-interface can extends (directly or over super-interface) `java.io.Serializable`.
@@ -305,9 +308,10 @@ The interface (as in the example before) can, optionally, contains `long serialV
 If the constant is present, the value will be used for the `private static final long serialVersionUID` attribute in the generated class.
 Otherwise generated class will be generated with `private static final long serialVersionUID = 0L`.
 
+## Miscellaneous
+
 ### Caching
-By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
-To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
+By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
