@@ -4,6 +4,7 @@ import static net.cactusthorn.config.core.ApiMessages.msg;
 import static net.cactusthorn.config.core.ApiMessages.Key.LOADER_NOT_FOUND;
 
 import java.net.URI;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -23,13 +24,11 @@ public final class Loaders {
         private boolean cachable = true;
 
         public UriTemplate(URI uri, boolean cachable) {
-            this.uri = replaceUserHome(uri);
-            this.cachable = cachable;
+            this.uri = replace(uri, cachable);
         }
 
         public UriTemplate(String template, boolean cachable) {
-            this.template = replaceUserHome(template);
-            this.cachable = cachable;
+            this.template = replace(template, cachable);
             if (template.indexOf("{") != -1) {
                 variable = true;
             } else {
@@ -37,7 +36,7 @@ public final class Loaders {
             }
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" }) private URI uri() {
+        @SuppressWarnings({ "rawtypes", "unchecked" }) URI uri() {
             if (!variable) {
                 return uri;
             }
@@ -46,29 +45,33 @@ public final class Loaders {
             return URI.create(new VariablesParser(template).replace(values));
         }
 
-        private boolean cachable() {
+        boolean cachable() {
             return cachable;
         }
 
         private static final String USERHOME_PREFIX = "file:~/";
 
-        private URI replaceUserHome(URI u) {
-            String tmp = replaceUserHome(u.toString());
+        private URI replace(URI u, boolean cache) {
+            String tmp = replace(u.toString(), cache);
             return URI.create(tmp);
         }
 
-        private String replaceUserHome(String str) {
-            if (str.indexOf(USERHOME_PREFIX) == -1) {
-                return str;
-            }
-            String userHome = userHome().toString();
-            return str.replace(USERHOME_PREFIX, userHome);
-        }
-
+        private static final String NOCACHE = "nocache:";
         private static final String USER_HOME = "user.home";
 
-        private URI userHome() {
-            return java.nio.file.Paths.get(System.getProperty(USER_HOME)).toUri();
+        private String replace(String str, boolean cache) {
+            String result = str;
+            if (result.indexOf(NOCACHE) == 0) {
+                this.cachable = false;
+                result = result.substring(NOCACHE.length());
+            } else {
+                this.cachable = cache;
+            }
+            if (result.indexOf(USERHOME_PREFIX) == -1) {
+                return result;
+            }
+            String userHome = Paths.get(System.getProperty(USER_HOME)).toUri().toString();
+            return result.replace(USERHOME_PREFIX, userHome);
         }
     }
 

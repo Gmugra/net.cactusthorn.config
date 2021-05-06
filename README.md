@@ -324,6 +324,11 @@ In this case generated class will also get methods for this interface:
 ### Caching
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
 
+Alternative, it's possible to use URI-prefix `nocache:` this also will switch off caching for the URI.
+e.g.
+`nocache:system:properties`
+`nocache:file:~/my.properties`
+
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
 That's because one of the requirements is that external libraries must not be used, and JUL is only option in this case.
