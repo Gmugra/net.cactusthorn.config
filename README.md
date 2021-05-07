@@ -7,10 +7,11 @@ The Java library with the goal of minimizing the code required to handle applica
 
 ## Motivation
 
-The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's future is "gray", because it not actually maintened anymore. So, this project is providing similar with *OWNER* API, but
-1. Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing)
-1. Required at least Java 8, as result it support "more fresh" language features e.g. `java.util.Optional`
-1. There is not goal, to provide *all* features of *OWNER*
+The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it has problems: it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
+
+So, this project is providing library with similar with *OWNER* API, but
+* Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
+* Required at least Java 8, as result it support "more fresh" language features e.g. `java.util.Optional`, `java.time.*`.
 
 ## Basics
 
@@ -168,30 +169,44 @@ The return type of the interface methods must either:
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
 1. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
+### `java.time.Instant` format
+The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)
+e.g. `2011-12-03T10:15:30Z`
+
+### `java.time.Duration` formats
+1. Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
+1.  "unit strings" format: 
+    1. Bare numbers are taken to be in milliseconds: `10`
+    1. Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
+    1. The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
+       - `ns`, `nano`, `nanos`, `nanosecond`, `nanoseconds`
+       - `us`, `µs`, `micro`, `micros`, `microsecond`, `microseconds`
+       - `ms`, `milli`, `millis`, `millisecond`, `milliseconds`
+       - `s`, `second`, `seconds`
+       - `m`, `minute`, `minutes`
+       - `h`, `hour`, `hours`
+       - `d`, `day`, `days`
+
 ### Custom converters
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
-The `@ConverterClass` annotation allows to specify a customized conversion logic implementing the `Converter` interface:
 ```java
-public class DurationConverter implements Converter<Duration> {
-    @Override public Duration convert(String value) {
+public class MyClassConverter implements Converter<MyClass> {
+    @Override public MyClass convert(String value) {
         ...
     }
 }
 ```
-Usage:
+The `@ConverterClass` annotation allows to specify the `Converter`-implementation for the config-interface method:
 ```java
 @Config public interface MyConfigWithConverter {
-    @ConverterClass(DurationConverter.class) @Default("10 millisecond") Duration theDuration();
+    @ConverterClass(MyClassConverter.class) @Default("some super default value") MyClass theValue();
 
-    @ConverterClass(DurationConverter.class) Optional<Duration> mayBeDuration();
+    @ConverterClass(MyClassConverter.class) Optional<MyClass> mayBeValue();
 
-    @ConverterClass(DurationConverter.class) Optional<List<Duration>> durations();
+    @ConverterClass(MyClassConverter.class) Optional<List<MyClass>> values();
 }
 ```
-FYI: Custom converter implementation must be stateless and must have a default(no-argument) `public` constructor.
-
-Converter implementations shipped with the library:
-1. `DurationConverter` from [OWNER](http://owner.aeonbits.org/docs/type-conversion/)
+FYI: `Converter`-implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ## Loaders
 
@@ -293,7 +308,7 @@ interface MyConfig extends MyRoot {
 - There is no limit to the number and "depth" of super-interfaces.
 - Interface level annotations (e.g. `@Prefix`) on super-interfaces will be ignored.
 
-### java.io.Serializable
+### `java.io.Serializable`
 "config"-interface can extends (directly or over super-interface) `java.io.Serializable`.
 In this case generated class will also get `private static final long serialVersionUID` attribute.
 ```java
@@ -308,7 +323,7 @@ The interface (as in the example before) can, optionally, contains `long serialV
 If the constant is present, the value will be used for the `private static final long serialVersionUID` attribute in the generated class.
 Otherwise generated class will be generated with `private static final long serialVersionUID = 0L`.
 
-### net.cactusthorn.config.core.Accessible
+### `net.cactusthorn.config.core.Accessible`
 "config"-interface can extends (directly or over super-interface) `net.cactusthorn.config.core.Accessible`.
 In this case generated class will also get methods for this interface:
 ```java
