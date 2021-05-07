@@ -48,17 +48,20 @@ public class VariablesParserTest {
     }
 
     @Test public void wrongVarStart() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser("aaa{fff{f}").replace(Collections.emptyMap()));
-        assertEquals(msg(WRONG_SOURCE_PARAM), e.getMessage());
+        String template = "a{a}a{fff{f}";
+        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser(template).replace(Collections.emptyMap()));
+        assertEquals(msg(WRONG_SOURCE_PARAM, 9, template), e.getMessage());
     }
 
     @Test public void wrongVarEnd() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser("aaafff}f").replace(Collections.emptyMap()));
-        assertEquals(msg(WRONG_SOURCE_PARAM), e.getMessage());
+        String template = "aa{a}fff}f";
+        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser(template).replace(Collections.emptyMap()));
+        assertEquals(msg(WRONG_SOURCE_PARAM, template, 8), e.getMessage());
     }
 
     @Test public void wrongVarNoEnd() {
-        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser("aaa{fff").replace(Collections.emptyMap()));
-        assertEquals(msg(WRONG_SOURCE_PARAM), e.getMessage());
+        String template = "a{a}aa{a}dd{fff";
+        Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser(template).replace(Collections.emptyMap()));
+        assertEquals(msg(WRONG_SOURCE_PARAM, 11, template), e.getMessage());
     }
 }
