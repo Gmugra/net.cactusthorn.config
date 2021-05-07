@@ -6,6 +6,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import net.cactusthorn.config.core.converter.URLConverter;
 import net.cactusthorn.config.core.converter.DurationConverter;
 import net.cactusthorn.config.core.converter.InstantConverter;
 import net.cactusthorn.config.core.converter.PathConverter;
+import net.cactusthorn.config.core.converter.PeriodConverter;
 
 public class DefaultConvertorValidator extends MethodValidatorAncestor {
 
@@ -34,6 +36,7 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS.put(Instant.class, InstantConverter.class.getName());
         CONVERTERS.put(Path.class, PathConverter.class.getName());
         CONVERTERS.put(Duration.class, DurationConverter.class.getName());
+        CONVERTERS.put(Period.class, PeriodConverter.class.getName());
     }
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();
