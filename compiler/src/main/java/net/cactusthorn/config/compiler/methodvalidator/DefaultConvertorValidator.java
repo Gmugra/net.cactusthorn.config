@@ -3,6 +3,8 @@ package net.cactusthorn.config.compiler.methodvalidator;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,9 @@ import javax.lang.model.type.TypeMirror;
 import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.core.converter.URIConverter;
 import net.cactusthorn.config.core.converter.URLConverter;
+import net.cactusthorn.config.core.converter.DurationConverter;
 import net.cactusthorn.config.core.converter.InstantConverter;
+import net.cactusthorn.config.core.converter.PathConverter;
 
 public class DefaultConvertorValidator extends MethodValidatorAncestor {
 
@@ -28,6 +32,8 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS.put(URL.class, URLConverter.class.getName());
         CONVERTERS.put(URI.class, URIConverter.class.getName());
         CONVERTERS.put(Instant.class, InstantConverter.class.getName());
+        CONVERTERS.put(Path.class, PathConverter.class.getName());
+        CONVERTERS.put(Duration.class, DurationConverter.class.getName());
     }
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();

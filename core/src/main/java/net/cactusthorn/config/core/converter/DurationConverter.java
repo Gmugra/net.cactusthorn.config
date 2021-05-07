@@ -1,5 +1,8 @@
 package net.cactusthorn.config.core.converter;
 
+import static net.cactusthorn.config.core.ApiMessages.*;
+import static net.cactusthorn.config.core.ApiMessages.Key.*;
+
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
@@ -69,11 +72,11 @@ public class DurationConverter implements Converter<Duration> {
         String unitString = originalUnitString;
 
         if (numberString.length() == 0) {
-            throw new IllegalArgumentException(String.format("No number in duration value '%s'", input));
+            throw new IllegalArgumentException(msg(DURATION_NO_NUMBER, input));
         }
 
         if (unitString.length() > 2 && !unitString.endsWith("s")) {
-            unitString = unitString + "s";
+            unitString = unitString + 's';
         }
 
         ChronoUnit units;
@@ -113,22 +116,23 @@ public class DurationConverter implements Converter<Duration> {
             units = ChronoUnit.DAYS;
             break;
         default:
-            throw new IllegalArgumentException(
-                    String.format("Could not parse time unit '%s' (try ns, us, ms, s, m, h, d)", originalUnitString));
+            throw new IllegalArgumentException(msg(DURATION_WRONG_TIME_UNIT, originalUnitString));
         }
 
         return Duration.of(Long.parseLong(numberString), units);
     }
 
     /**
-     * Splits a string into a numeric part and a character part. The input string should conform to the format
-     * <code>[numeric_part][char_part]</code> with an optional whitespace between the two parts.
+     * Splits a string into a numeric part and a character part. The input string
+     * should conform to the format <code>[numeric_part][char_part]</code> with an
+     * optional whitespace between the two parts.
      *
-     * The <code>char_part</code> should only contain letters as defined by {@link Character#isLetter(char)} while
-     * the <code>numeric_part</code> will be parsed regardless of content.
+     * The <code>char_part</code> should only contain letters as defined by
+     * {@link Character#isLetter(char)} while the <code>numeric_part</code> will be
+     * parsed regardless of content.
      *
-     * Any whitespace will be trimmed from the beginning and end of both parts, however, the <code>numeric_part</code>
-     * can contain whitespaces within it.
+     * Any whitespace will be trimmed from the beginning and end of both parts,
+     * however, the <code>numeric_part</code> can contain whitespaces within it.
      *
      * @param input the string to split.
      *

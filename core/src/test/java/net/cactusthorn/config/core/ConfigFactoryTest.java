@@ -141,6 +141,12 @@ public class ConfigFactoryTest {
         assertEquals("RESOURCE", testConfig.str());
     }
 
+    @Test public void customConverter() {
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
+            .create(TestConfig.class);
+        assertEquals("test::default", testConfig.testconverter());
+    }
+
     @Test public void setSourceNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setSource(null));
     }

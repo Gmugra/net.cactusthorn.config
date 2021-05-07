@@ -14,10 +14,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-public final class ConfigTestConfig implements TestConfig {
+public final class Config_TestConfig implements TestConfig {
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
-  ConfigTestConfig(final Map<String, Object> values) {
+  Config_TestConfig(final Map<String, Object> values) {
     VALUES.putAll(values);
   }
 
@@ -150,9 +150,14 @@ public final class ConfigTestConfig implements TestConfig {
   }
 
   @Override
+  public String testconverter() {
+    return (String)VALUES.get("test.testconverter");
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(aaa(), dlist(), dlist2(), dset(), dset2(), dsort(), dsort2(), dstr(), dstr2(), duration(), list(), olist(),
-            olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str());
+            olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str(), testconverter());
   }
 
   @Override
@@ -202,6 +207,8 @@ public final class ConfigTestConfig implements TestConfig {
     buf.append("sort").append('=').append(String.valueOf(VALUES.get("test.sort")));
     buf.append(", ");
     buf.append("str").append('=').append(String.valueOf(VALUES.get("test.string")));
+    buf.append(", ");
+    buf.append("testconverter").append('=').append(String.valueOf(VALUES.get("test.testconverter")));
     buf.append(']');
     return buf.toString();
   }
@@ -209,8 +216,8 @@ public final class ConfigTestConfig implements TestConfig {
   @Override
   public boolean equals(Object o) {
     if (o == this) return true;
-    if (!(o instanceof ConfigTestConfig)) return false;
-    ConfigTestConfig other = (ConfigTestConfig) o;
+    if (!(o instanceof Config_TestConfig)) return false;
+    Config_TestConfig other = (Config_TestConfig) o;
     if (!this.aaa().equals(other.aaa())) return false;
     if (!this.dlist().equals(other.dlist())) return false;
     if (!this.dlist2().equals(other.dlist2())) return false;
@@ -233,6 +240,7 @@ public final class ConfigTestConfig implements TestConfig {
     if (!this.set().equals(other.set())) return false;
     if (!this.sort().equals(other.sort())) return false;
     if (!this.str().equals(other.str())) return false;
+    if (!this.testconverter().equals(other.testconverter())) return false;
     return true;
   }
 }

@@ -11,7 +11,8 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public abstract class ConfigBuilder<C> {
 
-    public static final String BUILDER_CLASSNAME_PREFIX = "ConfigBuilder$$";
+    public static final String CONFIG_CLASSNAME_PREFIX = "Config_";
+    public static final String BUILDER_CLASSNAME_PREFIX = "ConfigBuilder_";
 
     protected static final ConcurrentHashMap<Class<?>, Converter<?>> CONVERTERS = new ConcurrentHashMap<>();
 

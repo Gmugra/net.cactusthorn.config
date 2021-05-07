@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import net.cactusthorn.config.core.converter.ConverterClass;
-import net.cactusthorn.config.core.converter.DurationConverter;
+import net.cactusthorn.config.core.converter.ToTestConverter;
 
 @Config @Prefix("test") public interface TestConfig {
 
@@ -55,5 +55,7 @@ import net.cactusthorn.config.core.converter.DurationConverter;
 
     @Default("B,B") SortedSet<String> dsort2();
 
-    @ConverterClass(DurationConverter.class) Optional<Duration> duration();
+    Optional<Duration> duration();
+
+    @ConverterClass(ToTestConverter.class) @Default("default") String testconverter();
 }
