@@ -165,7 +165,7 @@ The return type of the interface methods must either:
    1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
    1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be `java.net.URL` or `java.net.URI` or `java.time.Instant`
+1. Be `java.net.URL`, `java.net.URI`, `java.time.Instant`, `java.time.Duration`, `java.time.Period`, `java.nio.file.Path`
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
 1. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
@@ -186,6 +186,17 @@ e.g. `2011-12-03T10:15:30Z`
        - `m`, `minute`, `minutes`
        - `h`, `hour`, `hours`
        - `d`, `day`, `days`
+
+### `java.time.Period` formats
+1. Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Period](https://docs.oracle.com/javase/8/docs/api/java/time/Period.html#parse-java.lang.CharSequence-). e.g. `P1Y2M3W4D`
+1.  "unit strings" format: 
+    1. Bare numbers are taken to be in days: `10`
+    1. Strings are parsed as a number plus an optional unit string: `10y`, `10 days`
+    1. The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
+       - `d`, `day`, `days`
+       - `w`, `week`, `weeks`
+       - `m`, `mo`, `month`, `months`
+       - `y`, `year`, `years`
 
 ### Custom converters
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.

@@ -14,7 +14,6 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.InterfaceInfo;
-import net.cactusthorn.config.compiler.configgenerator.ConfigGenerator;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.core.ConfigBuilder;
 
@@ -29,7 +28,7 @@ public final class ConfigBuilderGenerator extends Generator {
     private static final ClassName CONFIG_BUILDER = ClassName.get(ConfigBuilder.class);
 
     @Override public JavaFile generate() {
-        ClassName configClass = ClassName.get(packageName(), ConfigGenerator.CLASSNAME_PREFIX + interfaceName().simpleName());
+        ClassName configClass = ClassName.get(packageName(), ConfigBuilder.CONFIG_CLASSNAME_PREFIX + interfaceName().simpleName());
         TypeName superClass = ParameterizedTypeName.get(CONFIG_BUILDER, configClass);
         TypeSpec.Builder classBuilder = classBuilder().superclass(superClass);
         PARTS.forEach(p -> p.addPart(classBuilder, this));

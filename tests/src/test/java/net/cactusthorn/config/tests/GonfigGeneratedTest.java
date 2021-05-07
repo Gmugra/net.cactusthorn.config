@@ -32,8 +32,8 @@ public class GonfigGeneratedTest {
         v1.put("uuid", Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
         v1.put("value", "simpleString");
         v1.put("myChar", 'Y');
-        config = new Config$$AllCorrect(v1);
-        config2 = new Config$$AllCorrect(v1);
+        config = new Config_AllCorrect(v1);
+        config2 = new Config_AllCorrect(v1);
     }
 
     @Test public void toStr() {

@@ -6,8 +6,9 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
 import net.cactusthorn.config.core.converter.DurationConverter;
+import net.cactusthorn.config.core.converter.ToTestConverter;
 
-public final class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestConfig> {
+public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestConfig> {
   private static final Map<String, String> DEFAULTS;
 
   static {
@@ -21,15 +22,17 @@ public final class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestCon
     DEFAULTS.put("dsort2", "B,B");
     DEFAULTS.put("dstr", "A");
     DEFAULTS.put("dstr2", "B");
+    DEFAULTS.put("testconverter", "default");
   }
 
-  public ConfigBuilder$$TestConfig(final ConfigHolder configHolder) {
+  public ConfigBuilder_TestConfig(final ConfigHolder configHolder) {
     super(configHolder);
   }
 
   @Override
-  public ConfigTestConfig build() {
+  public Config_TestConfig build() {
     CONVERTERS.computeIfAbsent(DurationConverter.class, c -> new DurationConverter());
+    CONVERTERS.computeIfAbsent(ToTestConverter.class, c -> new ToTestConverter());
     Map<String,Object> values = new HashMap<>();
     values.put("aaa", get(s -> s, "aaa", DEFAULTS.get("aaa")));
     values.put("test.dlist", getList(s -> s, "test.dlist", ",", DEFAULTS.get("dlist")));
@@ -53,6 +56,7 @@ public final class ConfigBuilder$$TestConfig extends ConfigBuilder<ConfigTestCon
     values.put("test.set", getSet(s -> s, "test.set", ","));
     values.put("test.sort", getSortedSet(s -> s, "test.sort", ","));
     values.put("test.string", get(s -> s, "test.string"));
-    return new ConfigTestConfig(values);
+    values.put("test.testconverter", get(s -> convert(ToTestConverter.class, s), "test.testconverter", "default"));
+    return new Config_TestConfig(values);
   }
 }
