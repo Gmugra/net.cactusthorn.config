@@ -33,11 +33,11 @@ public final class VariablesParser {
             result.append(source.substring(pos, start));
             pos = source.indexOf('}', start + 1);
             if (pos == -1) {
-                throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
+                throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM, start, source));
             }
             String variable = source.substring(start + 1, pos);
             if (variable.indexOf('{') != -1) {
-                throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
+                throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM, start + 1 + variable.indexOf('{'), source));
             }
             String value = values.getOrDefault(variable, "");
             result.append(value);
@@ -46,7 +46,7 @@ public final class VariablesParser {
         }
         result.append(source.substring(pos));
         if (result.indexOf("}") != -1) {
-            throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM));
+            throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM, source, source.indexOf("}", pos)));
         }
         return result.toString();
     }
