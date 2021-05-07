@@ -137,7 +137,7 @@ ConfigHolder holder =
         .build()
         .configHolder();
 
-String val = holder.get(Function.identity(), "app.val", "unknown");
+String val = holder.getString("app.val", "unknown");
 int intVal = holder.getInt("app.number");
 Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
 Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
