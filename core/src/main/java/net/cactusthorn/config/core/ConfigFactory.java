@@ -1,8 +1,8 @@
 package net.cactusthorn.config.core;
 
-import static net.cactusthorn.config.core.ApiMessages.*;
-import static net.cactusthorn.config.core.ApiMessages.Key.*;
 import static net.cactusthorn.config.core.loader.Loaders.UriTemplate;
+import static net.cactusthorn.config.core.util.ApiMessages.*;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
 import net.cactusthorn.config.core.loader.ClasspathXMLLoader;
+import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
@@ -29,7 +30,7 @@ import net.cactusthorn.config.core.loader.UrlXMLLoader;
 
 public final class ConfigFactory {
 
-    private static final MethodType CONSTRUCTOR = MethodType.methodType(void.class, ConfigHolder.class);
+    private static final MethodType BUILDER_CONSTRUCTOR = MethodType.methodType(void.class, Loaders.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
     private final Loaders loaders;
@@ -131,10 +132,9 @@ public final class ConfigFactory {
     }
 
     @SuppressWarnings("unchecked") public <T> T create(Class<T> sourceInterface) {
-        ConfigHolder configHolder = configHolder(sourceInterface.getClassLoader());
         try {
             MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findBuilderConstructor);
-            @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(configHolder);
+            @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(loaders);
             return (T) builder.build();
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
@@ -142,7 +142,7 @@ public final class ConfigFactory {
     }
 
     public ConfigHolder configHolder(ClassLoader classLoader) {
-        return new ConfigHolder(loaders.load(classLoader));
+        return loaders.load(classLoader);
     }
 
     public ConfigHolder configHolder() {
@@ -155,7 +155,7 @@ public final class ConfigFactory {
         String builderClassName = interfacePackage.getName() + '.' + ConfigBuilder.BUILDER_CLASSNAME_PREFIX + interfaceName;
         try {
             Class<?> builderClass = Class.forName(builderClassName);
-            return MethodHandles.publicLookup().findConstructor(builderClass, CONSTRUCTOR);
+            return MethodHandles.publicLookup().findConstructor(builderClass, BUILDER_CONSTRUCTOR);
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_FIND_CONFIGBUILDER, sourceInterface.getName()), e);
         }

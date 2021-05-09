@@ -13,7 +13,10 @@ public enum LoadStrategy {
     FIRST(l -> first(new HashMap<>(), l)),
     MERGE(l -> merge(new HashMap<>(), l)),
     FIRST_KEYCASEINSENSITIVE(l -> first(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
-    MERGE_KEYCASEINSENSITIVE(l -> merge(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l));
+    MERGE_KEYCASEINSENSITIVE(l -> merge(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
+    UNKNOWN(l -> {
+        throw new UnsupportedOperationException();
+    });
     // @formatter:on
 
     private final Function<List<Map<String, String>>, Map<String, String>> strategy;

@@ -1,7 +1,7 @@
 package net.cactusthorn.config.core.util;
 
-import static net.cactusthorn.config.core.ApiMessages.*;
-import static net.cactusthorn.config.core.ApiMessages.Key.WRONG_SOURCE_PARAM;
+import static net.cactusthorn.config.core.util.ApiMessages.*;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.WRONG_SOURCE_PARAM;
 
 import java.util.Map;
 

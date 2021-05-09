@@ -5,13 +5,15 @@ import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.Prefix;
 import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Split;
+import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.Key;
 import net.cactusthorn.config.core.Default;
 
 import java.io.Serializable;
 import java.util.*;
 
-@Config @Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
+@Config(sources = {"classpath:my.properties", "system.properties"}, loadStrategy = LoadStrategy.FIRST) //
+@Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
 
     long serialVersionUID = 100L;
 

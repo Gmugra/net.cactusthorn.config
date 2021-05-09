@@ -19,7 +19,8 @@ import net.cactusthorn.config.core.ConfigBuilder;
 
 public final class ConfigBuilderGenerator extends Generator {
 
-    private static final List<GeneratorPart> PARTS = Arrays.asList(new DefaultPart(), new ConstructorPart(), new BuildPart());
+    private static final List<GeneratorPart> PARTS = Arrays.asList(new UrisPart(), new DefaultPart(), new ConstructorPart(),
+            new BuildPart());
 
     public ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
         super(interfaceElement, methodsInfo, ConfigBuilder.BUILDER_CLASSNAME_PREFIX, interfaceInfo);

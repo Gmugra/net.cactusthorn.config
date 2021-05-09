@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.loader;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,6 +10,8 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import net.cactusthorn.config.core.ConfigFactory;
 
 public class ConfigHolderTest {
 

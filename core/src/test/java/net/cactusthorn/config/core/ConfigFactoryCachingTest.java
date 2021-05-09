@@ -6,6 +6,8 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.ConfigHolder;
+
 public class ConfigFactoryCachingTest {
 
     @Test public void cached() {
