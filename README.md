@@ -254,6 +254,10 @@ FYI: `Converter`-implementation must be stateless and must have a default(no-arg
    - XML format: [properties.dtd](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) or [OWNER](http://owner.aeonbits.org/docs/xml-support/)
    - Default charset (if URI fragment not present) is **UTF-8**
    - e.g. `file:./my.xml`
+1. META-INF/MANIFEST.MF: classpath:jar:manifest?*attribute*[=value]
+   - The loader scans all JARs in classpath for META-INF/MANIFEST.MF files. First META-INF/MANIFEST.MF, which contain *attribute* (with optional value) from the URI will be used as source.
+   - e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**: `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
+   - e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value: `classpath:jar:manifest?exotic-unique-attribite`
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.

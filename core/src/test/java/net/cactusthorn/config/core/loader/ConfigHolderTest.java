@@ -117,4 +117,8 @@ public class ConfigHolderTest {
         Optional<List<UUID>> list = holder.getOptionalList(UUID::fromString, "list", ",");
         assertEquals(2, list.get().size());
     }
+
+    @Test public void getNotExist() {
+        assertThrows(IllegalArgumentException.class, () -> holder.get(UUID::fromString, "notExist"));
+    }
 }
