@@ -18,7 +18,7 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
 
 public class Annotations {
 
-    public final class ConfigInfo {
+    public static final class ConfigInfo {
         private final String[] sources;
         private final LoadStrategy loadStrategy;
 
