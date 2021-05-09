@@ -7,13 +7,13 @@ import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
-import net.cactusthorn.config.core.ConfigHolder;
+import net.cactusthorn.config.core.loader.Loaders;
 
 public class ConstructorPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(ConfigHolder.class, "configHolder", Modifier.FINAL).addStatement("super(configHolder)");
+                .addParameter(Loaders.class, "loaders", Modifier.FINAL).addStatement("super(loaders)");
         classBuilder.addMethod(constructorBuilder.build());
     }
 

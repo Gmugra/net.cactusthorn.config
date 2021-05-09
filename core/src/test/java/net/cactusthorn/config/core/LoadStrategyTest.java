@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 
 public class LoadStrategyTest {
@@ -98,5 +99,10 @@ public class LoadStrategyTest {
                 .addSource("classpath:config/testconfigIgnoreKeyCase.properties", "classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("IGNORECASE", testConfig.str());
+    }
+
+    @Test public void unknown() {
+        assertThrows(IllegalArgumentException.class,
+                () -> ConfigFactory.builder().setLoadStrategy(LoadStrategy.UNKNOWN).build().create(TestConfig.class));
     }
 }

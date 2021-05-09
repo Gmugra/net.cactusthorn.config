@@ -10,15 +10,19 @@ import javax.lang.model.type.TypeMirror;
 
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
+
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
 import net.cactusthorn.config.core.ConfigBuilder;
+import net.cactusthorn.config.core.loader.ConfigHolder;
+import net.cactusthorn.config.core.loader.LoadStrategy;
 
 public class BuildPart implements GeneratorPart {
 
@@ -29,9 +33,31 @@ public class BuildPart implements GeneratorPart {
         MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(configClass);
 
-        Set<TypeMirror> converters = new HashSet<>();
+        addConfigHolder(buildBuilder, generator);
 
-        generator.methodsInfo().forEach(mi -> {
+        addConverters(buildBuilder, generator.methodsInfo());
+
+        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", String.class, Object.class, HashMap.class);
+        generator.methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi)));
+
+        classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
+    }
+
+    private static final String CONFIG_HOLDER = "ch";
+
+    private void addConfigHolder(MethodSpec.Builder buildBuilder, Generator generator) {
+
+        Annotations.ConfigInfo configInfo = generator.interfaceInfo().configInfo();
+
+        CodeBlock strategyBlock = CodeBlock.builder().add("$T.$L", LoadStrategy.class, configInfo.loadStrategy().name()).build();
+
+        buildBuilder.addStatement("$T $L = loaders().load($L.class.getClassLoader(), $L, $L)", ConfigHolder.class, CONFIG_HOLDER,
+                ConfigBuilder.CONFIG_CLASSNAME_PREFIX + generator.interfaceName().simpleName(), strategyBlock, URIS_ATTR);
+    }
+
+    private void addConverters(MethodSpec.Builder buildBuilder, List<MethodInfo> methodInfo) {
+        Set<TypeMirror> converters = new HashSet<>();
+        methodInfo.forEach(mi -> {
             if (mi.returnConverter().isPresent()) {
                 TypeMirror converter = mi.returnConverter().get();
                 if (!converters.contains(converter)) {
@@ -40,11 +66,6 @@ public class BuildPart implements GeneratorPart {
                 }
             }
         });
-
-        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", String.class, Object.class, HashMap.class);
-        generator.methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi)));
-
-        classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
     }
 
     private CodeBlock convert(MethodInfo mi) {
@@ -74,8 +95,9 @@ public class BuildPart implements GeneratorPart {
     }
 
     private CodeBlock.Builder findGetMethod(MethodInfo mi) {
+        CodeBlock.Builder builder = CodeBlock.builder().add("$L.", CONFIG_HOLDER);
         if (mi.returnOptional()) {
-            return CodeBlock.builder().add(mi.returnInterface().map(t -> {
+            return builder.add(mi.returnInterface().map(t -> {
                 if (t == List.class) {
                     return "getOptionalList";
                 }
@@ -85,7 +107,7 @@ public class BuildPart implements GeneratorPart {
                 return "getOptionalSortedSet";
             }).orElse("getOptional"));
         }
-        return CodeBlock.builder().add(mi.returnInterface().map(t -> {
+        return builder.add(mi.returnInterface().map(t -> {
             if (t == List.class) {
                 return "getList";
             }

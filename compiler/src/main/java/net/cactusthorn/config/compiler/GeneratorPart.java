@@ -25,6 +25,7 @@ public interface GeneratorPart {
 
     String VALUES_ATTR = "VALUES";
     String DEFAULTS_ATTR = "DEFAULTS";
+    String URIS_ATTR = "URIS";
 
     void addPart(TypeSpec.Builder classBuilder, Generator generator);
 }

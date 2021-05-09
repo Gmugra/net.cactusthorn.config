@@ -21,11 +21,13 @@ public final class InterfaceInfo {
     private final String split;
     private final Optional<Long> serialVersionUID;
     private final boolean accessible;
+    private final Annotations.ConfigInfo configInfo;
 
     InterfaceInfo(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
         Annotations a = new Annotations(interfaceTypeElement);
         prefix = a.prefix().map(s -> s + KEY_SEPARATOR).orElse("");
         split = a.split().orElse(DEFAULT_SPLIT);
+        configInfo = a.config();
         serialVersionUID = findSerializable(processingEnv, interfaceTypeElement);
         accessible = findAccessible(processingEnv, interfaceTypeElement);
     }
@@ -44,6 +46,10 @@ public final class InterfaceInfo {
 
     public boolean accessible() {
         return accessible;
+    }
+
+    public Annotations.ConfigInfo configInfo() {
+        return configInfo;
     }
 
     private boolean findAccessible(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {

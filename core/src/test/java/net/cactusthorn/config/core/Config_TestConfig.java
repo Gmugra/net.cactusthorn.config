@@ -156,8 +156,7 @@ public final class Config_TestConfig implements TestConfig {
 
   @Override
   public int hashCode() {
-    return Objects.hash(aaa(), dlist(), dlist2(), dset(), dset2(), dsort(), dsort2(), dstr(), dstr2(), duration(), list(), olist(),
-            olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str(), testconverter());
+    return Objects.hash(aaa(), dlist(), dlist2(), dset(), dset2(), dsort(), dsort2(), dstr(), dstr2(), duration(), list(), olist(), olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str(), testconverter());
   }
 
   @Override

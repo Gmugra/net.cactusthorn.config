@@ -1,7 +1,7 @@
 package net.cactusthorn.config.core.loader;
 
-import static net.cactusthorn.config.core.ApiMessages.*;
-import static net.cactusthorn.config.core.ApiMessages.Key.*;
+import static net.cactusthorn.config.core.util.ApiMessages.*;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

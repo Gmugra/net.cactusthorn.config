@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 
 public class ConfigFactoryTest {
@@ -173,7 +174,7 @@ public class ConfigFactoryTest {
 
     @Test public void loaderNotFound() {
         ConfigFactory factory = ConfigFactory.builder().addSource("system:yyy").build();
-        assertThrows(UnsupportedOperationException.class, () -> factory.create(TestConfig.class));
+        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
     @Test public void unknownBuilder() {

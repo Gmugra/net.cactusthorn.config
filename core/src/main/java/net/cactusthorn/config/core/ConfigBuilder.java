@@ -1,13 +1,9 @@
 package net.cactusthorn.config.core;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 import net.cactusthorn.config.core.converter.Converter;
+import net.cactusthorn.config.core.loader.Loaders;
 
 public abstract class ConfigBuilder<C> {
 
@@ -16,10 +12,10 @@ public abstract class ConfigBuilder<C> {
 
     protected static final ConcurrentHashMap<Class<?>, Converter<?>> CONVERTERS = new ConcurrentHashMap<>();
 
-    private final ConfigHolder configHolder;
+    private final Loaders loaders;
 
-    protected ConfigBuilder(ConfigHolder configHolder) {
-        this.configHolder = configHolder;
+    protected ConfigBuilder(Loaders loaders) {
+        this.loaders = loaders;
     }
 
     public abstract C build();
@@ -28,6 +24,11 @@ public abstract class ConfigBuilder<C> {
         return (T) CONVERTERS.get(clazz).convert(value);
     }
 
+    protected Loaders loaders() {
+        return loaders;
+    }
+
+    /*
     protected <T> T get(Function<String, T> convert, String key) {
         return configHolder.get(convert, key);
     }
@@ -75,4 +76,5 @@ public abstract class ConfigBuilder<C> {
     protected <T> Optional<SortedSet<T>> getOptionalSortedSet(Function<String, T> convert, String key, String splitRegEx) {
         return configHolder.getOptionalSortedSet(convert, key, splitRegEx);
     }
+    */
 }

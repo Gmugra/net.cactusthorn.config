@@ -155,6 +155,19 @@ FYI: The `@Default` annotation can't be used with a method that returns `Optiona
 The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
 Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
 
+### `@Config` annotation parameters
+There are two *optional* paramters `sources` and `loadStrategy` which can be used to override these settigns from `ConfigFactory`.
+e.g.
+```java
+@Config(sources = {"classpath:config/testconfig2.properties","system:properties"}, loadStrategy = LoadStrategy.FIRST)
+public interface ConfigOverride {
+    String string();
+}
+```
+1. If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
+1. If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
+1. Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These property will be merged in any case.
+
 ## Type conversion
 
 ### Supported method return types

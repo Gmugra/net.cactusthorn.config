@@ -1,7 +1,7 @@
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.loader;
 
-import static net.cactusthorn.config.core.ApiMessages.msg;
-import static net.cactusthorn.config.core.ApiMessages.Key.VALUE_NOT_FOUND;
+import static net.cactusthorn.config.core.util.ApiMessages.msg;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.VALUE_NOT_FOUND;
 
 import java.util.List;
 import java.util.Map;

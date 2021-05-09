@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.util;
 
 import java.text.MessageFormat;
 import java.util.Locale;
@@ -15,10 +15,6 @@ public final class ApiMessages {
     }
 
     private ApiMessages() {
-    }
-
-    public static String msg(Key key) {
-        return MESSAGES.getString(key.name());
     }
 
     public static String msg(Key key, Object argument) {

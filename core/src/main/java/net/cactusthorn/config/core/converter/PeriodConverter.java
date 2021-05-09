@@ -1,7 +1,7 @@
 package net.cactusthorn.config.core.converter;
 
-import static net.cactusthorn.config.core.ApiMessages.msg;
-import static net.cactusthorn.config.core.ApiMessages.Key.*;
+import static net.cactusthorn.config.core.util.ApiMessages.msg;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.time.Period;
 

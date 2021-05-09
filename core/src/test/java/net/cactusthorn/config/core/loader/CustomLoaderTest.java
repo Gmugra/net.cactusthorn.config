@@ -10,7 +10,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.ConfigFactory;
-import net.cactusthorn.config.core.ConfigHolder;
 
 public class CustomLoaderTest {
 

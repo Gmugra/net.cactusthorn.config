@@ -1,7 +1,7 @@
 package net.cactusthorn.config.core.loader;
 
-import static net.cactusthorn.config.core.ApiMessages.msg;
-import static net.cactusthorn.config.core.ApiMessages.Key.LOADER_NOT_FOUND;
+import static net.cactusthorn.config.core.util.ApiMessages.*;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -89,9 +89,27 @@ public final class Loaders {
         this.properties = properties;
     }
 
-    public Map<String, String> load(ClassLoader classLoader) {
+    public ConfigHolder load(ClassLoader classLoader) {
+        return load(classLoader, loadStrategy, templates);
+    }
+
+    public ConfigHolder load(ClassLoader classLoader, LoadStrategy strategy, String[] uris) {
+        LoadStrategy withStrategy = strategy == LoadStrategy.UNKNOWN ? loadStrategy : strategy;
+        LinkedHashSet<UriTemplate> withTemplates;
+        if (uris.length == 1 && "".equals(uris[0])) {
+            withTemplates = templates;
+        } else {
+            withTemplates = new LinkedHashSet<>();
+            for (String uri : uris) {
+                withTemplates.add(new UriTemplate(uri, true));
+            }
+        }
+        return load(classLoader, withStrategy, withTemplates);
+    }
+
+    private ConfigHolder load(ClassLoader classLoader, LoadStrategy strategy, LinkedHashSet<UriTemplate> uriTemplates) {
         List<Map<String, String>> values = new ArrayList<>();
-        for (UriTemplate template : templates) {
+        for (UriTemplate template : uriTemplates) {
             URI uri = template.uri();
             Loader loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
@@ -103,6 +121,6 @@ public final class Loaders {
             }
             values.add(uriProperties);
         }
-        return loadStrategy.combine(values, properties);
+        return new ConfigHolder(strategy.combine(values, properties));
     }
 }
