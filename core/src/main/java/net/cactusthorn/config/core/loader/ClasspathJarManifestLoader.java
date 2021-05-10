@@ -13,9 +13,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ClasspathJarManifestLoader implements Loader {
 
@@ -31,7 +31,7 @@ public class ClasspathJarManifestLoader implements Loader {
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
 
         String param = uri.getSchemeSpecificPart().substring(SUB_PREFIX.length());
-        String[] parts = param.split("=");
+        String[] parts = param.split("=", -1);
         String name = parts[0];
         String value = parts.length > 1 ? parts[1] : null;
 
@@ -45,12 +45,8 @@ public class ClasspathJarManifestLoader implements Loader {
                     Attributes attributes = manifest.getMainAttributes();
                     String attribute = attributes.getValue(name);
                     if (attribute != null && (value == null || value.equals(attribute))) {
-                        Map<String, String> result = new HashMap<>();
-                        for (Map.Entry<Object, Object> entry : attributes.entrySet()) {
-                            result.put(entry.getKey().toString(), entry.getValue().toString());
-                        }
-
-                        return result;
+                        return attributes.entrySet().stream()
+                                .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
                     }
                 }
             }
