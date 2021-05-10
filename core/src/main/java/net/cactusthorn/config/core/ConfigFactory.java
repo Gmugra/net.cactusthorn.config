@@ -17,6 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import net.cactusthorn.config.core.loader.ClasspathJarManifestLoader;
 import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
 import net.cactusthorn.config.core.loader.ClasspathXMLLoader;
 import net.cactusthorn.config.core.loader.ConfigHolder;
@@ -60,6 +61,7 @@ public final class ConfigFactory {
             loaders.add(new UrlPropertiesLoader());
             loaders.add(new ClasspathXMLLoader());
             loaders.add(new UrlXMLLoader());
+            loaders.add(new ClasspathJarManifestLoader());
         }
 
         public Builder addLoader(Loader loader) {
