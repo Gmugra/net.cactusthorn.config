@@ -31,7 +31,7 @@ public class ClasspathJarManifestLoader implements Loader {
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
 
         String param = uri.getSchemeSpecificPart().substring(SUB_PREFIX.length());
-        String[] parts = param.split("=", -1);
+        String[] parts = param.split("=", 2);
         String name = parts[0];
         String value = parts.length > 1 ? parts[1] : null;
 
