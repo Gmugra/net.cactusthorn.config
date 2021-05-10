@@ -24,7 +24,6 @@ public interface GeneratorPart {
     TypeName CONCURRENTHASHMAP_STRING_OBJECT = ParameterizedTypeName.get(CONCURRENTHASHMAP, STRING, OBJECT);
 
     String VALUES_ATTR = "VALUES";
-    String DEFAULTS_ATTR = "DEFAULTS";
     String URIS_ATTR = "URIS";
 
     void addPart(TypeSpec.Builder classBuilder, Generator generator);
