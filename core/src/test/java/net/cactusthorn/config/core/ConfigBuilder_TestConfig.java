@@ -12,23 +12,7 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
 
 public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestConfig> {
-
   private static final String[] URIS = new String[] {""};
-
-  private static final Map<String, String> DEFAULTS;
-  static {
-    DEFAULTS = new HashMap<>();
-    DEFAULTS.put("aaa", "ddd");
-    DEFAULTS.put("dlist", "A,A");
-    DEFAULTS.put("dlist2", "B,B");
-    DEFAULTS.put("dset", "A,A");
-    DEFAULTS.put("dset2", "B,B");
-    DEFAULTS.put("dsort", "A,A");
-    DEFAULTS.put("dsort2", "B,B");
-    DEFAULTS.put("dstr", "A");
-    DEFAULTS.put("dstr2", "B");
-    DEFAULTS.put("testconverter", "default");
-  }
 
   public ConfigBuilder_TestConfig(final Loaders loaders) {
     super(loaders);
@@ -40,15 +24,15 @@ public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestCon
     CONVERTERS.computeIfAbsent(DurationConverter.class, c -> new DurationConverter());
     CONVERTERS.computeIfAbsent(ToTestConverter.class, c -> new ToTestConverter());
     Map<String,Object> values = new HashMap<>();
-    values.put("aaa", ch.get(s -> s, "aaa", DEFAULTS.get("aaa")));
-    values.put("test.dlist", ch.getList(s -> s, "test.dlist", ",", DEFAULTS.get("dlist")));
-    values.put("test.dlist2", ch.getList(s -> s, "test.dlist2", ",", DEFAULTS.get("dlist2")));
-    values.put("test.dset", ch.getSet(s -> s, "test.dset", ",", DEFAULTS.get("dset")));
-    values.put("test.dset2", ch.getSet(s -> s, "test.dset2", ",", DEFAULTS.get("dset2")));
-    values.put("test.dsort", ch.getSortedSet(s -> s, "test.dsort", ",", DEFAULTS.get("dsort")));
-    values.put("test.dsort2", ch.getSortedSet(s -> s, "test.dsort2", ",", DEFAULTS.get("dsort2")));
-    values.put("test.dstr", ch.get(s -> s, "test.dstr", DEFAULTS.get("dstr")));
-    values.put("test.dstr2", ch.get(s -> s, "test.dstr2", DEFAULTS.get("dstr2")));
+    values.put("aaa", ch.get(s -> s, "aaa", "ddd"));
+    values.put("test.dlist", ch.getList(s -> s, "test.dlist", ",", "A,A"));
+    values.put("test.dlist2", ch.getList(s -> s, "test.dlist2", ",", "B,B"));
+    values.put("test.dset", ch.getSet(s -> s, "test.dset", ",", "A,A"));
+    values.put("test.dset2", ch.getSet(s -> s, "test.dset2", ",", "B,B"));
+    values.put("test.dsort", ch.getSortedSet(s -> s, "test.dsort", ",", "A,A"));
+    values.put("test.dsort2", ch.getSortedSet(s -> s, "test.dsort2", ",", "B,B"));
+    values.put("test.dstr", ch.get(s -> s, "test.dstr", "A"));
+    values.put("test.dstr2", ch.get(s -> s, "test.dstr2", "B"));
     values.put("test.duration", ch.getOptional(s -> convert(DurationConverter.class, s), "test.duration"));
     values.put("test.list", ch.getList(s -> s, "test.list", ","));
     values.put("test.olist", ch.getOptionalList(s -> s, "test.olist", ","));
@@ -62,7 +46,7 @@ public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestCon
     values.put("test.set", ch.getSet(s -> s, "test.set", ","));
     values.put("test.sort", ch.getSortedSet(s -> s, "test.sort", ","));
     values.put("test.string", ch.get(s -> s, "test.string"));
-    values.put("test.testconverter", ch.get(s -> convert(ToTestConverter.class, s), "test.testconverter", DEFAULTS.get("testconverter")));
+    values.put("test.testconverter", ch.get(s -> convert(ToTestConverter.class, s), "test.testconverter", "default"));
     return new Config_TestConfig(values);
   }
 }

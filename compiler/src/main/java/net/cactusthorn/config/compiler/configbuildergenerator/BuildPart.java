@@ -3,6 +3,7 @@ package net.cactusthorn.config.compiler.configbuildergenerator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -37,7 +38,7 @@ public class BuildPart implements GeneratorPart {
 
         addConverters(buildBuilder, generator.methodsInfo());
 
-        buildBuilder.addStatement("Map<$T,$T> values = new $T<>()", String.class, Object.class, HashMap.class);
+        buildBuilder.addStatement("$T<$T,$T> values = new $T<>()", Map.class, String.class, Object.class, HashMap.class);
         generator.methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi)));
 
         classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
@@ -123,6 +124,6 @@ public class BuildPart implements GeneratorPart {
     }
 
     private CodeBlock defaultValue(MethodInfo mi) {
-        return mi.defaultValue().map(s -> CodeBlock.of(", $L.get($S)", DEFAULTS_ATTR, mi.name())).orElse(CodeBlock.of(""));
+        return mi.defaultValue().map(s -> CodeBlock.of(", $S", s)).orElse(CodeBlock.of(""));
     }
 }
