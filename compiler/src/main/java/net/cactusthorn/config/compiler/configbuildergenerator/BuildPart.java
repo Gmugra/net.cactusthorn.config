@@ -21,9 +21,9 @@ import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
-import net.cactusthorn.config.core.ConfigBuilder;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
+import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public class BuildPart implements GeneratorPart {
 

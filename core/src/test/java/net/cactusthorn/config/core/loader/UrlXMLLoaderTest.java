@@ -20,6 +20,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import net.cactusthorn.config.core.loader.standard.UrlXMLLoader;
+
 public class UrlXMLLoaderTest {
 
     private static final Loader LOADER = new UrlXMLLoader();

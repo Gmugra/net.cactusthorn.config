@@ -1,7 +1,7 @@
-package net.cactusthorn.config.core.loader;
+package net.cactusthorn.config.core.loader.standard;
 
-import static net.cactusthorn.config.core.util.ApiMessages.msg;
-import static net.cactusthorn.config.core.util.ApiMessages.Key.CANT_LOAD_RESOURCE;
+import static net.cactusthorn.config.core.util.ApiMessages.*;
+import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -14,27 +14,22 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public final class UrlPropertiesLoader implements Loader {
+import net.cactusthorn.config.core.loader.Loader;
 
-    private static final Logger LOG = Logger.getLogger(UrlPropertiesLoader.class.getName());
+public final class ClasspathPropertiesLoader implements Loader {
 
+    private static final Logger LOG = Logger.getLogger(ClasspathPropertiesLoader.class.getName());
+
+    private static final String SCHEME = "classpath";
     private static final String EXTENTION = ".properties";
 
     @Override public boolean accept(URI uri) {
-        if (!uri.getSchemeSpecificPart().endsWith(EXTENTION)) {
-            return false;
-        }
-        try {
-            uri.toURL();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        return uri.isOpaque() && SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().endsWith(EXTENTION);
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
         String charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
-        try (InputStream stream = uri.toURL().openStream();
+        try (InputStream stream = classLoader.getResourceAsStream(uri.getSchemeSpecificPart());
                 Reader reader = new InputStreamReader(stream, charsetName);
                 BufferedReader buffer = new BufferedReader(reader)) {
             Properties properties = new Properties();

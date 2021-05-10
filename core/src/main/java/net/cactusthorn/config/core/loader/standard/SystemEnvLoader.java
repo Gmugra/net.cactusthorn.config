@@ -1,8 +1,10 @@
-package net.cactusthorn.config.core.loader;
+package net.cactusthorn.config.core.loader.standard;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
+import net.cactusthorn.config.core.loader.Loader;
 
 public final class SystemEnvLoader implements Loader {
 

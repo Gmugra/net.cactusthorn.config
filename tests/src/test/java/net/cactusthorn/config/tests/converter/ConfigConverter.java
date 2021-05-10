@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.Default;
-import net.cactusthorn.config.core.converter.URLConverter;
 import net.cactusthorn.config.core.converter.ConverterClass;
+import net.cactusthorn.config.core.converter.standard.URLConverter;
 
 @Config public interface ConfigConverter {
 

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import net.cactusthorn.config.core.converter.standard.PeriodConverter;
+
 public class PeriodConverterTest {
 
     static Converter<Period> converter = new PeriodConverter();

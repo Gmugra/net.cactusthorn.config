@@ -1,10 +1,12 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import static net.cactusthorn.config.core.util.ApiMessages.*;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+
+import net.cactusthorn.config.core.converter.Converter;
 
 /**
  *

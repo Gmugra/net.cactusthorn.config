@@ -8,6 +8,8 @@ import java.time.Instant;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.converter.standard.InstantConverter;
+
 public class InstantConverterTest {
 
     static Converter<Instant> converter = new InstantConverter();

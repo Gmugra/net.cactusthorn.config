@@ -1,9 +1,11 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import static net.cactusthorn.config.core.util.ApiMessages.msg;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.time.Period;
+
+import net.cactusthorn.config.core.converter.Converter;
 
 public class PeriodConverter implements Converter<Period> {
 

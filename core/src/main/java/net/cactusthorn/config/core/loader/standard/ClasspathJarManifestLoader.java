@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core.loader;
+package net.cactusthorn.config.core.loader.standard;
 
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -16,6 +16,8 @@ import java.util.Enumeration;
 import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import net.cactusthorn.config.core.loader.Loader;
 
 public class ClasspathJarManifestLoader implements Loader {
 

@@ -19,12 +19,12 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
-import net.cactusthorn.config.core.converter.URIConverter;
-import net.cactusthorn.config.core.converter.URLConverter;
-import net.cactusthorn.config.core.converter.DurationConverter;
-import net.cactusthorn.config.core.converter.InstantConverter;
-import net.cactusthorn.config.core.converter.PathConverter;
-import net.cactusthorn.config.core.converter.PeriodConverter;
+import net.cactusthorn.config.core.converter.standard.DurationConverter;
+import net.cactusthorn.config.core.converter.standard.InstantConverter;
+import net.cactusthorn.config.core.converter.standard.PathConverter;
+import net.cactusthorn.config.core.converter.standard.PeriodConverter;
+import net.cactusthorn.config.core.converter.standard.URIConverter;
+import net.cactusthorn.config.core.converter.standard.URLConverter;
 
 public class DefaultConvertorValidator extends MethodValidatorAncestor {
 

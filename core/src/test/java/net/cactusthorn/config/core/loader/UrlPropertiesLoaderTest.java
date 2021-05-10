@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.io.TempDir;
 
+import net.cactusthorn.config.core.loader.standard.UrlPropertiesLoader;
+
 public class UrlPropertiesLoaderTest {
 
     private static final Loader LOADER = new UrlPropertiesLoader();

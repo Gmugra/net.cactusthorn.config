@@ -8,6 +8,8 @@ import java.net.URL;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.converter.standard.URLConverter;
+
 public class URLConverterTest {
 
     static Converter<URL> converter = new URLConverter();
