@@ -15,7 +15,7 @@ import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.InterfaceInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
-import net.cactusthorn.config.core.ConfigBuilder;
+import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public final class ConfigBuilderGenerator extends Generator {
 

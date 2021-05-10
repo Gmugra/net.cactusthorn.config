@@ -1,6 +1,9 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import java.net.URL;
+
+import net.cactusthorn.config.core.converter.Converter;
+
 import java.net.MalformedURLException;
 
 public class URLConverter implements Converter<URL> {

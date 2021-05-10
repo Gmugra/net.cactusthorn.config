@@ -17,17 +17,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.cactusthorn.config.core.loader.ClasspathJarManifestLoader;
-import net.cactusthorn.config.core.loader.ClasspathPropertiesLoader;
-import net.cactusthorn.config.core.loader.ClasspathXMLLoader;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.loader.SystemEnvLoader;
-import net.cactusthorn.config.core.loader.SystemPropertiesLoader;
-import net.cactusthorn.config.core.loader.UrlPropertiesLoader;
-import net.cactusthorn.config.core.loader.UrlXMLLoader;
+import net.cactusthorn.config.core.loader.standard.ClasspathJarManifestLoader;
+import net.cactusthorn.config.core.loader.standard.ClasspathPropertiesLoader;
+import net.cactusthorn.config.core.loader.standard.ClasspathXMLLoader;
+import net.cactusthorn.config.core.loader.standard.SystemEnvLoader;
+import net.cactusthorn.config.core.loader.standard.SystemPropertiesLoader;
+import net.cactusthorn.config.core.loader.standard.UrlPropertiesLoader;
+import net.cactusthorn.config.core.loader.standard.UrlXMLLoader;
+import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public final class ConfigFactory {
 

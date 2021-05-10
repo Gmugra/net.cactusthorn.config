@@ -7,6 +7,8 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.converter.standard.URIConverter;
+
 public class URIConverterTest {
 
     static Converter<URI> converter = new URIConverter();

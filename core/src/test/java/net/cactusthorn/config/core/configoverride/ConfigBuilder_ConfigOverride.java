@@ -5,10 +5,11 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
-import net.cactusthorn.config.core.ConfigBuilder;
+
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
+import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public final class ConfigBuilder_ConfigOverride extends ConfigBuilder<Config_ConfigOverride> {
   private static final String[] URIS = new String[] {"classpath:config/testconfig2.properties", "classpath:config/testconfig.properties"};

@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.standard.ClasspathJarManifestLoader;
+
 public class ClasspathJarManifestLoaderTest {
 
     private static final Loader LOADER = new ClasspathJarManifestLoader();

@@ -1,6 +1,8 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import java.net.URI;
+
+import net.cactusthorn.config.core.converter.Converter;
 
 public class URIConverter implements Converter<URI> {
 

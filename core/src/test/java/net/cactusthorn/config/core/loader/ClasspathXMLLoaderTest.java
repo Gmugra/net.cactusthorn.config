@@ -12,6 +12,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.standard.ClasspathXMLLoader;
+
 public class ClasspathXMLLoaderTest {
 
     @BeforeAll static void setUpLogger() {

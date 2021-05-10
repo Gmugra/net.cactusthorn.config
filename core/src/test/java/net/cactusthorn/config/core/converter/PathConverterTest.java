@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.converter.standard.PathConverter;
+
 public class PathConverterTest {
 
     static Converter<Path> converter = new PathConverter();

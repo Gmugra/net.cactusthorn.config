@@ -5,11 +5,13 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
-import net.cactusthorn.config.core.converter.DurationConverter;
+
 import net.cactusthorn.config.core.converter.ToTestConverter;
+import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
+import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestConfig> {
   private static final String[] URIS = new String[] {""};

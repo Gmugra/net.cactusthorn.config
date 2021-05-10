@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import net.cactusthorn.config.core.converter.standard.DurationConverter;
+
 public class DurationConverterTest {
 
     static Converter<Duration> converter = new DurationConverter();

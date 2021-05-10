@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.util;
 
 import java.util.concurrent.ConcurrentHashMap;
 

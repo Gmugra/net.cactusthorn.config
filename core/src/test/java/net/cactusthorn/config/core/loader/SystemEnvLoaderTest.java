@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import net.cactusthorn.config.core.loader.standard.SystemEnvLoader;
+
 public class SystemEnvLoaderTest {
 
     private static final Loader LOADER = new SystemEnvLoader();

@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core.loader;
+package net.cactusthorn.config.core.loader.standard;
 
 import static net.cactusthorn.config.core.util.ApiMessages.msg;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.CANT_LOAD_RESOURCE;
@@ -11,15 +11,16 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Properties;
 import java.util.logging.Logger;
 
-import net.cactusthorn.config.core.util.XMLToMapParser;
+import net.cactusthorn.config.core.loader.Loader;
 
-public class UrlXMLLoader implements Loader {
+public final class UrlPropertiesLoader implements Loader {
 
     private static final Logger LOG = Logger.getLogger(UrlPropertiesLoader.class.getName());
 
-    private static final String EXTENTION = ".xml";
+    private static final String EXTENTION = ".properties";
 
     @Override public boolean accept(URI uri) {
         if (!uri.getSchemeSpecificPart().endsWith(EXTENTION)) {
@@ -33,14 +34,15 @@ public class UrlXMLLoader implements Loader {
         }
     }
 
-    private static final XMLToMapParser PARSER = new XMLToMapParser();
-
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
         String charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
         try (InputStream stream = uri.toURL().openStream();
                 Reader reader = new InputStreamReader(stream, charsetName);
                 BufferedReader buffer = new BufferedReader(reader)) {
-            return PARSER.parse(buffer);
+            Properties properties = new Properties();
+            properties.load(buffer);
+            @SuppressWarnings({ "unchecked", "rawtypes" }) Map<String, String> result = (Map) properties;
+            return result;
         } catch (Exception e) {
             LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
