@@ -3,7 +3,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.10)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.20)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
 
@@ -16,14 +16,15 @@ So, this project is providing library with similar with *OWNER* API, but
 ## Basics
 
 ### Installing
-Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config).
+Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config).   
+Download: [GitHub Packages](https://github.com/Gmugra?tab=packages&repo_name=net.cactusthorn.config).
 
 In order to use the library in a project, it's need to add the dependency to the pom.xml:
 ```xml
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>core</artifactId>
-    <version>0.10</version>
+    <version>0.20</version>
 </dependency>
 ```
 It's also need to include the compiler used to convert annotated "source"-interfaces into the code:
@@ -37,7 +38,7 @@ It's also need to include the compiler used to convert annotated "source"-interf
               <path>
                   <groupId>net.cactusthorn.config</groupId>
                   <artifactId>compiler</artifactId>
-                  <version>0.10</version>
+                  <version>0.20</version>
               </path>
          </annotationProcessorPaths>
     </configuration>
