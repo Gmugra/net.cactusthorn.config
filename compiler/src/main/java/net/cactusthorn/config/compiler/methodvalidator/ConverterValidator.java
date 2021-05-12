@@ -48,9 +48,9 @@ public class ConverterValidator extends MethodValidatorAncestor {
 
     private String[] findParameters(AnnotationMirror annotationMirror) {
         Map<? extends ExecutableElement, ? extends AnnotationValue> values = annotationMirror.getElementValues();
-        for (ExecutableElement element : values.keySet()) {
-            if ("value()".equals(element.toString())) {
-                Object value = values.get(element).getValue();
+        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : values.entrySet()) {
+            if ("value()".equals(entry.getKey().toString())) {
+                Object value = entry.getValue().getValue();
                 if (value instanceof List<?>) {
                     @SuppressWarnings("unchecked") List<? extends AnnotationValue> list = (List<? extends AnnotationValue>) value;
                     String[] result = new String[list.size()];
