@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import net.cactusthorn.config.core.converter.standard.PeriodConverter;
+import net.cactusthorn.config.core.converter.Converter;
 
 public class PeriodConverterTest {
 

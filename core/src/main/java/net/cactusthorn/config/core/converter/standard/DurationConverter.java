@@ -7,6 +7,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 
 import net.cactusthorn.config.core.converter.Converter;
+import net.cactusthorn.config.core.util.NumericAndCharSplitter;
 
 /**
  *
@@ -46,7 +47,9 @@ import net.cactusthorn.config.core.converter.Converter;
  */
 public class DurationConverter implements Converter<Duration> {
 
-    @Override public Duration convert(String value) {
+    private static final NumericAndCharSplitter SPLITTER = new NumericAndCharSplitter();
+
+    @Override public Duration convert(String value, String[] parameters) {
         // If it looks like a string that Duration.parse can handle, let's try that.
         if (value.startsWith("P") || value.startsWith("-P") || value.startsWith("+P")) {
             return Duration.parse(value);
@@ -68,7 +71,7 @@ public class DurationConverter implements Converter<Duration> {
      * @throws IllegalArgumentException if input is invalid
      */
     private Duration parseDuration(String input) {
-        String[] parts = splitNumericAndChar(input);
+        String[] parts = SPLITTER.split(input);
         String numberString = parts[0];
         String originalUnitString = parts[1];
         String unitString = originalUnitString;
@@ -122,39 +125,5 @@ public class DurationConverter implements Converter<Duration> {
         }
 
         return Duration.of(Long.parseLong(numberString), units);
-    }
-
-    /**
-     * Splits a string into a numeric part and a character part. The input string
-     * should conform to the format <code>[numeric_part][char_part]</code> with an
-     * optional whitespace between the two parts.
-     *
-     * The <code>char_part</code> should only contain letters as defined by
-     * {@link Character#isLetter(char)} while the <code>numeric_part</code> will be
-     * parsed regardless of content.
-     *
-     * Any whitespace will be trimmed from the beginning and end of both parts,
-     * however, the <code>numeric_part</code> can contain whitespaces within it.
-     *
-     * @param input the string to split.
-     *
-     * @return an array of two strings.
-     */
-    static String[] splitNumericAndChar(String input) {
-        // ATTN: String.trim() may not trim all UTF-8 whitespace characters properly.
-        // The original implementation used its own unicodeTrim() method that I decided
-        // not to include until the need
-        // arises. For more information, see:
-        // https://github.com/typesafehub/config/blob/v1.3.0/config/src/main/java/com/typesafe/config/impl/ConfigImplUtil.java#L118-L164
-
-        int i = input.length() - 1;
-        while (i >= 0) {
-            char c = input.charAt(i);
-            if (!Character.isLetter(c)) {
-                break;
-            }
-            i -= 1;
-        }
-        return new String[] {input.substring(0, i + 1).trim(), input.substring(i + 1).trim()};
     }
 }

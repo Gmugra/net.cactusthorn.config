@@ -5,8 +5,7 @@ import java.lang.Override;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.cactusthorn.config.core.converter.ToTestConverter;
+import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
@@ -35,7 +34,7 @@ public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestCon
     values.put("test.dsort2", ch.getSortedSet(s -> s, "test.dsort2", ",", "B,B"));
     values.put("test.dstr", ch.get(s -> s, "test.dstr", "A"));
     values.put("test.dstr2", ch.get(s -> s, "test.dstr2", "B"));
-    values.put("test.duration", ch.getOptional(s -> convert(DurationConverter.class, s), "test.duration"));
+    values.put("test.duration", ch.getOptional(s -> convert(DurationConverter.class, s, Converter.EMPTY), "test.duration"));
     values.put("test.list", ch.getList(s -> s, "test.list", ","));
     values.put("test.olist", ch.getOptionalList(s -> s, "test.olist", ","));
     values.put("test.olist2", ch.getOptionalList(s -> s, "test.olist2", ","));
@@ -48,7 +47,7 @@ public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestCon
     values.put("test.set", ch.getSet(s -> s, "test.set", ","));
     values.put("test.sort", ch.getSortedSet(s -> s, "test.sort", ","));
     values.put("test.string", ch.get(s -> s, "test.string"));
-    values.put("test.testconverter", ch.get(s -> convert(ToTestConverter.class, s), "test.testconverter", "default"));
+    values.put("test.testconverter", ch.get(s -> convert(ToTestConverter.class, s, Converter.EMPTY), "test.testconverter", "default"));
     return new Config_TestConfig(values);
   }
 }

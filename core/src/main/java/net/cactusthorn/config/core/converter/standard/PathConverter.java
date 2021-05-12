@@ -7,7 +7,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class PathConverter implements Converter<Path> {
 
-    @Override public Path convert(String value) {
+    @Override public Path convert(String value, String[] parameters) {
         return Paths.get(value);
     }
 }

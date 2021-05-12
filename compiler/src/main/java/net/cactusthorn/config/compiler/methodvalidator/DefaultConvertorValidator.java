@@ -19,6 +19,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.converter.standard.InstantConverter;
 import net.cactusthorn.config.core.converter.standard.PathConverter;
@@ -65,6 +66,6 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
             return next(methodElement, typeMirror);
         }
         TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
-        return new MethodInfo(methodElement).withConverter(converter);
+        return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
     }
 }

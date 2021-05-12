@@ -62,6 +62,24 @@ public final class MethodInfo {
         }
     }
 
+    public static final class ConverterInfo {
+        private final TypeMirror type;
+        private final String[] parameters;
+
+        private ConverterInfo(TypeMirror type, String[] parameters) {
+            this.type = type;
+            this.parameters = parameters;
+        }
+
+        public TypeMirror type() {
+            return type;
+        }
+
+        public String[] parameters() {
+            return parameters;
+        }
+    }
+
     private final Annotations annotations;
     private final TypeName returnTypeName;
     private final String name;
@@ -74,7 +92,7 @@ public final class MethodInfo {
     private Optional<StringMethodInfo> returnStringMethod = Optional.empty();
     private Optional<Type> returnInterface = Optional.empty();
     private boolean returnOptional = false;
-    private Optional<TypeMirror> returnConverter = Optional.empty();
+    private Optional<ConverterInfo> returnConverter = Optional.empty();
 
     MethodInfo(ExecutableElement methodElement) {
         annotations = new Annotations(methodElement);
@@ -100,8 +118,8 @@ public final class MethodInfo {
         return this;
     }
 
-    MethodInfo withConverter(TypeMirror converterType) {
-        returnConverter = Optional.of(converterType);
+    MethodInfo withConverter(TypeMirror converterType, String[] parameters) {
+        returnConverter = Optional.of(new ConverterInfo(converterType, parameters));
         return this;
     }
 
@@ -137,7 +155,7 @@ public final class MethodInfo {
         return returnStringMethod;
     }
 
-    public Optional<TypeMirror> returnConverter() {
+    public Optional<ConverterInfo> returnConverter() {
         return returnConverter;
     }
 

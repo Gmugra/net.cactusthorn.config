@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import net.cactusthorn.config.core.converter.ConverterClass;
-import net.cactusthorn.config.core.converter.ToTestConverter;
 
 @Config @Prefix("test") public interface TestConfig {
 
