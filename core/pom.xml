@@ -14,6 +14,7 @@
     <packaging>jar</packaging>
 
     <name>Config :: Core</name>
+    <description>Config :: Core</description>
 
     <licenses>
         <license>
@@ -24,6 +25,7 @@
     </licenses>
     <developers>
         <developer>
+            <id>akhatskevich</id>
             <name>Alexei Khatskevich</name>
             <email>alexei.khatskevich@gmail.com</email>
         </developer>
@@ -56,6 +58,25 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+             <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <!-- next line need for bnd-maven-plugin, otherwise it will not work:
+                             https://github.com/bndtools/bnd/tree/master/maven/bnd-maven-plugin -->
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                        <manifestEntries>
+                            <Automatic-Module-Name>net.cactusthorn.config.core</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

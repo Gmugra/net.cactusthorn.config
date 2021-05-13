@@ -22,6 +22,7 @@
     </licenses>
     <developers>
         <developer>
+            <id>akhatskevich</id>
             <name>Alexei Khatskevich</name>
             <email>alexei.khatskevich@gmail.com</email>
         </developer>
@@ -69,6 +70,7 @@
         <plugin.jxr>3.0.0</plugin.jxr>
         <plugin.gpg>1.6</plugin.gpg>
         <plugin.nexus-staging>1.6.8</plugin.nexus-staging>
+        <plugin.bnd>5.3.0</plugin.bnd>
 
         <plugin.checkstyle>3.1.1</plugin.checkstyle>
             <dependency.checkstyle>8.41.1</dependency.checkstyle>
@@ -417,6 +419,19 @@
                             <version>${dependency.jaxb}</version>
                         </dependency>
                     </dependencies>
+                </plugin>
+
+                <plugin>
+                    <groupId>biz.aQute.bnd</groupId>
+                    <artifactId>bnd-maven-plugin</artifactId>
+                    <version>${plugin.bnd}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>bnd-process</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
 
             </plugins>
