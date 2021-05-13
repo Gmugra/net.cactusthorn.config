@@ -1,0 +1,15 @@
+Bundle-DocURL: https://github.com/Gmugra/net.cactusthorn.config
+Bundle-License: https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
+Bundle-ManifestVersion: 2
+Bundle-Name: Config :: Core
+Bundle-Description: Config :: Core
+Bundle-SymbolicName: net.cactusthorn.config.core
+Bundle-Version: ${project.version}
+
+Import-Package:\
+    !net.cactusthorn.config.core.*,\
+    *
+
+Export-Package:\
+    !net.cactusthorn.config.core.util,\
+    *
