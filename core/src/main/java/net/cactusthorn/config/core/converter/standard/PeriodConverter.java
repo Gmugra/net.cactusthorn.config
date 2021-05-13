@@ -6,10 +6,13 @@ import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 import java.time.Period;
 
 import net.cactusthorn.config.core.converter.Converter;
+import net.cactusthorn.config.core.util.NumericAndCharSplitter;
 
 public class PeriodConverter implements Converter<Period> {
 
-    @Override public Period convert(String value) {
+    private static final NumericAndCharSplitter SPLITTER = new NumericAndCharSplitter();
+
+    @Override public Period convert(String value, String[] parameters) {
         // If it looks like a string that Period.parse can handle, let's try that.
         if (value.startsWith("P") || value.startsWith("-P") || value.startsWith("+P")) {
             return Period.parse(value);
@@ -19,7 +22,7 @@ public class PeriodConverter implements Converter<Period> {
     }
 
     private Period parsePeriod(String input) {
-        String[] parts = splitNumericAndChar(input);
+        String[] parts = SPLITTER.split(input);
         String numberString = parts[0];
         String originalUnitString = parts[1];
         String unitString = originalUnitString;
@@ -51,23 +54,5 @@ public class PeriodConverter implements Converter<Period> {
         default:
             throw new IllegalArgumentException(msg(PERIOD_WRONG_TIME_UNIT, originalUnitString));
         }
-    }
-
-    static String[] splitNumericAndChar(String input) {
-        // ATTN: String.trim() may not trim all UTF-8 whitespace characters properly.
-        // The original implementation used its own unicodeTrim() method that I decided
-        // not to include until the need
-        // arises. For more information, see:
-        // https://github.com/typesafehub/config/blob/v1.3.0/config/src/main/java/com/typesafe/config/impl/ConfigImplUtil.java#L118-L164
-
-        int i = input.length() - 1;
-        while (i >= 0) {
-            char c = input.charAt(i);
-            if (!Character.isLetter(c)) {
-                break;
-            }
-            i -= 1;
-        }
-        return new String[] {input.substring(0, i + 1).trim(), input.substring(i + 1).trim()};
     }
 }

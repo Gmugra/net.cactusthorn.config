@@ -6,7 +6,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class URIConverter implements Converter<URI> {
 
-    @Override public URI convert(String value) {
+    @Override public URI convert(String value, String[] parameters) {
         return URI.create(value);
     }
 

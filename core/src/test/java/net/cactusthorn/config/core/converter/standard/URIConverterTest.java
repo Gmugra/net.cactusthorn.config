@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,7 +7,7 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.converter.standard.URIConverter;
+import net.cactusthorn.config.core.converter.Converter;
 
 public class URIConverterTest {
 

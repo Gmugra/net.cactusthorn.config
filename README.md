@@ -216,7 +216,7 @@ e.g. `2011-12-03T10:15:30Z`
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
 ```java
 public class MyClassConverter implements Converter<MyClass> {
-    @Override public MyClass convert(String value) {
+    @Override public MyClass convert(String value, String[] parameters) {
         ...
     }
 }
@@ -232,6 +232,43 @@ The `@ConverterClass` annotation allows to specify the `Converter`-implementatio
 }
 ```
 FYI: `Converter`-implementation must be stateless and must have a default(no-argument) `public` constructor.
+
+### Parameterized custom converters
+Sometimes it's convenient to set several constant parameters for the custom converter.
+For example, to provide format(s) with a converter for date-time types.
+This can be achieved with converter-annotation for the custom-converter:
+```java
+@Retention(SOURCE)
+@Target(METHOD) 
+@ConverterClass(LocalDateConverter.class) //converter implementation
+public @interface ConverterLocalDate {
+    String[] value() default "";
+}
+```
+FYI: 
+- such annotation must contains `String[] value() default ""` parameter, otherwise parameters will be ignored by compiler
+- such annotation can be made for any converter (even for converter which ia actually not need parameters)
+
+usage:
+```java
+@Config 
+public interface MyConfig {
+
+    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"})
+    LocalDate localDate();
+
+    @ConverterLocalDate LocalDate //default format
+    localDateA();
+
+    @ConverterClass(LocalDateConverter.class) //in fact it's same with @ConverterLocalDate
+    LocalDate localDateB();
+}
+```
+
+Several such annotation shipped with the library:
+`net.cactusthorn.config.core.converter.ConverterLocalDate`
+`net.cactusthorn.config.core.converter.ConverterLocalDateTime`
+`net.cactusthorn.config.core.converter.ConverterZonedDateTime`
 
 ## Loaders
 

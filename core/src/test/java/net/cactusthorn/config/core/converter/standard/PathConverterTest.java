@@ -1,4 +1,4 @@
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.core.converter.standard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.converter.standard.PathConverter;
+import net.cactusthorn.config.core.converter.Converter;
 
 public class PathConverterTest {
 

@@ -8,7 +8,7 @@ import java.net.MalformedURLException;
 
 public class URLConverter implements Converter<URL> {
 
-    @Override public URL convert(String value) {
+    @Override public URL convert(String value, String[] parameters) {
         try {
             return new URL(value);
         } catch (MalformedURLException mue) {

@@ -1,5 +1,6 @@
 package net.cactusthorn.config.compiler.configbuildergenerator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,9 @@ import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.ConverterInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
+import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.util.ConfigBuilder;
@@ -60,7 +63,7 @@ public class BuildPart implements GeneratorPart {
         Set<TypeMirror> converters = new HashSet<>();
         methodInfo.forEach(mi -> {
             if (mi.returnConverter().isPresent()) {
-                TypeMirror converter = mi.returnConverter().get();
+                TypeMirror converter = mi.returnConverter().get().type();
                 if (!converters.contains(converter)) {
                     converters.add(converter);
                     buildBuilder.addStatement("CONVERTERS.computeIfAbsent($T.class, c -> new $T())", converter, converter);
@@ -73,7 +76,8 @@ public class BuildPart implements GeneratorPart {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
         if (mi.returnConverter().isPresent()) {
-            builder.add("s -> convert($T.class, s), ", mi.returnConverter().get());
+            ConverterInfo ci = mi.returnConverter().get();
+            builder.add("s -> convert($T.class, s, $L), ", ci.type(), converterParameters(ci.parameters()));
             return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
         } else if (mi.returnStringMethod().isPresent()) {
             MethodInfo.StringMethodInfo smi = mi.returnStringMethod().get();
@@ -125,5 +129,19 @@ public class BuildPart implements GeneratorPart {
 
     private CodeBlock defaultValue(MethodInfo mi) {
         return mi.defaultValue().map(s -> CodeBlock.of(", $S", s)).orElse(CodeBlock.of(""));
+    }
+
+    private CodeBlock converterParameters(String[] parameters) {
+        if (Arrays.equals(Converter.EMPTY, parameters)) {
+            return CodeBlock.builder().add("$T.EMPTY", Converter.class).build();
+        }
+        CodeBlock.Builder builder = CodeBlock.builder().add("new $T[] {", String.class);
+        for (int i = 0; i < parameters.length; i++) {
+            if (i != 0) {
+                builder.add(", ");
+            }
+            builder.add("$S", parameters[i]);
+        }
+        return builder.add("}").build();
     }
 }
