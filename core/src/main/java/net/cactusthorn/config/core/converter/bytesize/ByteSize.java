@@ -22,7 +22,7 @@ import java.util.Objects;
  *
  * @author Stefan Freyr Stefansson
  */
-public class ByteSize {
+public final class ByteSize {
     private final BigDecimal value;
     private final ByteSizeUnit unit;
 
@@ -136,7 +136,7 @@ public class ByteSize {
      * a non-terminating decimal expansion occurs, an {@link ArithmeticException} is
      * thrown.
      *
-     * @param unit the unit for the new {@link ByteSize}.
+     * @param byteSizeUnit the unit for the new {@link ByteSize}.
      *
      * @throws ArithmeticException if a non-terminating decimal expansion occurs
      *                             during calculation.
