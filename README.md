@@ -58,18 +58,20 @@ To access properties you need to define a convenient Java interface, e.g. :
 ```java
 package my.superapp;
 
-import static net.cactusthorn.config.core.Disable.Feature.*
-import net.cactusthorn.config.core.*
+import static net.cactusthorn.config.core.Disable.Feature.*;
+import net.cactusthorn.config.core.*;
+import net.cactusthorn.config.core.converter.*;
 
 import java.util.concurrent.TimeUnit;
 import java.util.Set;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.time.LocalDate;
 
 @Config
 @Prefix("app")
-interface MyConfig {
+public interface MyConfig {
 
     @Default("unknown") String val();
 
@@ -78,6 +80,8 @@ interface MyConfig {
     @Disable(PREFIX) Optional<List<UUID>> ids();
 
     @Split("[:;]") @Default("DAYS:HOURS") Set<TimeUnit> units();
+
+    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"}) LocalDate date();
 }
 ```
 - An interface must be annotated with `@Config`.
@@ -100,6 +104,7 @@ app.val=ABC
 app.number=10
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
 app.units=DAYS:HOURS;MICROSECONDS
+app.date=12.11.2005
 ```
 
 ### Annotations
@@ -179,7 +184,7 @@ The return type of the interface methods must either:
    1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
    1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be `java.net.URL`, `java.net.URI`, `java.time.Instant`, `java.time.Duration`, `java.time.Period`, `java.nio.file.Path`
+1. Be `java.net.URL`, `java.net.URI`, `java.time.Instant`, `java.time.Duration`, `java.time.Period`, `java.nio.file.Path`, `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
 1. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
@@ -211,6 +216,35 @@ e.g. `2011-12-03T10:15:30Z`
        - `w`, `week`, `weeks`
        - `m`, `mo`, `month`, `months`
        - `y`, `year`, `years`
+
+### `net.cactusthorn.config.core.converter.bytesize.ByteSize` format
+It based on [OWNER](http://owner.aeonbits.org/docs/type-conversion/) classes to represent data sizes.
+
+usage:
+```java
+@Config public interface MyByteSize {
+    @Default("10 megabytes") 
+    ByteSize size();
+}
+```
+The supported unit strings for `ByteSize` are case sensitive and must be lowercase. Exactly these strings are supported:
+   - `byte`, `bytes`, `b`
+   - `kilobyte`, `kilobytes`, `k`, `ki`, `kib`
+   - `kibibyte`, `kibibytes`, `kb`
+   - `megabyte`, `megabytes`, `m`, `mi`, `mib`
+   - `mebibyte`, `mebibytes`, `mb`
+   - `gigabyte`, `gigabytes`, `g`, `gi`, `gib`
+   - `gibibyte`, `gibibytes`, `gb`
+   - `terabyte`, `terabytes`, `t`, `ti`, `tib`
+   - `tebibyte`, `tebibytes`, `tb`
+   - `petabyte`, `petabytes`, `p`, `pi`, `pib`
+   - `pebibyte`, `pebibytes`, `pb`
+   - `exabyte`, `exabytes`, `e`, `ei`, `eib`
+   - `exbibyte`, `exbibytes`, `eb`
+   - `zettabyte`, `zettabytes`, `z`, `zi`, `zib`
+   - `zebibyte`, `zebibytes`, `zb`
+   - `yottabyte`, `yottabytes`, `y`, `yi`, `yib`
+   - `yobibyte`, `yobibytes`, `yb`
 
 ### Custom converters
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
@@ -266,9 +300,9 @@ public interface MyConfig {
 ```
 
 Several such annotation shipped with the library:
-`net.cactusthorn.config.core.converter.ConverterLocalDate`
-`net.cactusthorn.config.core.converter.ConverterLocalDateTime`
-`net.cactusthorn.config.core.converter.ConverterZonedDateTime`
+* `net.cactusthorn.config.core.converter.ConverterLocalDate`
+* `net.cactusthorn.config.core.converter.ConverterLocalDateTime`
+* `net.cactusthorn.config.core.converter.ConverterZonedDateTime`
 
 ## Loaders
 
