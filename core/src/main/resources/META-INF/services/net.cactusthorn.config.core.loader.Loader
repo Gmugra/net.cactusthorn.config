@@ -1,0 +1,7 @@
+net.cactusthorn.config.core.loader.standard.ClasspathJarManifestLoader
+net.cactusthorn.config.core.loader.standard.ClasspathPropertiesLoader
+net.cactusthorn.config.core.loader.standard.ClasspathXMLLoader
+net.cactusthorn.config.core.loader.standard.SystemEnvLoader
+net.cactusthorn.config.core.loader.standard.SystemPropertiesLoader
+net.cactusthorn.config.core.loader.standard.UrlPropertiesLoader
+net.cactusthorn.config.core.loader.standard.UrlXMLLoader

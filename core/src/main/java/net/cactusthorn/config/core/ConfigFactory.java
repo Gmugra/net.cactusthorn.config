@@ -29,8 +29,10 @@ import java.lang.invoke.MethodType;
 import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -40,13 +42,6 @@ import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.loader.standard.ClasspathJarManifestLoader;
-import net.cactusthorn.config.core.loader.standard.ClasspathPropertiesLoader;
-import net.cactusthorn.config.core.loader.standard.ClasspathXMLLoader;
-import net.cactusthorn.config.core.loader.standard.SystemEnvLoader;
-import net.cactusthorn.config.core.loader.standard.SystemPropertiesLoader;
-import net.cactusthorn.config.core.loader.standard.UrlPropertiesLoader;
-import net.cactusthorn.config.core.loader.standard.UrlXMLLoader;
 import net.cactusthorn.config.core.util.ConfigBuilder;
 
 public final class ConfigFactory {
@@ -75,13 +70,10 @@ public final class ConfigFactory {
         private LoadStrategy loadStrategy = LoadStrategy.MERGE;
 
         private Builder() {
-            loaders.add(new ClasspathPropertiesLoader());
-            loaders.add(new SystemPropertiesLoader());
-            loaders.add(new SystemEnvLoader());
-            loaders.add(new UrlPropertiesLoader());
-            loaders.add(new ClasspathXMLLoader());
-            loaders.add(new UrlXMLLoader());
-            loaders.add(new ClasspathJarManifestLoader());
+            ServiceLoader<Loader> serviceLoader = ServiceLoader.load(Loader.class);
+            for (Iterator<Loader> it = serviceLoader.iterator(); it.hasNext();) {
+                loaders.add(it.next());
+            }
         }
 
         public Builder addLoader(Loader loader) {
