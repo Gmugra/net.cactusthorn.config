@@ -26,9 +26,10 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.xml.sax.Attributes;
@@ -57,8 +58,8 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     }
 
     private boolean isJavaPropertiesFormat = false;
-    private final Stack<String> paths = new Stack<String>();
-    private final Stack<StringBuilder> value = new Stack<StringBuilder>();
+    private final Deque<String> paths = new ArrayDeque<String>();
+    private final Deque<StringBuilder> value = new ArrayDeque<StringBuilder>();
 
     private final Map<String, String> properties = new HashMap<>();
 
@@ -78,17 +79,17 @@ public final class XMLToMapHandler extends DefaultHandler2 {
 
     @Override public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-        value.push(new StringBuilder());
+        value.addFirst(new StringBuilder());
 
         if (isJavaPropertiesFormat) {
             if (ENTRY.equals(qName)) {
-                paths.push(attributes.getValue(KEY));
+                paths.addFirst(attributes.getValue(KEY));
             } else {
-                paths.push(qName);
+                paths.addFirst(qName);
             }
         } else {
-            String path = paths.size() == 0 ? qName : paths.peek() + '.' + qName;
-            paths.push(path);
+            String path = paths.size() == 0 ? qName : paths.peekFirst() + '.' + qName;
+            paths.addFirst(path);
             for (int i = 0; i < attributes.getLength(); i++) {
                 String attrName = attributes.getQName(i);
                 String attrValue = attributes.getValue(i);
@@ -98,19 +99,19 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     }
 
     @Override public void characters(char[] ch, int start, int length) throws SAXException {
-        value.peek().append(new String(ch, start, length));
+        value.peekFirst().append(new String(ch, start, length));
     }
 
     private static final String COMMENT = "comment";
 
     @Override public void endElement(String uri, String localName, String qName) throws SAXException {
-        String key = paths.peek();
-        String propertyValue = this.value.peek().toString().trim();
+        String key = paths.peekFirst();
+        String propertyValue = this.value.peekFirst().toString().trim();
         if (!propertyValue.isEmpty() && !(isJavaPropertiesFormat && COMMENT.equals(key))) {
             properties.put(key, propertyValue);
         }
-        value.pop();
-        paths.pop();
+        value.removeFirst();
+        paths.removeFirst();
     }
 
     @Override public void error(SAXParseException e) throws SAXException {
