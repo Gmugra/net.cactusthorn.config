@@ -77,7 +77,7 @@
         <plugin.jacoco>0.8.6</plugin.jacoco>
         <plugin.pmd>3.14.0</plugin.pmd>
         <plugin.spotbugs>4.2.2</plugin.spotbugs>
-            <dependency.spotbugs>4.2.2</dependency.spotbugs>
+            <dependency.spotbugs>4.2.3</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb>2.3.1</dependency.jaxb>
 
