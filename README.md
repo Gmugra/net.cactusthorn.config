@@ -48,13 +48,12 @@ FYI: With this configuration, Maven will output the generated code into `target/
 
 Same with Gradle:
 ```
-compile 'net.cactusthorn.config:core:0.10'
-annotationProcessor 'net.cactusthorn.config:compiler:0.10'
+compile 'net.cactusthorn.config:core:0.20'
+annotationProcessor 'net.cactusthorn.config:compiler:0.20'
 ```
 
 ### Basic usage
-
-To access properties you need to define a convenient Java interface, e.g. :
+To access properties it's need to define a convenient Java interface, e.g. :
 ```java
 package my.superapp;
 
@@ -88,8 +87,7 @@ public interface MyConfig {
 - An interface must contain at least one method declaration (but methods decalaration can be also in super interface(s)).
 - All methods must be without parameters
 
-Based on this interface the annotations-processor will generate the implementation.
-And all you need to do to get property values is to get an implementation using the `ConfigFactory`, e.g.:
+Based on the interface, the annotation processor will generate an implementation, that can be obtained using `ConfigFactory`:
 ```java
 MyConfig myConfig =
     ConfigFactory.builder()
@@ -126,12 +124,41 @@ app.date=12.11.2005
    - `@Target(METHOD)`
    - Disable interface-level features for this method.
 1. `@Split`
-   - `@Target({TYPE,METHOD})`
+   - `@Target({TYPE, METHOD})`
    - Set splitter regular expression for splitting value for collections.
    - If this annotation is not present, default "splitter" is comma : `,`
 1. `@ConverterClass`
-   - `@Target(METHOD)`
+   - `@Target({METHOD, ANNOTATION_TYPE})`
    - apply custom converter implementation
+1. `@ConverterLocalDate`, `@ConverterLocalDateTime`, `@ConverterZonedDateTime`
+   - `@Target(METHOD)`
+   - apply a parameterised (formats) converter to the relevant java-time.* type
+
+### Property not found : `@Default` or `Optional`
+There are three ways for dealing with properties that are not found in sources:
+1. If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
+1. If method return type is `Optional` ->  method will return `Optional.empty()`
+1. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
+FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
+
+### `@Config` annotation parameters
+There are two *optional* paramters `sources` and `loadStrategy` which can be used to override these settigns from `ConfigFactory`.
+e.g.
+```java
+@Config(sources = {"classpath:config/testconfig2.properties","nocache:system:properties"},
+        loadStrategy = LoadStrategy.FIRST)
+public interface ConfigOverride {
+
+    String string();
+}
+```
+1. If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
+1. If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
+1. Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
+
+## The `ConfigFactory`
+The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
+Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
 
 ### Direct access to properties
 It's possible to get loaded propeties without define config-interface.
@@ -150,29 +177,21 @@ Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
 Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
 ```
 
-### Property not found : `@Default` or `Optional`
-There are three ways for dealing with properties that are not found in sources:
-1. If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
-1. If method return type is `Optional` ->  method will return `Optional.empty()`
-1. If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
-FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
+### Manually added properties
+The `ConfigFactory.Builder` contains a method for adding properties manually: `setSource(Map<String, String> properties)`.
+Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties, independent of loading strategy.
+In other words: the manually added properties will always override (sure, when the proeprty keys are same) properties loaded by URI(s).
+   
+There is two major use-cases for the feature: unit-tests & console applications.   
+For console applications, it is convenient to provide command line arguments to the `ConfigFactory` using this method.
 
-### The `ConfigFactory`
-The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
-Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
+### Caching
+By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
 
-### `@Config` annotation parameters
-There are two *optional* paramters `sources` and `loadStrategy` which can be used to override these settigns from `ConfigFactory`.
+Alternative, it's possible to use URI-prefix `nocache:` this also will switch off caching for the URI.
 e.g.
-```java
-@Config(sources = {"classpath:config/testconfig2.properties","system:properties"}, loadStrategy = LoadStrategy.FIRST)
-public interface ConfigOverride {
-    String string();
-}
-```
-1. If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
-1. If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
-1. Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These property will be merged in any case.
+`nocache:system:properties`
+`nocache:file:~/my.properties`
 
 ## Type conversion
 
@@ -181,15 +200,22 @@ The return type of the interface methods must either:
 1. Be a primitive type
 1. Have a public constructor that accepts a single `String` argument
 1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
-   1. e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
-   1. e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
-   1. If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be `java.net.URL`, `java.net.URI`, `java.time.Instant`, `java.time.Duration`, `java.time.Period`, `java.nio.file.Path`, `net.cactusthorn.config.core.converter.bytesize.ByteSize`
-1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
-1. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
+   - e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
+   - e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
+   - If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
+1. Be 
+   - `java.net.URL`
+   - `java.net.URI`
+   - `java.time.Instant`
+   - `java.time.Duration`
+   - `java.time.Period`
+   - `java.nio.file.Path`
+   - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
+3. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
+4. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
 ### `java.time.Instant` format
-The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)
+The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
 e.g. `2011-12-03T10:15:30Z`
 
 ### `java.time.Duration` formats
@@ -222,7 +248,9 @@ It based on [OWNER](http://owner.aeonbits.org/docs/type-conversion/) classes to 
 
 usage:
 ```java
-@Config public interface MyByteSize {
+@Config
+public interface MyByteSize {
+
     @Default("10 megabytes") 
     ByteSize size();
 }
@@ -250,6 +278,7 @@ The supported unit strings for `ByteSize` are case sensitive and must be lowerca
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
 ```java
 public class MyClassConverter implements Converter<MyClass> {
+
     @Override public MyClass convert(String value, String[] parameters) {
         ...
     }
@@ -258,6 +287,7 @@ public class MyClassConverter implements Converter<MyClass> {
 The `@ConverterClass` annotation allows to specify the `Converter`-implementation for the config-interface method:
 ```java
 @Config public interface MyConfigWithConverter {
+
     @ConverterClass(MyClassConverter.class) @Default("some super default value") MyClass theValue();
 
     @ConverterClass(MyClassConverter.class) Optional<MyClass> mayBeValue();
@@ -276,12 +306,13 @@ This can be achieved with converter-annotation for the custom-converter:
 @Target(METHOD) 
 @ConverterClass(LocalDateConverter.class) //converter implementation
 public @interface ConverterLocalDate {
+
     String[] value() default "";
 }
 ```
 FYI: 
-- such annotation must contains `String[] value() default ""` parameter, otherwise parameters will be ignored by compiler
-- such annotation can be made for any converter (even for converter which ia actually not need parameters)
+- the annotation must contains `String[] value() default ""` parameter, otherwise parameters will be ignored by compiler
+- the annotation can be made for any converter (even for converter which ia actually not need parameters)
 
 usage:
 ```java
@@ -299,10 +330,10 @@ public interface MyConfig {
 }
 ```
 
-Several such annotation shipped with the library:
-* `net.cactusthorn.config.core.converter.ConverterLocalDate`
-* `net.cactusthorn.config.core.converter.ConverterLocalDateTime`
-* `net.cactusthorn.config.core.converter.ConverterZonedDateTime`
+Several of these annotations shipped with the library:
+* `@ConverterLocalDate`
+* `@ConverterLocalDateTime`
+* `@ConverterZonedDateTime`
 
 ## Loaders
 
@@ -337,11 +368,14 @@ This makes it possible to load properties from specific sources (e.g. Database, 
 e.g.
 ```java
 public final class SinglePropertyLoader implements Loader {
+
     @Override public boolean accept(URI uri) {
+    
         return uri.toString().equals("single:property");
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
+    
         Map<String, String> result = new HashMap<>();
         result.put("key", "value");
         return result;
@@ -396,12 +430,14 @@ Interfaces inheritance is supported.
 e.g.
 ```java
 interface MyRoot {
+
     @Key(rootVal) String value();
 }
 ```
 ```java
 @Config
 interface MyConfig extends MyRoot {
+
     int intValue();
 }
 ```
@@ -414,6 +450,7 @@ In this case generated class will also get `private static final long serialVers
 ```java
 @Config
 public interface MyConfig extends java.io.Serializable {
+
     long serialVersionUID = 100L;
 
     String val();
@@ -436,14 +473,6 @@ In this case generated class will also get methods for this interface:
 
 ## Miscellaneous
 
-### Caching
-By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
-
-Alternative, it's possible to use URI-prefix `nocache:` this also will switch off caching for the URI.
-e.g.
-`nocache:system:properties`
-`nocache:file:~/my.properties`
-
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
 That's because one of the requirements is that external libraries must not be used, and JUL is only option in this case.
@@ -463,6 +492,21 @@ and e.g. this code somewhere at start of the application:
 org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger();
 org.slf4j.bridge.SLF4JBridgeHandler.install();
 java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
+```
+
+### Profiles
+There is no specific support for profiles, but it is easy to achieve similar behaviour using *System properties and/or environment variables* in sources URIs,
+e.g.:
+```java
+ConfigFactory.builder()
+    .addSource("file:~/myconfig-{myapp.profile}.properties")
+    .addSource("file:./myconfig-{myapp.profile}.properties")
+    .addSource("classpath:myconfig.properties")
+    .build();
+```
+and get *profile* from, for example, system property:
+```
+java -Dmyapp.profile=DEV -jar myapp.jar
 ```
 
 ## FYI : Eclipse
