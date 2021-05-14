@@ -79,7 +79,7 @@
         <plugin.spotbugs>4.2.3</plugin.spotbugs>
             <dependency.spotbugs>4.2.3</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
-            <dependency.jaxb>2.3.1</dependency.jaxb>
+            <dependency.jaxb>2.3.4</dependency.jaxb>
 
     </properties>
 
