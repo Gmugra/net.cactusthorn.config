@@ -49,7 +49,7 @@
 
         <pmd.skip>true</pmd.skip>
 
-        <dependency.junit>5.7.0</dependency.junit>
+        <dependency.junit>5.7.1</dependency.junit>
         <dependency.mockito>3.6.28</dependency.mockito>
         <dependency.compile-testing>0.19</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
@@ -65,19 +65,19 @@
         <plugin.javadoc>3.2.0</plugin.javadoc>
         <plugin.enforcer>3.0.0-M3</plugin.enforcer>
         <plugin.deploy>3.0.0-M1</plugin.deploy>
-        <plugin.release>3.0.0-M1</plugin.release>
-        <plugin.flatten>1.2.5</plugin.flatten>
+        <plugin.release>3.0.0-M4</plugin.release>
+        <plugin.flatten>1.2.7</plugin.flatten>
         <plugin.jxr>3.0.0</plugin.jxr>
         <plugin.gpg>1.6</plugin.gpg>
         <plugin.nexus-staging>1.6.8</plugin.nexus-staging>
         <plugin.bnd>5.3.0</plugin.bnd>
 
-        <plugin.checkstyle>3.1.1</plugin.checkstyle>
+        <plugin.checkstyle>3.1.2</plugin.checkstyle>
             <dependency.checkstyle>8.42</dependency.checkstyle>
-        <plugin.jacoco>0.8.6</plugin.jacoco>
+        <plugin.jacoco>0.8.7</plugin.jacoco>
         <plugin.pmd>3.14.0</plugin.pmd>
-        <plugin.spotbugs>4.2.2</plugin.spotbugs>
-            <dependency.spotbugs>4.2.2</dependency.spotbugs>
+        <plugin.spotbugs>4.2.3</plugin.spotbugs>
+            <dependency.spotbugs>4.2.3</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb>2.3.1</dependency.jaxb>
 
