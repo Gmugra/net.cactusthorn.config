@@ -79,7 +79,7 @@
         <plugin.spotbugs>4.2.3</plugin.spotbugs>
             <dependency.spotbugs>4.2.3</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
-            <dependency.jaxb>2.3.4</dependency.jaxb>
+            <dependency.jaxb-runtime>2.3.4</dependency.jaxb-runtime>
 
     </properties>
 
@@ -409,14 +409,9 @@
                     <version>${plugin.coveralls}</version>
                     <dependencies>
                         <dependency>
-                            <groupId>javax.xml.bind</groupId>
-                            <artifactId>jaxb-api</artifactId>
-                            <version>${dependency.jaxb}</version>
-                        </dependency>
-                        <dependency>
                             <groupId>org.glassfish.jaxb</groupId>
                             <artifactId>jaxb-runtime</artifactId>
-                            <version>${dependency.jaxb}</version>
+                            <version>${dependency.jaxb-runtime}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
