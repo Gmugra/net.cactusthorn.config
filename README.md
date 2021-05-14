@@ -393,6 +393,12 @@ FYI:
    - Custom loaders always have the highest priority: last added -> first used.
    - Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
+### SPI
+[Service-provider loading facility](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) (introduced in JDK 1.6) can be used to *automatically* add custom loader implementation to the `ConfigFactory`. Add file *META-INF\services\net.cactusthorn.config.core.loader.Loader* in the class path.   
+e.g.   
+- [core module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/core/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
+- [tests module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/tests/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
+
 ### System properties and/or environment variables in sources URIs
 Syntax: {*name*}
 e.g.
