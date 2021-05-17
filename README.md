@@ -6,12 +6,24 @@ The Java library with the goal of minimizing the code required to handle applica
 [![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.20)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
-
-The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it has problems: it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
+The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
 
 So, this project is providing library with similar with *OWNER* API, but
-* Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
-* Required at least Java 8, as result it support "more fresh" language features e.g. `java.util.Optional`, `java.time.*`.
+- Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
+- Required at least Java 8, as result it support "more fresh" language features.
+
+## Features
+- Plain Java 8 without any external dependencies
+- Uses no reflection or runtime bytecode generation; generates plain Java source code.
+- Small (< 100KB) & lightweight runtime part
+- Multiple configuration sources and/or formats (.properties, .xml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
+- Multiple loading strategies (configuration sources fallback/merging)
+- Powerful type conversions (collections, enums etc. ); expandable with custom converters
+- Parameterized type converters
+- Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
+- Caching
+- Seamless integration with DI containers
+- Thread-safe
 
 ## Basics
 
@@ -72,15 +84,22 @@ import java.time.LocalDate;
 @Prefix("app")
 public interface MyConfig {
 
-    @Default("unknown") String val();
+    @Default("unknown")
+    String val();
 
-    @Key("number") int intVal();
+    @Key("number")
+    int intVal();
+    
+    URI uri();
 
-    @Disable(PREFIX) Optional<List<UUID>> ids();
+    @Disable(PREFIX)
+    Optional<List<UUID>> ids();
 
-    @Split("[:;]") @Default("DAYS:HOURS") Set<TimeUnit> units();
+    @Split("[:;]") @Default("DAYS:HOURS")
+    Set<TimeUnit> units();
 
-    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"}) LocalDate date();
+    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"})
+    LocalDate date();
 }
 ```
 - An interface must be annotated with `@Config`.
@@ -100,6 +119,7 @@ e.g. "myconfig.properties":
 ```java
 app.val=ABC
 app.number=10
+app.uri=http://java.sun.com/j2se/1.3/
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
 app.units=DAYS:HOURS;MICROSECONDS
 app.date=12.11.2005
@@ -180,10 +200,10 @@ Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAY
 ### Manually added properties
 The `ConfigFactory.Builder` contains a method for adding properties manually: `setSource(Map<String, String> properties)`.
 Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties, independent of loading strategy.
-In other words: the manually added properties will always override (sure, when the proeprty keys are same) properties loaded by URI(s).
+In other words: the manually added properties will always override (sure, when the property keys are same) properties loaded by URI(s).
    
 There is two major use-cases for the feature: unit-tests & console applications.   
-For console applications, it is convenient to provide command line arguments to the `ConfigFactory` using this method.
+For console applications, it is convenient to provide command line arguments to the `ConfigFactory` using this feature.
 
 ### Caching
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
@@ -199,11 +219,12 @@ e.g.
 The return type of the interface methods must either:
 1. Be a primitive type
 1. Have a public constructor that accepts a single `String` argument
-1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
+   - e.g. [StringBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html#StringBuilder-java.lang.String-)
+3. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
    - e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
    - e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    - If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-1. Be 
+4. Be 
    - `java.net.URL`
    - `java.net.URI`
    - `java.time.Instant`
@@ -211,8 +232,8 @@ The return type of the interface methods must either:
    - `java.time.Period`
    - `java.nio.file.Path`
    - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
-3. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
-4. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
+5. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
+6. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
 
 ### `java.time.Instant` format
 The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
@@ -322,8 +343,8 @@ public interface MyConfig {
     @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"})
     LocalDate localDate();
 
-    @ConverterLocalDate LocalDate //default format
-    localDateA();
+    @ConverterLocalDate //default format
+    LocalDate localDateA();
 
     @ConverterClass(LocalDateConverter.class) //in fact it's same with @ConverterLocalDate
     LocalDate localDateB();
@@ -359,8 +380,10 @@ Several of these annotations shipped with the library:
    - e.g. `file:./my.xml`
 1. META-INF/MANIFEST.MF: classpath:jar:manifest?*attribute*[=value]
    - The loader scans all JARs in classpath for META-INF/MANIFEST.MF files. First META-INF/MANIFEST.MF, which contain *attribute* (with optional value) from the URI will be used as source.
-   - e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**: `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
-   - e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value: `classpath:jar:manifest?exotic-unique-attribite`
+   - e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**:   
+`classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
+   - e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value:   
+`classpath:jar:manifest?exotic-unique-attribite`
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
@@ -394,7 +417,7 @@ FYI:
    - Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ### SPI
-[Service-provider loading facility](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) (introduced in JDK 1.6) can be used to *automatically* add custom loader implementation to the `ConfigFactory`. Add file *META-INF\services\net.cactusthorn.config.core.loader.Loader* in the class path.   
+[Service-provider loading facility](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) (introduced in JDK 1.6) can be used to *automatically* add custom loader implementation to the `ConfigFactory`. Simple add file *META-INF\services\net.cactusthorn.config.core.loader.Loader* with full-class-name of custom-loader implementation(s) in the class path.   
 e.g.   
 - [core module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/core/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 - [tests module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/tests/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
