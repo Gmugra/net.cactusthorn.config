@@ -18,7 +18,7 @@ So, this project is providing library with similar with *OWNER* API, but
 - Small (< 100KB) & lightweight runtime part
 - Multiple configuration sources and/or formats (.properties, .xml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
 - Multiple loading strategies (configuration sources fallback/merging)
-- Powerful type conversions (collections, enums etc. ); expandable with custom converters
+- Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
 - Parameterized type converters
 - Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
 - Caching
@@ -220,11 +220,11 @@ The return type of the interface methods must either:
 1. Be a primitive type
 1. Have a public constructor that accepts a single `String` argument
    - e.g. [StringBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html#StringBuilder-java.lang.String-)
-3. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
+1. Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
    - e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
    - e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
    - If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
-4. Be 
+1. Be 
    - `java.net.URL`
    - `java.net.URI`
    - `java.time.Instant`
@@ -232,8 +232,31 @@ The return type of the interface methods must either:
    - `java.time.Period`
    - `java.nio.file.Path`
    - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
-5. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where T satisfies 2, 3 or 4 above. The resulting collection is read-only.
-6. Be `Optional<T>`, where T satisfies 2, 3, 4 or 5 above
+1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
+1. Be `Map<K,V>`, where **K** & **V** satisfies 2, 3 or 4 above. The resulting map is read-only.
+1. Be `Optional<T>`, where **T** satisfies 2, 3, 4, 5 or 6 above
+
+### Maps
+For the momemnt `Map` support is limited by two restrictions:
+1. custom converters are not supported for the *key*
+1. as key-value separator can be used only `|` (pipe character)
+
+e.g. "myconfig.properties":
+```java
+map=A|10,BBB|20
+map=10000|10;20000|20
+```
+```java
+@Config(sources="classpath:/myconfig.properties") 
+public interface ConfigMap {
+
+    Map<String, Integer> map();
+
+    @Split(";") Optional<Map<Integer, Byte>> map2();
+
+    @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") Map<UUID, URL> map3();
+}
+```
 
 ### `java.time.Instant` format
 The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
