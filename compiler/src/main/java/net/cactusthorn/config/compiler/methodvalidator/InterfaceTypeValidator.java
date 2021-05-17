@@ -42,19 +42,85 @@ import net.cactusthorn.config.compiler.ProcessorException;
 
 public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
-    public static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class);
+    private static final class ElementInfo {
 
+        private final ProcessingEnvironment processingEnv;
+        private final ExecutableElement methodElement;
+        private final Map<TypeMirror, Type> interfaces;
+
+        private final DeclaredType declaredType;
+        private final Element element;
+
+        private Type interfaceType;
+        private List<? extends TypeMirror> arguments;
+
+        private ElementInfo(ProcessingEnvironment processingEnv, ExecutableElement methodElement, TypeMirror typeMirror,
+                Map<TypeMirror, Type> interfaces) {
+
+            this.processingEnv = processingEnv;
+            this.methodElement = methodElement;
+            this.interfaces = interfaces;
+
+            declaredType = (DeclaredType) typeMirror;
+            element = declaredType.asElement();
+        }
+
+        private void initInterface() {
+         // @formatter:off
+            interfaceType = interfaces.entrySet().stream()
+                .filter(e -> processingEnv.getTypeUtils().isSameType(element.asType(), e.getKey()))
+                .map(e -> e.getValue()).findAny()
+                .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), element));
+            // @formatter:on
+            arguments = declaredType.getTypeArguments();
+            if (arguments.isEmpty()) {
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), element);
+            }
+        }
+
+        private boolean isInterface() {
+            return element.getKind() == ElementKind.INTERFACE;
+        }
+
+        private boolean isMap() {
+            return interfaceType == Map.class;
+        }
+
+        private MethodInfo validateArgument(int argumentIndex, MethodValidator validator) {
+            if (arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), element);
+            }
+            DeclaredType argumentDeclaredType = (DeclaredType) arguments.get(argumentIndex);
+            Element argumentElement = argumentDeclaredType.asElement();
+            if (argumentElement.getKind() == ElementKind.INTERFACE) {
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), element);
+            }
+            return validator.validate(methodElement, arguments.get(argumentIndex)).withInterface(interfaceType);
+        }
+
+        private List<? extends TypeMirror> arguments() {
+            return arguments;
+        }
+    }
+
+    public static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class, Map.class);
     private final Map<TypeMirror, Type> interfaces = new HashMap<>();
 
-    private final MethodValidator argumentValidator;
+    private final MethodValidator valueValidator;
+    private final MethodValidator keyValidator;
 
     public InterfaceTypeValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
-        INTERFACES.forEach(c -> interfaces.put(processingEnv().getElementUtils().getTypeElement(c.getName()).asType(), c));
+        INTERFACES.forEach(c -> interfaces.put(processingEnv.getElementUtils().getTypeElement(c.getName()).asType(), c));
+
         // @formatter:off
-        argumentValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
+        valueValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
                 .next(DefaultConvertorValidator.class)
                 .next(ConverterValidator.class)
+                .next(StringTypeValidator.class)
+                .build();
+
+        keyValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
         // @formatter:on
@@ -64,31 +130,21 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        DeclaredType declaredType = (DeclaredType) typeMirror;
-        Element element = declaredType.asElement();
-        if (element.getKind() != ElementKind.INTERFACE) {
+        ElementInfo elementInfo = new ElementInfo(processingEnv(), methodElement, typeMirror, interfaces);
+        if (!elementInfo.isInterface()) {
             return next(methodElement, typeMirror);
         }
-        // @formatter:off
-        Type interfaceType =
-            interfaces.entrySet().stream()
-            .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
-            .map(e -> e.getValue())
-            .findAny()
-            .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), element));
-        // @formatter:on
-        List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
-        if (arguments.isEmpty()) {
-            throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), element);
+        elementInfo.initInterface();
+        if (elementInfo.isMap()) {
+            return validateMap(elementInfo);
+        } else {
+            return elementInfo.validateArgument(0, valueValidator);
         }
-        if (arguments.get(0).getKind() == TypeKind.WILDCARD) {
-            throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), element);
-        }
-        DeclaredType argumentDeclaredType = (DeclaredType) arguments.get(0);
-        Element argumentElement = argumentDeclaredType.asElement();
-        if (argumentElement.getKind() == ElementKind.INTERFACE) {
-            throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), element);
-        }
-        return argumentValidator.validate(methodElement, arguments.get(0)).withInterface(interfaceType);
+    }
+
+    private MethodInfo validateMap(ElementInfo elementInfo) {
+        MethodInfo key = elementInfo.validateArgument(0, keyValidator);
+        MethodInfo value = elementInfo.validateArgument(1, valueValidator).withMapKey(key);
+        return value;
     }
 }

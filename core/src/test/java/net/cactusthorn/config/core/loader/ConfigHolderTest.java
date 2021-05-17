@@ -48,6 +48,7 @@ public class ConfigHolderTest {
         properties.put("double", "137.45");
         properties.put("char", "XYZ");
         properties.put("list", "f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000");
+        properties.put("map", "A|10,B|20");
         holder = ConfigFactory.builder().setSource(properties).build().configHolder();
     }
 
@@ -139,5 +140,24 @@ public class ConfigHolderTest {
 
     @Test public void getNotExist() {
         assertThrows(IllegalArgumentException.class, () -> holder.get(UUID::fromString, "notExist"));
+    }
+
+    @Test public void getMap() {
+        Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
+        assertEquals(10, result.get("A"));
+        assertThrows(IllegalArgumentException.class, () -> holder.getMap(s -> s, Integer::valueOf, "notExists", ","));
+    }
+
+    @Test public void getMapDefaut() {
+        Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",", "C|30");
+        assertEquals(10, result.get("A"));
+        result = holder.getMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
+        assertEquals(30, result.get("C"));
+    }
+
+    @Test public void getOptionalMap() {
+        Optional<Map<String, Integer>> result = holder.getOptionalMap(s -> s, Integer::valueOf, "map", ",");
+        assertEquals(10, result.get().get("A"));
+        assertFalse(holder.getOptionalMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
     }
 }
