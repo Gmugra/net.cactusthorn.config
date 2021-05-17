@@ -284,6 +284,39 @@ public final class ConfigHolder {
         return Optional.of(new TreeSet<>(asList(convert, value, splitRegEx)));
     }
 
+    private static final String MAP_PART_SPLIT = "\\|";
+
+    public <K, V> Map<K, V> getMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
+            String splitRegEx) {
+        String value = properties.get(key);
+        if (value == null) {
+            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+        }
+        return Stream.of(value.split(splitRegEx)).map(s -> s.split(MAP_PART_SPLIT, 2))
+                .collect(Collectors.toMap(p -> keyConvert.apply(p[0]), p -> valueConvert.apply(p[1])));
+    }
+
+    public <K, V> Map<K, V> getMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
+            String splitRegEx, String defaultValue) {
+        String value = properties.get(key);
+        if (value == null) {
+            return Stream.of(defaultValue.split(splitRegEx)).map(s -> s.split(MAP_PART_SPLIT, 2))
+                    .collect(Collectors.toMap(p -> keyConvert.apply(p[0]), p -> valueConvert.apply(p[1])));
+        }
+        return Stream.of(value.split(splitRegEx)).map(s -> s.split(MAP_PART_SPLIT, 2))
+                .collect(Collectors.toMap(p -> keyConvert.apply(p[0]), p -> valueConvert.apply(p[1])));
+    }
+
+    public <K, V> Optional<Map<K, V>> getOptionalMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
+            String splitRegEx) {
+        String value = properties.get(key);
+        if (value == null) {
+            return Optional.empty();
+        }
+        return Optional.of(Stream.of(value.split(splitRegEx)).map(s -> s.split(MAP_PART_SPLIT, 2))
+                .collect(Collectors.toMap(p -> keyConvert.apply(p[0]), p -> valueConvert.apply(p[1]))));
+    }
+
     private <T> List<T> asList(Function<String, T> convert, String value, String splitRegEx) {
         return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toList());
     }

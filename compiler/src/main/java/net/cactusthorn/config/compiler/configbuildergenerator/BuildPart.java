@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.lang.model.element.Modifier;
@@ -94,28 +95,14 @@ public class BuildPart implements GeneratorPart {
     private CodeBlock convert(MethodInfo mi) {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
-        if (mi.returnConverter().isPresent()) {
-            ConverterInfo ci = mi.returnConverter().get();
-            builder.add("s -> convert($T.class, s, $L), ", ci.type(), converterParameters(ci.parameters()));
-            return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
-        } else if (mi.returnStringMethod().isPresent()) {
-            MethodInfo.StringMethodInfo smi = mi.returnStringMethod().get();
-            StringMethod sm = smi.stringMethod();
-            if (sm == StringMethod.STRING) {
-                builder.add("s -> s, ");
-            } else if (sm == StringMethod.CONSTRUCTOR) {
-                builder.add("s -> new $T(s), ", mi.returnTypeName());
-            } else {
-                builder.add("$T::$L, ", smi.methodType(), sm.methodName().get());
-            }
+        if (mi.returnMapKeyInfo().isPresent()) {
+            MethodInfo keyInfo = mi.returnMapKeyInfo().get();
+            builder.add("$L, ", function(Optional.empty(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
+            builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
             return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
         }
-        if (mi.returnTypeName().equals(TypeName.CHAR)) {
-            builder.add("s -> s.charAt(0), ");
-        } else {
-            builder.add("$T::valueOf, ", mi.returnTypeName().box());
-        }
-        return builder.add("$S", mi.key()).add(defaultValue).add(")").build();
+        builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
+        return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
     }
 
     private CodeBlock.Builder findGetMethod(MethodInfo mi) {
@@ -128,6 +115,9 @@ public class BuildPart implements GeneratorPart {
                 if (t == Set.class) {
                     return "getOptionalSet";
                 }
+                if (t == Map.class) {
+                    return "getOptionalMap";
+                }
                 return "getOptionalSortedSet";
             }).orElse("getOptional"));
         }
@@ -137,6 +127,9 @@ public class BuildPart implements GeneratorPart {
             }
             if (t == Set.class) {
                 return "getSet";
+            }
+            if (t == Map.class) {
+                return "getMap";
             }
             return "getSortedSet";
         }).orElse("get"));
@@ -148,6 +141,30 @@ public class BuildPart implements GeneratorPart {
 
     private CodeBlock defaultValue(MethodInfo mi) {
         return mi.defaultValue().map(s -> CodeBlock.of(", $S", s)).orElse(CodeBlock.of(""));
+    }
+
+    private CodeBlock function(Optional<ConverterInfo> converterInfo, Optional<MethodInfo.StringMethodInfo> stringMethodInfo,
+            TypeName returnTypeName) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        if (converterInfo.isPresent()) {
+            ConverterInfo ci = converterInfo.get();
+            builder.add("s -> convert($T.class, s, $L)", ci.type(), converterParameters(ci.parameters()));
+        } else if (stringMethodInfo.isPresent()) {
+            MethodInfo.StringMethodInfo smi = stringMethodInfo.get();
+            StringMethod sm = smi.stringMethod();
+            if (sm == StringMethod.STRING) {
+                builder.add("s -> s");
+            } else if (sm == StringMethod.CONSTRUCTOR) {
+                builder.add("s -> new $T(s)", returnTypeName);
+            } else {
+                builder.add("$T::$L", smi.methodType(), sm.methodName().get());
+            }
+        } else if (returnTypeName.equals(TypeName.CHAR)) {
+            builder.add("s -> s.charAt(0)");
+        } else {
+            builder.add("$T::valueOf", returnTypeName.box());
+        }
+        return builder.build();
     }
 
     private CodeBlock converterParameters(String[] parameters) {

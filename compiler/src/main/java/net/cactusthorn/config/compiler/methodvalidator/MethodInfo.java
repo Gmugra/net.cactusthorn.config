@@ -112,6 +112,7 @@ public final class MethodInfo {
     private Optional<Type> returnInterface = Optional.empty();
     private boolean returnOptional = false;
     private Optional<ConverterInfo> returnConverter = Optional.empty();
+    private Optional<MethodInfo> returnMapKeyInfo = Optional.empty();
 
     MethodInfo(ExecutableElement methodElement) {
         annotations = new Annotations(methodElement);
@@ -150,6 +151,11 @@ public final class MethodInfo {
         return this;
     }
 
+    public MethodInfo withMapKey(MethodInfo mapKeyInfo) {
+        returnMapKeyInfo = Optional.of(mapKeyInfo);
+        return this;
+    }
+
     public String key() {
         return key;
     }
@@ -176,6 +182,10 @@ public final class MethodInfo {
 
     public Optional<ConverterInfo> returnConverter() {
         return returnConverter;
+    }
+
+    public Optional<MethodInfo> returnMapKeyInfo() {
+        return returnMapKeyInfo;
     }
 
     public String split() {

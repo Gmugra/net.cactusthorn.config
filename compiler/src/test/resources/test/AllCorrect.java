@@ -58,5 +58,6 @@ import java.util.*;
     Float boxedPrimitive();
 
     char myChar();
-}
 
+    Optional<Map<String,UUID>> map();
+}
