@@ -83,12 +83,19 @@ public class BuildPart implements GeneratorPart {
     private void addConverters(MethodSpec.Builder buildBuilder, List<MethodInfo> methodInfo) {
         Set<TypeMirror> converters = new HashSet<>();
         methodInfo.forEach(mi -> {
-            if (mi.returnConverter().isPresent()) {
-                TypeMirror converter = mi.returnConverter().get().type();
-                if (!converters.contains(converter)) {
-                    converters.add(converter);
-                    buildBuilder.addStatement("CONVERTERS.computeIfAbsent($T.class, c -> new $T())", converter, converter);
-                }
+            addConverter(buildBuilder, mi, converters);
+            mi.returnMapKeyInfo().ifPresent(mki -> {
+                addConverter(buildBuilder, mki, converters);
+            });
+        });
+    }
+
+    private void addConverter(MethodSpec.Builder buildBuilder, MethodInfo methodInfo, Set<TypeMirror> converters) {
+        methodInfo.returnConverter().ifPresent(c -> {
+            TypeMirror converter = c.type();
+            if (!converters.contains(converter)) {
+                converters.add(converter);
+                buildBuilder.addStatement("CONVERTERS.computeIfAbsent($T.class, c -> new $T())", converter, converter);
             }
         });
     }
@@ -96,14 +103,15 @@ public class BuildPart implements GeneratorPart {
     private CodeBlock convert(MethodInfo mi) {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
-        if (mi.returnMapKeyInfo().isPresent()) {
-            MethodInfo keyInfo = mi.returnMapKeyInfo().get();
-            builder.add("$L, ", function(Optional.empty(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
-            builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-            return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
-        }
-        builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-        return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
+        return
+            mi.returnMapKeyInfo().map(keyInfo -> {
+                builder.add("$L, ", function(keyInfo.returnConverter(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
+                builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
+                return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
+            }).orElseGet(() -> {
+                builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
+                return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
+            });
     }
 
     private CodeBlock.Builder findGetMethod(MethodInfo mi) {

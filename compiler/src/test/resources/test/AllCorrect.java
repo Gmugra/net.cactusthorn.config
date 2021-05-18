@@ -11,6 +11,7 @@ import net.cactusthorn.config.core.Default;
 
 import java.io.Serializable;
 import java.util.*;
+import java.time.Instant;
 
 @Config(sources = {"classpath:my.properties", "system.properties"}, loadStrategy = LoadStrategy.FIRST) //
 @Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
@@ -64,4 +65,6 @@ import java.util.*;
     Optional<SortedMap<String,UUID>> sortedMap();
 
     Optional<List<Character>> charList();
+
+    Optional<Map<Instant,String>> defaultConverterKey();
 }

@@ -23,8 +23,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -93,5 +95,15 @@ public class ConfigMapTest {
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
         Map<UUID, URL> result = config.sortedMap3();
         assertEquals(new URL("https://github.com"), result.get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
+    }
+
+    @Test public void defaultKeyConverter() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("map", "A|10,BBB|20");
+        properties.put("sortedMap", "A|50,BBB|60");
+        properties.put("defaultKeyConverter", "2007-12-03T10:15:30.00Z|Test");
+        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        Optional<Map<Instant, String>> result = config.defaultKeyConverter();
+        assertEquals("Test", result.get().get(Instant.parse("2007-12-03T10:15:30.00Z")));
     }
 }
