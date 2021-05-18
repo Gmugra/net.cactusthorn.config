@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.lang.reflect.Type;
 
@@ -83,7 +84,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         }
 
         private boolean isMap() {
-            return interfaceType == Map.class;
+            return interfaceType == Map.class || interfaceType == SortedMap.class;
         }
 
         private MethodInfo validateArgument(int argumentIndex, MethodValidator validator) {
@@ -103,7 +104,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         }
     }
 
-    public static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class, Map.class);
+    public static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class, Map.class, SortedMap.class);
     private final Map<TypeMirror, Type> interfaces = new HashMap<>();
 
     private final MethodValidator valueValidator;
