@@ -142,10 +142,10 @@ app.date=12.11.2005
    - Can't be used for methods with `Optional` return type.
 1. `@Disable`
    - `@Target(METHOD)`
-   - Disable interface-level features for this method.
+   - Disable "global"-level features for this method.
 1. `@Split`
    - `@Target({TYPE, METHOD})`
-   - Set splitter regular expression for splitting value for collections.
+   - Set splitter regular expression for splitting value for collections, or key+value "entries" for maps.
    - If this annotation is not present, default "splitter" is comma : `,`
 1. `@ConverterClass`
    - `@Target({METHOD, ANNOTATION_TYPE})`
@@ -233,18 +233,21 @@ The return type of the interface methods must either:
    - `java.nio.file.Path`
    - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
-1. Be `Map<K,V>`, where **K** & **V** satisfies 2, 3 or 4 above. The resulting map is read-only.
-1. Be `Optional<T>`, where **T** satisfies 2, 3, 4, 5 or 6 above
+1. Be `Map<K,V>`, where 
+   - **K** satisfies 2 or 3 above.
+   - **V** satisfies 2, 3 or 4 above. 
+   - The resulting map is read-only.
+3. Be `Optional<T>`, where **T** satisfies 2, 3, 4, 5 or 6 above
 
 ### Maps
-For the momemnt `Map` support is limited by two restrictions:
+Maps support is limited to two restrictions:
 1. custom converters are not supported for the *key*
 1. as key-value separator can be used only `|` (pipe character)
 
 e.g. "myconfig.properties":
 ```java
 map=A|10,BBB|20
-map=10000|10;20000|20
+map2=10000|10;20000|20
 ```
 ```java
 @Config(sources="classpath:/myconfig.properties") 
@@ -257,6 +260,9 @@ public interface ConfigMap {
     @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") Map<UUID, URL> map3();
 }
 ```
+FYI:
+1. In case of Maps, `@Split` annotation set spliter for key+value "entries" (default "splitter" is comma : `,`).
+1. In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ConverterZonedDateTime` etc.) only affect the Map values.
 
 ### `java.time.Instant` format
 The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
@@ -565,5 +571,5 @@ java -Dmyapp.profile=DEV -jar myapp.jar
 It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
 
 ## LICENSE
-net.cactusthorn.config is released under the BSD 3-Clause license. See LICENSE file included for the details.
+net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
 
