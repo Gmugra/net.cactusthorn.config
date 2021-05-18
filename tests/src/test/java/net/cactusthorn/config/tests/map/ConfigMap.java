@@ -20,6 +20,7 @@
 package net.cactusthorn.config.tests.map;
 
 import java.net.URL;
+import java.time.Instant;
 import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
@@ -42,4 +43,6 @@ import net.cactusthorn.config.core.Split;
     @Split(";") Optional<SortedMap<Integer, Byte>> sortedMap2();
 
     @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") SortedMap<UUID, URL> sortedMap3();
+
+    Optional<Map<Instant, String>> defaultKeyConverter();
 }

@@ -122,6 +122,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
                 .build();
 
         keyValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
+                .next(DefaultConvertorValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
         // @formatter:on
