@@ -19,20 +19,11 @@
 */
 package net.cactusthorn.config.core.converter.standard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.Instant;
-
-import org.junit.jupiter.api.Test;
-
 import net.cactusthorn.config.core.converter.Converter;
 
-public class InstantConverterTest {
+public class CharacterConverter implements Converter<Character> {
 
-    static Converter<Instant> converter = new InstantConverter();
-
-    @Test public void correct() {
-        Instant instant = converter.convert("2007-12-03T10:15:30.00Z");
-        assertEquals(Instant.parse("2007-12-03T10:15:30.00Z"), instant);
+    @Override public Character convert(String value, String[] parameters) {
+        return value.charAt(0);
     }
 }

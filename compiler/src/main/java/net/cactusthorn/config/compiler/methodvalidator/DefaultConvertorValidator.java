@@ -41,6 +41,7 @@ import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
+import net.cactusthorn.config.core.converter.standard.CharacterConverter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.converter.standard.InstantConverter;
 import net.cactusthorn.config.core.converter.standard.PathConverter;
@@ -60,6 +61,7 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS.put(Duration.class, DurationConverter.class.getName());
         CONVERTERS.put(Period.class, PeriodConverter.class.getName());
         CONVERTERS.put(ByteSize.class, ByteSizeConverter.class.getName());
+        CONVERTERS.put(Character.class, CharacterConverter.class.getName());
     }
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();

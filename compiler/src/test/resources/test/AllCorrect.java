@@ -62,4 +62,6 @@ import java.util.*;
     Optional<Map<String,UUID>> map();
 
     Optional<SortedMap<String,UUID>> sortedMap();
+
+    Optional<List<Character>> charList();
 }
