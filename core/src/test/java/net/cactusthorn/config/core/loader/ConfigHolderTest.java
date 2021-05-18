@@ -157,7 +157,7 @@ public class ConfigHolderTest {
         assertThrows(IllegalArgumentException.class, () -> holder.getMap(s -> s, Integer::valueOf, "notExists", ","));
     }
 
-    @Test public void getMapDefaut() {
+    @Test public void getMapDefault() {
         Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",", "C|30");
         assertEquals(10, result.get("A"));
         result = holder.getMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
@@ -176,7 +176,7 @@ public class ConfigHolderTest {
         assertThrows(IllegalArgumentException.class, () -> holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ","));
     }
 
-    @Test public void getSortedMapDefaut() {
+    @Test public void getSortedMapDefault() {
         SortedMap<String, Integer> result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",", "C|30");
         assertEquals(50, result.get("A"));
         result = holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");

@@ -37,9 +37,9 @@ import net.cactusthorn.config.core.Split;
 
     @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") Map<UUID, URL> map3();
 
-    SortedMap<String, Integer> smap();
+    SortedMap<String, Integer> sortedMap();
 
-    @Split(";") Optional<SortedMap<Integer, Byte>> smap2();
+    @Split(";") Optional<SortedMap<Integer, Byte>> sortedMap2();
 
-    @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") SortedMap<UUID, URL> smap3();
+    @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") SortedMap<UUID, URL> sortedMap3();
 }

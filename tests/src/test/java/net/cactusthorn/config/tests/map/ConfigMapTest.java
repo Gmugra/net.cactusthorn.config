@@ -36,7 +36,7 @@ public class ConfigMapTest {
     @Test public void map() {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
+        properties.put("sortedMap", "A|50,BBB|60");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
         Map<String, Integer> result = config.map();
         assertEquals(10, result.get("A"));
@@ -47,7 +47,7 @@ public class ConfigMapTest {
     @Test public void optionalMap() {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
+        properties.put("sortedMap", "A|50,BBB|60");
         properties.put("map2", "10000|10;20000|20");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
         Map<Integer, Byte> result = config.map2().get();
@@ -58,7 +58,7 @@ public class ConfigMapTest {
     @Test public void defaultMap() throws MalformedURLException {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
+        properties.put("sortedMap", "A|50,BBB|60");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
         Map<UUID, URL> result = config.map3();
         assertEquals(new URL("https://github.com"), result.get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
@@ -67,9 +67,9 @@ public class ConfigMapTest {
     @Test public void sortedMap() {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
+        properties.put("sortedMap", "A|50,BBB|60");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<String, Integer> result = config.smap();
+        Map<String, Integer> result = config.sortedMap();
         assertEquals(50, result.get("A"));
         assertEquals(60, result.get("BBB"));
         assertFalse(config.map2().isPresent());
@@ -78,10 +78,10 @@ public class ConfigMapTest {
     @Test public void optionalSortedMap() {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
-        properties.put("smap2", "10000|50;20000|60");
+        properties.put("sortedMap", "A|50,BBB|60");
+        properties.put("sortedMap2", "10000|50;20000|60");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<Integer, Byte> result = config.smap2().get();
+        Map<Integer, Byte> result = config.sortedMap2().get();
         assertEquals((byte) 50, result.get(10000));
         assertEquals((byte) 60, result.get(20000));
     }
@@ -89,9 +89,9 @@ public class ConfigMapTest {
     @Test public void defaultSortedMap() throws MalformedURLException {
         Map<String, String> properties = new HashMap<>();
         properties.put("map", "A|10,BBB|20");
-        properties.put("smap", "A|50,BBB|60");
+        properties.put("sortedMap", "A|50,BBB|60");
         ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<UUID, URL> result = config.smap3();
+        Map<UUID, URL> result = config.sortedMap3();
         assertEquals(new URL("https://github.com"), result.get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
     }
 }
