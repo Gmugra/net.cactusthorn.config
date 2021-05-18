@@ -60,4 +60,6 @@ import java.util.*;
     char myChar();
 
     Optional<Map<String,UUID>> map();
+
+    Optional<SortedMap<String,UUID>> sortedMap();
 }

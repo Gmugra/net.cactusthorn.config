@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -49,6 +50,7 @@ public class ConfigHolderTest {
         properties.put("char", "XYZ");
         properties.put("list", "f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000");
         properties.put("map", "A|10,B|20");
+        properties.put("sortedMap", "A|50,B|60");
         holder = ConfigFactory.builder().setSource(properties).build().configHolder();
     }
 
@@ -142,13 +144,20 @@ public class ConfigHolderTest {
         assertThrows(IllegalArgumentException.class, () -> holder.get(UUID::fromString, "notExist"));
     }
 
+    @Test public void duplicatedKey() {
+        Map<String, String> p = new HashMap<>();
+        p.put("map", "A|10,A|20");
+        ConfigHolder h = ConfigFactory.builder().setSource(p).build().configHolder();
+        assertThrows(IllegalStateException.class, () -> h.getMap(s -> s, Integer::valueOf, "map", ","));
+    }
+
     @Test public void getMap() {
         Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
         assertEquals(10, result.get("A"));
         assertThrows(IllegalArgumentException.class, () -> holder.getMap(s -> s, Integer::valueOf, "notExists", ","));
     }
 
-    @Test public void getMapDefaut() {
+    @Test public void getMapDefault() {
         Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",", "C|30");
         assertEquals(10, result.get("A"));
         result = holder.getMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
@@ -159,5 +168,24 @@ public class ConfigHolderTest {
         Optional<Map<String, Integer>> result = holder.getOptionalMap(s -> s, Integer::valueOf, "map", ",");
         assertEquals(10, result.get().get("A"));
         assertFalse(holder.getOptionalMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
+    }
+
+    @Test public void getSortedMap() {
+        SortedMap<String, Integer> result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
+        assertEquals(50, result.get("A"));
+        assertThrows(IllegalArgumentException.class, () -> holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ","));
+    }
+
+    @Test public void getSortedMapDefault() {
+        SortedMap<String, Integer> result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",", "C|30");
+        assertEquals(50, result.get("A"));
+        result = holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
+        assertEquals(30, result.get("C"));
+    }
+
+    @Test public void getOptionalSortedMap() {
+        Optional<SortedMap<String, Integer>> result = holder.getOptionalSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
+        assertEquals(50, result.get().get("A"));
+        assertFalse(holder.getOptionalSortedMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
     }
 }

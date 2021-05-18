@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.SortedMap;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
@@ -118,6 +119,9 @@ public class BuildPart implements GeneratorPart {
                 if (t == Map.class) {
                     return "getOptionalMap";
                 }
+                if (t == SortedMap.class) {
+                    return "getOptionalSortedMap";
+                }
                 return "getOptionalSortedSet";
             }).orElse("getOptional"));
         }
@@ -130,6 +134,9 @@ public class BuildPart implements GeneratorPart {
             }
             if (t == Map.class) {
                 return "getMap";
+            }
+            if (t == SortedMap.class) {
+                return "getSortedMap";
             }
             return "getSortedSet";
         }).orElse("get"));

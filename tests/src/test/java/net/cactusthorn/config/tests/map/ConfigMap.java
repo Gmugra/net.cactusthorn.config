@@ -22,6 +22,7 @@ package net.cactusthorn.config.tests.map;
 import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.UUID;
 
 import net.cactusthorn.config.core.Config;
@@ -35,4 +36,10 @@ import net.cactusthorn.config.core.Split;
     @Split(";") Optional<Map<Integer, Byte>> map2();
 
     @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") Map<UUID, URL> map3();
+
+    SortedMap<String, Integer> sortedMap();
+
+    @Split(";") Optional<SortedMap<Integer, Byte>> sortedMap2();
+
+    @Default("123e4567-e89b-12d3-a456-556642440000|https://github.com") SortedMap<UUID, URL> sortedMap3();
 }
