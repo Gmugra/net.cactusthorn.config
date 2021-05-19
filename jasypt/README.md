@@ -12,7 +12,7 @@ interface:
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.extras.jasypt.PBEDecryptor;
 
-@Config(sources = {"classpath:my.properties"}
+@Config(sources = {"classpath:my.properties"})
 public interface ConfigPBE {
 
     @PBEDecryptor("pbepassword") // "pbepassword" is name of the System Property with password for decrypting

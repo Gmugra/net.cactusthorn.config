@@ -532,7 +532,7 @@ In this case generated class will also get methods for this interface:
 ## Miscellaneous
 
 ### Extras
-* sub-module **jasypt** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
+* sub-module **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
