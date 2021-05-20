@@ -1,0 +1,2 @@
+net.cactusthorn.config.extras.toml.ClasspathTOMLLoader
+net.cactusthorn.config.extras.toml.UrlTOMLLoader

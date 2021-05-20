@@ -27,6 +27,6 @@ import java.lang.annotation.Target;
 
 import net.cactusthorn.config.core.converter.standard.LocalDateConverter;
 
-@Retention(SOURCE) @Target(METHOD) @ConverterClass(LocalDateConverter.class) public @interface ConverterLocalDate {
+@Retention(SOURCE) @Target(METHOD) @ConverterClass(LocalDateConverter.class) public @interface LocalDateParser {
     String[] value() default "";
 }

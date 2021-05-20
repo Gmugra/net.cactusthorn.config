@@ -17,16 +17,32 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.tests.toml;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import java.util.List;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import net.cactusthorn.config.core.Config;
+import net.cactusthorn.config.core.Key;
 
-import net.cactusthorn.config.core.converter.standard.ZonedDateTimeConverter;
+@Config public interface ConfigToml {
 
-@Retention(SOURCE) @Target(METHOD) @ConverterClass(ZonedDateTimeConverter.class) public @interface ConverterZonedDateTime {
-    String[] value() default "";
+    @Key("database.temp_targets.case") double ttcase();
+
+    @Key("database.temp_targets.cpu") double ttcpu();
+
+    @Key("servers.alpha.role") String arole();
+
+    @Key("servers.beta.role") String brole();
+
+    @Key("database.enabled") boolean enabled();
+
+    @Key("owner.name") String name();
+
+    @Key("servers.alpha.ip") String aip();
+
+    @Key("servers.beta.ip") String bip();
+
+    @Key("database.ports") List<Integer> ports();
+
+    @Key("title") String title();
 }

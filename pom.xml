@@ -54,6 +54,7 @@
         <dependency.compile-testing>0.19</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
         <dependency.jasypt>1.9.3</dependency.jasypt>
+        <dependency.tomlj>1.0.0</dependency.tomlj>
 
         <plugin.compiler>3.8.1</plugin.compiler>
         <plugin.jar>3.2.0</plugin.jar>
@@ -88,6 +89,7 @@
         <module>core</module>
         <module>compiler</module>
         <module>jasypt</module>
+        <module>toml</module>
         <module>tests</module>
     </modules>
 
@@ -125,6 +127,12 @@
                 <artifactId>jasypt</artifactId>
                 <classifier>lite</classifier>
                 <version>${dependency.jasypt}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.tomlj</groupId>
+                <artifactId>tomlj</artifactId>
+                <version>${dependency.tomlj}</version>
             </dependency>
 
             <dependency>
