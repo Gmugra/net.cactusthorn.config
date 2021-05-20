@@ -52,7 +52,7 @@ public final class TOMLToMapParser {
                 result.put(key, value.toString());
             }
         }
-        return result;
+        return Collections.unmodifiableMap(result);
     }
 
     private String convertArray(String key, TomlArray tomlArray) {
