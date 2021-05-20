@@ -15,7 +15,7 @@ So, this project is providing library with similar with *OWNER* API, but
 ## Features
 - Plain Java 8 without any external dependencies
 - Uses no reflection or runtime bytecode generation; generates plain Java source code.
-- Small (< 100KB) & lightweight runtime part
+- Small (< 100KB) & lightweight core runtime part
 - Multiple configuration sources and/or formats (.properties, .xml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
 - Multiple loading strategies (configuration sources fallback/merging)
 - Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
@@ -162,7 +162,7 @@ There are three ways for dealing with properties that are not found in sources:
 FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
 ### `@Config` annotation parameters
-There are two *optional* paramters `sources` and `loadStrategy` which can be used to override these settigns from `ConfigFactory`.
+There are two *optional* parameters `sources` and `loadStrategy` which can be used to override these settings from `ConfigFactory`.
 e.g.
 ```java
 @Config(sources = {"classpath:config/testconfig2.properties","nocache:system:properties"},
@@ -532,7 +532,8 @@ In this case generated class will also get methods for this interface:
 ## Miscellaneous
 
 ### Extras
-* sub-module **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
+"Extras" are optional extensions (converters and loaders) that need external dependencies and, because of this, can't be integrated into the core library.
+* **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
