@@ -41,4 +41,8 @@ or with Gradle:
 compile 'net.cactusthorn.config:jasypt:0.30'
 ```
 
+## LICENSE
+net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
+
+
 

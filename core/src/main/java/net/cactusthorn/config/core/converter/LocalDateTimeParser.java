@@ -17,23 +17,16 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.tests.converter;
+package net.cactusthorn.config.core.converter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Optional;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
-import net.cactusthorn.config.core.Config;
-import net.cactusthorn.config.core.converter.LocalDateParser;
-import net.cactusthorn.config.core.converter.LocalDateTimeParser;
-import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@Config public interface ConfigParamConverter {
+import net.cactusthorn.config.core.converter.standard.LocalDateTimeConverter;
 
-    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"}) LocalDate localDate();
-
-    @LocalDateTimeParser({"dd.MM.yyyy' 'HH:mm:ss"}) Optional<LocalDateTime> localDateTime();
-
-    @ZonedDateTimeParser({"dd.MM.yyyy' 'HH:mm:sszzz"}) Optional<ZonedDateTime> zonedDateTime();
+@Retention(SOURCE) @Target(METHOD) @ConverterClass(LocalDateTimeConverter.class) public @interface LocalDateTimeParser {
+    String[] value() default "";
 }

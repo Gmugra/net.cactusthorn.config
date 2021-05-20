@@ -16,7 +16,7 @@ So, this project is providing library with similar with *OWNER* API, but
 - Plain Java 8 without any external dependencies
 - Uses no reflection or runtime bytecode generation; generates plain Java source code.
 - Small (< 100KB) & lightweight core runtime part
-- Multiple configuration sources and/or formats (.properties, .xml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
+- Multiple configuration sources and/or formats (.properties, .xml, .toml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
 - Multiple loading strategies (configuration sources fallback/merging)
 - Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
 - Parameterized type converters
@@ -355,7 +355,7 @@ This can be achieved with converter-annotation for the custom-converter:
 @Retention(SOURCE)
 @Target(METHOD) 
 @ConverterClass(LocalDateConverter.class) //converter implementation
-public @interface ConverterLocalDate {
+public @interface LocalDateParser {
 
     String[] value() default "";
 }
@@ -369,10 +369,10 @@ usage:
 @Config 
 public interface MyConfig {
 
-    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"})
+    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"})
     LocalDate localDate();
 
-    @ConverterLocalDate //default format
+    @LocalDateParser //default format
     LocalDate localDateA();
 
     @ConverterClass(LocalDateConverter.class) //in fact it's same with @ConverterLocalDate
@@ -381,9 +381,9 @@ public interface MyConfig {
 ```
 
 Several of these annotations shipped with the library:
-* `@ConverterLocalDate`
-* `@ConverterLocalDateTime`
-* `@ConverterZonedDateTime`
+* `@LocalDateParser`
+* `@LocalDateTimeParser`
+* `@ZonedDateTimeParser`
 
 ## Loaders
 
@@ -534,6 +534,7 @@ In this case generated class will also get methods for this interface:
 ### Extras
 "Extras" are optional extensions (converters and loaders) that need external dependencies and, because of this, can't be integrated into the core library.
 * **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
+* **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).

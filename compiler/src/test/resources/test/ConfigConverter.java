@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.ConverterClass;
-import net.cactusthorn.config.core.converter.ConverterLocalDate;
+import net.cactusthorn.config.core.converter.LocalDateParser;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 
 @Config public interface ConfigConverter extends Serializable {
@@ -16,9 +16,9 @@ import net.cactusthorn.config.core.converter.standard.DurationConverter;
 
     @ConverterClass(DurationConverter.class) Duration duration();
 
-    @ConverterLocalDate LocalDate localDate();
+    @LocalDateParser LocalDate localDate();
 
-    @ConverterLocalDate({"dd.MM.yyyy","yyyy-MM-dd"}) LocalDate localDate2();
+    @LocalDateParser({"dd.MM.yyyy","yyyy-MM-dd"}) LocalDate localDate2();
 
     public static final class ToTestConverter implements Converter<String> {
 

@@ -17,16 +17,18 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core.converter;
+package net.cactusthorn.config.tests.toml;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.converter.standard.LocalDateTimeConverter;
+import net.cactusthorn.config.core.ConfigFactory;
 
-@Retention(SOURCE) @Target(METHOD) @ConverterClass(LocalDateTimeConverter.class) public @interface ConverterLocalDateTime {
-    String[] value() default "";
+public class ConfigTomlTest {
+
+    @Test public void doIt() {
+        ConfigToml config = ConfigFactory.builder().addSource("classpath:correct.toml").build().create(ConfigToml.class);
+        assertFalse(config.ports().isEmpty());
+    }
 }

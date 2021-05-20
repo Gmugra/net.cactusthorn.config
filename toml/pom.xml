@@ -10,10 +10,11 @@
         <version>${revision}${changelist}</version>
     </parent>
 
-    <artifactId>tests</artifactId>
+    <artifactId>toml</artifactId>
     <packaging>jar</packaging>
 
-    <name>Config :: Tests</name>
+    <name>Config :: TOML</name>
+    <description>Config :: TOML</description>
 
     <licenses>
         <license>
@@ -38,7 +39,6 @@
 
     <properties>
         <pmd.skip>false</pmd.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>
@@ -50,15 +50,13 @@
         </dependency>
 
         <dependency>
-            <groupId>net.cactusthorn.config</groupId>
-            <artifactId>toml</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.tomlj</groupId>
+            <artifactId>tomlj</artifactId>
         </dependency>
 
     </dependencies>
 
     <build>
-
         <plugins>
 
             <plugin>
@@ -91,8 +89,18 @@
                 </executions>
             </plugin>
 
-        </plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>net.cactusthorn.config.toml</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 
+        </plugins>
     </build>
 
 </project>

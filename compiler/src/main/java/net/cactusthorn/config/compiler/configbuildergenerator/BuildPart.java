@@ -160,26 +160,24 @@ public class BuildPart implements GeneratorPart {
 
     private CodeBlock function(Optional<ConverterInfo> converterInfo, Optional<MethodInfo.StringMethodInfo> stringMethodInfo,
             TypeName returnTypeName) {
-        CodeBlock.Builder builder = CodeBlock.builder();
-        if (converterInfo.isPresent()) {
-            ConverterInfo ci = converterInfo.get();
-            builder.add("s -> convert($T.class, s, $L)", ci.type(), converterParameters(ci.parameters()));
-        } else if (stringMethodInfo.isPresent()) {
-            MethodInfo.StringMethodInfo smi = stringMethodInfo.get();
-            StringMethod sm = smi.stringMethod();
-            if (sm == StringMethod.STRING) {
-                builder.add("s -> s");
-            } else if (sm == StringMethod.CONSTRUCTOR) {
-                builder.add("s -> new $T(s)", returnTypeName);
-            } else {
-                builder.add("$T::$L", smi.methodType(), sm.methodName().get());
-            }
-        } else if (returnTypeName.equals(TypeName.CHAR)) {
-            builder.add("s -> s.charAt(0)");
-        } else {
-            builder.add("$T::valueOf", returnTypeName.box());
-        }
-        return builder.build();
+        return converterInfo.map(ci -> {
+            return CodeBlock.builder().add("s -> convert($T.class, s, $L)", ci.type(), converterParameters(ci.parameters())).build();
+        }).orElseGet(() -> {
+            return stringMethodInfo.map(smi -> {
+                StringMethod sm = smi.stringMethod();
+                if (sm == StringMethod.STRING) {
+                    return CodeBlock.builder().add("s -> s").build();
+                } else if (sm == StringMethod.CONSTRUCTOR) {
+                    return CodeBlock.builder().add("s -> new $T(s)", returnTypeName).build();
+                }
+                return CodeBlock.builder().add("$T::$L", smi.methodType(), sm.methodName().get()).build();
+            }).orElseGet(() -> {
+                if (returnTypeName.equals(TypeName.CHAR)) {
+                    return CodeBlock.builder().add("s -> s.charAt(0)").build();
+                }
+                return CodeBlock.builder().add("$T::valueOf", returnTypeName.box()).build();
+            });
+        });
     }
 
     private CodeBlock converterParameters(String[] parameters) {
