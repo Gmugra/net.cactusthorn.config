@@ -98,7 +98,7 @@ public interface MyConfig {
     @Split("[:;]") @Default("DAYS:HOURS")
     Set<TimeUnit> units();
 
-    @ConverterLocalDate({"dd.MM.yyyy", "yyyy-MM-dd"})
+    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"})
     LocalDate date();
 }
 ```
@@ -150,7 +150,7 @@ app.date=12.11.2005
 1. `@ConverterClass`
    - `@Target({METHOD, ANNOTATION_TYPE})`
    - apply custom converter implementation
-1. `@ConverterLocalDate`, `@ConverterLocalDateTime`, `@ConverterZonedDateTime`
+1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`
    - `@Target(METHOD)`
    - apply a parameterised (formats) converter to the relevant java-time.* type
 
@@ -262,7 +262,7 @@ public interface ConfigMap {
 ```
 FYI:
 1. In case of Maps, `@Split` annotation set spliter for key+value "entries" (default "splitter" is comma : `,`).
-1. In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ConverterZonedDateTime` etc.) only affect the Map values.
+1. In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ZonedDateTimeParser` etc.) only affect the Map values.
 
 ### `java.time.Instant` format
 The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
@@ -375,7 +375,7 @@ public interface MyConfig {
     @LocalDateParser //default format
     LocalDate localDateA();
 
-    @ConverterClass(LocalDateConverter.class) //in fact it's same with @ConverterLocalDate
+    @ConverterClass(LocalDateConverter.class) //in fact it's same with @LocalDateParser without parameters
     LocalDate localDateB();
 }
 ```
