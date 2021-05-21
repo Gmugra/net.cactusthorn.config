@@ -9,16 +9,10 @@ The module provides loaders for files in [TOML](https://toml.io) format
    - e.g. the file from the working directory: `file:./my.toml`
    - e.g. Windows file: `file:///C:/my.toml`
    - e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.toml`
-   - e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.toml`
 
-## TOML limitations
-1. arrays in array **are not supported**. e.g. `data = [ ["delta", "phi"], [3.14] ]`
-2. tables in array **are not supported**. e.g.:
-```toml
-[[products]]
-name = "Nail"
-sku = 284758393
-```
+### Restrictions
+1. arrays in array (e.g. `data = [ ["delta", "phi"], [3.14] ]`) are **not supported**.
+2. tables in array (e.g. `points = [{x = 1, y = 2}, { x = 7, y = 8}, {x = 2, y = 4}]`) are **not supported**.
 3. arrays are converter in comma `,` separated string.
 
 ### Example
@@ -48,7 +42,7 @@ ip = "10.0.0.2"
 role = "backend"
 ```
 the file, internally, factually "converted" in the next "properties" file:
-```
+```properties
 title=TOML Example
 owner.name=Tom Preston-Werner
 database.enabled=true
