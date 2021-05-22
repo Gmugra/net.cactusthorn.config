@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,5 +63,13 @@ public class ConfigParamConverterTest {
         properties.put("localDateDefault", "2011-11-12");
         ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
         assertEquals(LocalDate.of(2011, 11, 12), config.localDateDefault().get());
+    }
+
+    @Test public void offsetDateTime() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("offsetDateTime", "12.11.2011T01:30:00+02:00");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetDateTime().get());
     }
 }

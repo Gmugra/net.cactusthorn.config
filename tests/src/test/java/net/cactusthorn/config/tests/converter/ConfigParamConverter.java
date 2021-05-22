@@ -21,12 +21,14 @@ package net.cactusthorn.config.tests.converter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.converter.LocalDateParser;
 import net.cactusthorn.config.core.converter.LocalDateTimeParser;
+import net.cactusthorn.config.core.converter.OffsetDateTimeParser;
 import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
 
 @Config public interface ConfigParamConverter {
@@ -36,6 +38,8 @@ import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
     @LocalDateTimeParser({"dd.MM.yyyy' 'HH:mm:ss"}) Optional<LocalDateTime> localDateTime();
 
     @ZonedDateTimeParser({"dd.MM.yyyy' 'HH:mm:sszzz"}) Optional<ZonedDateTime> zonedDateTime();
+
+    @OffsetDateTimeParser({ "yyyy-MM-dd'T'HH:mm:ssXXX", "dd.MM.yyyy'T'HH:mm:ssXXX" }) Optional<OffsetDateTime> offsetDateTime();
 
     Optional<LocalDate> localDateDefault();
 }
