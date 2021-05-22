@@ -54,4 +54,12 @@ public class ConfigParamConverterTest {
         ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
         assertTrue(config.zonedDateTime().isPresent());
     }
+
+    @Test public void localDateDefault() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("localDateDefault", "2011-11-12");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(LocalDate.of(2011, 11, 12), config.localDateDefault().get());
+    }
 }
