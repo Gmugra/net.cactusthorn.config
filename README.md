@@ -150,7 +150,7 @@ app.date=12.11.2005
 1. `@ConverterClass`
    - `@Target({METHOD, ANNOTATION_TYPE})`
    - apply custom converter implementation
-1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`
+1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`
    - `@Target(METHOD)`
    - apply a parameterized by formats converter to the relevant java.time.* type
 
@@ -234,6 +234,7 @@ The return type of the interface methods must either:
    - `java.time.LocalDate`
    - `java.time.LocalDateTime`
    - `java.time.ZonedDateTime`
+   - `java.time.OffsetDateTime`
    - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
 1. Be `Map<K,V>` or `SortedMap<K,V>`, where
@@ -381,6 +382,7 @@ Several of these annotations shipped with the library:
 * `@LocalDateParser`
 * `@LocalDateTimeParser`
 * `@ZonedDateTimeParser`
+* `@OffsetDateTimeParser`
 
 ## Loaders
 
