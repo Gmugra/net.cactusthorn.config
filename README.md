@@ -152,7 +152,7 @@ app.date=12.11.2005
    - apply custom converter implementation
 1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`
    - `@Target(METHOD)`
-   - apply a parameterised by formats converter to the relevant java.time.* type
+   - apply a parameterized by formats converter to the relevant java.time.* type
 
 ### Property not found : `@Default` or `Optional`
 There are three ways for dealing with properties that are not found in sources:
