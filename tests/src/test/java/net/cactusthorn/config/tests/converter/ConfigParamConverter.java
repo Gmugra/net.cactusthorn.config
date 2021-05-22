@@ -36,4 +36,6 @@ import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
     @LocalDateTimeParser({"dd.MM.yyyy' 'HH:mm:ss"}) Optional<LocalDateTime> localDateTime();
 
     @ZonedDateTimeParser({"dd.MM.yyyy' 'HH:mm:sszzz"}) Optional<ZonedDateTime> zonedDateTime();
+
+    Optional<LocalDate> localDateDefault();
 }

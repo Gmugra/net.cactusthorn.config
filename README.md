@@ -152,7 +152,7 @@ app.date=12.11.2005
    - apply custom converter implementation
 1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`
    - `@Target(METHOD)`
-   - apply a parameterised (formats) converter to the relevant java-time.* type
+   - apply a parameterised by formats converter to the relevant java.time.* type
 
 ### Property not found : `@Default` or `Optional`
 There are three ways for dealing with properties that are not found in sources:
@@ -227,10 +227,13 @@ The return type of the interface methods must either:
 1. Be 
    - `java.net.URL`
    - `java.net.URI`
+   - `java.nio.file.Path`
    - `java.time.Instant`
    - `java.time.Duration`
    - `java.time.Period`
-   - `java.nio.file.Path`
+   - `java.time.LocalDate`
+   - `java.time.LocalDateTime`
+   - `java.time.ZonedDateTime`
    - `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 1. Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
 1. Be `Map<K,V>` or `SortedMap<K,V>`, where
@@ -354,8 +357,8 @@ This can be achieved with converter-annotation for the custom-converter:
 ```java
 @Retention(SOURCE)
 @Target(METHOD) 
-@ConverterClass(LocalDateConverter.class) //converter implementation
-public @interface LocalDateParser {
+@ConverterClass(MyClassConverter.class) //converter implementation
+public @interface MySuperParser {
 
     String[] value() default "";
 }
@@ -369,14 +372,8 @@ usage:
 @Config 
 public interface MyConfig {
 
-    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"})
-    LocalDate localDate();
-
-    @LocalDateParser //default format
-    LocalDate localDateA();
-
-    @ConverterClass(LocalDateConverter.class) //in fact it's same with @LocalDateParser without parameters
-    LocalDate localDateB();
+    @MySuperParser({"param1", "param1"})
+    MyClass localDate();
 }
 ```
 

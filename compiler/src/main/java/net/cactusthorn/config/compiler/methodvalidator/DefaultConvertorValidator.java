@@ -25,12 +25,17 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
@@ -39,15 +44,19 @@ import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.core.converter.Converter;
+import net.cactusthorn.config.core.converter.ConverterClass;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
 import net.cactusthorn.config.core.converter.standard.CharacterConverter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.converter.standard.InstantConverter;
+import net.cactusthorn.config.core.converter.standard.LocalDateConverter;
+import net.cactusthorn.config.core.converter.standard.LocalDateTimeConverter;
 import net.cactusthorn.config.core.converter.standard.PathConverter;
 import net.cactusthorn.config.core.converter.standard.PeriodConverter;
 import net.cactusthorn.config.core.converter.standard.URIConverter;
 import net.cactusthorn.config.core.converter.standard.URLConverter;
+import net.cactusthorn.config.core.converter.standard.ZonedDateTimeConverter;
 
 public class DefaultConvertorValidator extends MethodValidatorAncestor {
 
@@ -56,12 +65,15 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS = new HashMap<>();
         CONVERTERS.put(URL.class, URLConverter.class.getName());
         CONVERTERS.put(URI.class, URIConverter.class.getName());
-        CONVERTERS.put(Instant.class, InstantConverter.class.getName());
         CONVERTERS.put(Path.class, PathConverter.class.getName());
-        CONVERTERS.put(Duration.class, DurationConverter.class.getName());
-        CONVERTERS.put(Period.class, PeriodConverter.class.getName());
         CONVERTERS.put(ByteSize.class, ByteSizeConverter.class.getName());
         CONVERTERS.put(Character.class, CharacterConverter.class.getName());
+        CONVERTERS.put(Instant.class, InstantConverter.class.getName());
+        CONVERTERS.put(Duration.class, DurationConverter.class.getName());
+        CONVERTERS.put(Period.class, PeriodConverter.class.getName());
+        CONVERTERS.put(LocalDate.class, LocalDateConverter.class.getName());
+        CONVERTERS.put(LocalDateTime.class, LocalDateTimeConverter.class.getName());
+        CONVERTERS.put(ZonedDateTime.class, ZonedDateTimeConverter.class.getName());
     }
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();
@@ -79,6 +91,9 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         }
         DeclaredType declaredType = (DeclaredType) typeMirror;
         Element element = declaredType.asElement();
+        if (existConverterAnnotation(methodElement)) {
+            return next(methodElement, typeMirror);
+        }
         // @formatter:off
         Optional<Type> classType =
             classTypes.entrySet().stream()
@@ -91,5 +106,20 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         }
         TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
         return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
+    }
+
+    private boolean existConverterAnnotation(ExecutableElement methodElement) {
+        ConverterClass annotation = methodElement.getAnnotation(ConverterClass.class);
+        if (annotation != null) {
+            return true;
+        }
+        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
+        for (AnnotationMirror annotationMirror : annotationMirrors) {
+            ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
+            if (superAnnotation != null) {
+                return true;
+            }
+        }
+        return false;
     }
 }
