@@ -36,7 +36,7 @@
 
     <properties>
 
-        <revision>0.30</revision>
+        <revision>0.40</revision>
         <changelist>-SNAPSHOT</changelist>
 
         <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
@@ -90,7 +90,7 @@
         <module>compiler</module>
         <module>jasypt</module>
         <module>toml</module>
-        <module>tests</module>
+        <!--module>tests</module-->
     </modules>
 
     <dependencies>
