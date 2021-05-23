@@ -57,7 +57,7 @@ public class MethodValidatorTest {
 
     @Test public void abstractReturn() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AbstractReturn.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_ABSTRACT));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_ABSTRACT, "java.util.AbstractList"));
     }
 
     @Test public void stringMethods() {

@@ -24,6 +24,7 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_ABSTRA
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
@@ -44,8 +45,8 @@ public class AbstractTypeValidator extends MethodValidatorAncestor {
         }
         DeclaredType declaredType = (DeclaredType) typeMirror;
         Element element = declaredType.asElement();
-        if (element.getModifiers().contains(Modifier.ABSTRACT)) {
-            throw new ProcessorException(msg(RETURN_ABSTRACT), element);
+        if (element.getKind() != ElementKind.ENUM && element.getModifiers().contains(Modifier.ABSTRACT)) {
+            throw new ProcessorException(msg(RETURN_ABSTRACT, element), element);
         }
         return next(methodElement, declaredType);
     }

@@ -67,21 +67,8 @@ annotationProcessor 'net.cactusthorn.config:config-compiler:0.31'
 ### Basic usage
 To access properties it's need to define a convenient Java interface, e.g. :
 ```java
-package my.superapp;
-
-import static net.cactusthorn.config.core.Disable.Feature.*;
-import net.cactusthorn.config.core.*;
-import net.cactusthorn.config.core.converter.*;
-
-import java.util.concurrent.TimeUnit;
-import java.util.Set;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.time.LocalDate;
-
 @Config
-@Prefix("app")
+@Prefix("app") 
 public interface MyConfig {
 
     @Default("unknown")
@@ -89,16 +76,17 @@ public interface MyConfig {
 
     @Key("number")
     int intVal();
-    
+
     URI uri();
 
-    @Disable(PREFIX)
+    @Disable(PREFIX) 
     Optional<List<UUID>> ids();
 
-    @Split("[:;]") @Default("DAYS:HOURS")
+    @Split("[,:;]")
+    @Default("DAYS:HOURS")
     Set<TimeUnit> units();
 
-    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"})
+    @LocalDateParser({ "dd.MM.yyyy", "yyyy-MM-dd" })
     LocalDate date();
 }
 ```
@@ -110,19 +98,57 @@ Based on the interface, the annotation processor will generate an implementation
 ```java
 MyConfig myConfig =
     ConfigFactory.builder()
-        .addSource("file:./myconfig.xml")
-        .addSource("classpath:config/myconfig.properties", "system:properties")
+        .setLoadStrategy(LoadStrategy.MERGE)
+        .addSource("file:~/myconfig.xml")
+        .addSource("classpath:config/myconfig-owner.xml")
+        .addSource("jar:file:path/to/some.jar!/path/to/myconfig.properties")
+        .addSource("https://somewhere.com/myconfig.toml")
         .build()
         .create(MyConfig.class);
 ```
 e.g. "myconfig.properties":
-```java
+```properties
 app.val=ABC
 app.number=10
 app.uri=http://java.sun.com/j2se/1.3/
 ids=f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000
 app.units=DAYS:HOURS;MICROSECONDS
 app.date=12.11.2005
+```
+e.g. "myconfig.xml" (properties style xml):
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app.val">ABC</entry>
+    <entry key="app.number">10</entry>
+    <entry key="app.uri">http://java.sun.com/j2se/1.3/</entry>
+    <entry key="ids">f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000</entry>
+    <entry key="app.units">DAYS:HOURS;MICROSECONDS</entry>
+    <entry key="app.date">12.11.2005</entry>
+</properties>
+```
+e.g. "myconfig-owner.xml" (*OWNER* style xml):
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<app>
+    <val>ABC</val>
+    <number>10</number>
+    <uri>http://java.sun.com/j2se/1.3/</uri>
+    <units>DAYS:HOURS;MICROSECONDS</units>
+    <date>12.11.2005</date>
+</app>
+```
+e.g. "myconfig.toml" (*OWNER* style xml):
+```toml
+ids = ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454","123e4567-e89b-12d3-a456-556642440000"]
+
+[app]
+val = "ABC"
+number = 10
+uri = "http://java.sun.com/j2se/1.3/"
+units = ["DAYS", "HOURS", "MICROSECONDS"]
+date = 2005-11-12
 ```
 
 ### Annotations
