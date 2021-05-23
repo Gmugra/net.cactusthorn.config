@@ -3,7 +3,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.31)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/config-core/0.31)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
 The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
@@ -128,7 +128,7 @@ e.g. "myconfig.xml" (properties style xml):
     <entry key="app.date">12.11.2005</entry>
 </properties>
 ```
-e.g. "myconfig-owner.xml" (*OWNER* style xml):
+e.g. "myconfig-owner.xml" ([OWNER](http://owner.aeonbits.org/docs/xml-support/) xml format):
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <app>
@@ -139,7 +139,7 @@ e.g. "myconfig-owner.xml" (*OWNER* style xml):
     <date>12.11.2005</date>
 </app>
 ```
-e.g. "myconfig.toml" (*OWNER* style xml):
+e.g. "myconfig.toml" ([TOML](https://toml.io) format):
 ```toml
 ids = ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454","123e4567-e89b-12d3-a456-556642440000"]
 
