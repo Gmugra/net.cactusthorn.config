@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app>
+    <val>ABC</val>
+    <number>10</number>
+    <uri>http://java.sun.com/j2se/1.3/</uri>
+    <units>DAYS:HOURS;MICROSECONDS</units>
+    <date>12.11.2005</date>
+</app>

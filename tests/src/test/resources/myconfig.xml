@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="app.val">ABC</entry>
+    <entry key="app.number">10</entry>
+    <entry key="app.uri">http://java.sun.com/j2se/1.3/</entry>
+    <entry key="ids">f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000</entry>
+    <entry key="app.units">DAYS:HOURS;MICROSECONDS</entry>
+    <entry key="app.date">12.11.2005</entry>
+</properties>
