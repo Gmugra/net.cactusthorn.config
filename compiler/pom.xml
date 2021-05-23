@@ -10,7 +10,7 @@
         <version>${revision}${changelist}</version>
     </parent>
 
-    <artifactId>compiler</artifactId>
+    <artifactId>config-compiler</artifactId>
     <packaging>jar</packaging>
 
     <name>Config :: Compiler</name>
@@ -44,7 +44,7 @@
 
         <dependency>
             <groupId>net.cactusthorn.config</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>config-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 

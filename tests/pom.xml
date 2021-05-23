@@ -45,13 +45,13 @@
 
         <dependency>
             <groupId>net.cactusthorn.config</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>config-core</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.cactusthorn.config</groupId>
-            <artifactId>toml</artifactId>
+            <artifactId>config-toml</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -67,7 +67,7 @@
                     <annotationProcessorPaths>
                         <path>
                             <groupId>net.cactusthorn.config</groupId>
-                            <artifactId>compiler</artifactId>
+                            <artifactId>config-compiler</artifactId>
                             <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>

@@ -3,7 +3,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.30)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/core/0.31)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
 The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
@@ -35,8 +35,8 @@ In order to use the library in a project, it's need to add the dependency to the
 ```xml
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
-    <artifactId>core</artifactId>
-    <version>0.30</version>
+    <artifactId>config-core</artifactId>
+    <version>0.31</version>
 </dependency>
 ```
 It's also need to include the compiler used to convert annotated "source"-interfaces into the code:
@@ -49,8 +49,8 @@ It's also need to include the compiler used to convert annotated "source"-interf
          <annotationProcessorPaths>
               <path>
                   <groupId>net.cactusthorn.config</groupId>
-                  <artifactId>compiler</artifactId>
-                  <version>0.30</version>
+                  <artifactId>config-compiler</artifactId>
+                  <version>0.31</version>
               </path>
          </annotationProcessorPaths>
     </configuration>
@@ -60,8 +60,8 @@ FYI: With this configuration, Maven will output the generated code into `target/
 
 Same with Gradle:
 ```
-compile 'net.cactusthorn.config:core:0.30'
-annotationProcessor 'net.cactusthorn.config:compiler:0.30'
+compile 'net.cactusthorn.config:config-core:0.31'
+annotationProcessor 'net.cactusthorn.config:config-compiler:0.31'
 ```
 
 ### Basic usage
