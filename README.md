@@ -599,10 +599,10 @@ java -Dmyapp.profile=DEV -jar myapp.jar
 
 ### Integration with DI containers
 Example with [Dagger 2](https://dagger.dev):
-- Config Interface: [AppInfo] (https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
-- Dagger 2 module: [CoreModule] (https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
-- One nore config Interface: [HikariConf] (https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
-- One nore Dagger 2 module: [DatabaseModule] (https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
+- Config Interface: [AppInfo](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
+- Dagger 2 module: [CoreModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
+- One nore config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
+- One nore Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
 
 ## FYI : Eclipse
 It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
