@@ -89,13 +89,13 @@ In order to use the library in a project, it's need to add the dependency to the
 ```xml
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
-    <artifactId>toml</artifactId>
-    <version>0.30</version>
+    <artifactId>config-toml</artifactId>
+    <version>0.31</version>
 </dependency>
 ```
 or with Gradle:
 ```
-compile 'net.cactusthorn.config:toml:0.30'
+compile 'net.cactusthorn.config:config-toml:0.31'
 ```
 
 ## LICENSE
