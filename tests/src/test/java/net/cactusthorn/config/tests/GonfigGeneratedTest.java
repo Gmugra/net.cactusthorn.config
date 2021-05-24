@@ -21,16 +21,13 @@ package net.cactusthorn.config.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.TreeMap;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import net.cactusthorn.config.core.ConfigFactory;
 
 public class GonfigGeneratedTest {
 
@@ -38,39 +35,29 @@ public class GonfigGeneratedTest {
     private static AllCorrect config2;
 
     @BeforeAll static void setUp() {
-        Map<String, Object> v1 = new HashMap<>();
-        v1.put("buf", new StringBuilder("ABC"));
-        v1.put("ddd", 125d);
-        v1.put("fromStringEnum", AllCorrect.FromStringEnum.BBB);
-        v1.put("intValue", 124);
-        v1.put("list", Optional.empty());
-        v1.put("set", new HashSet<>(Arrays.asList(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"))));
-        v1.put("simpleEnum", AllCorrect.SimpleEnum.AAA);
-        v1.put("sorted", new TreeSet<>(Arrays.asList(126f)));
+        Map<String, String> v1 = new TreeMap<>();
+        v1.put("ddd", "125");
+        v1.put("fromStringEnum", "BBB");
+        v1.put("intValue", "124");
+        v1.put("set", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
+        v1.put("simpleEnum", "AAA");
+        v1.put("sorted", "126");
         v1.put("superInterface", "SI");
-        v1.put("uuid", Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")));
+        v1.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         v1.put("value", "simpleString");
-        v1.put("myChar", 'Y');
-        config = new Config_AllCorrect(v1);
-        config2 = new Config_AllCorrect(v1);
+        v1.put("myChar", "Y");
+        config = ConfigFactory.builder().setSource(v1).build().create(AllCorrect.class); 
+        config2 = ConfigFactory.builder().setSource(v1).build().create(AllCorrect.class); 
     }
 
     @Test public void toStr() {
         assertEquals(
-                "[buf=ABC, ddd=125.0, fromStringEnum=BBB, intValue=124, list=Optional.empty, myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
+                "[ddd=125.0, fromStringEnum=AAA, intValue=124, list=Optional.empty, myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
                 config.toString());
     }
 
     @Test public void eqls() {
-        assertEquals(config, config);
-    }
-
-    @Test public void hash() {
-        assertEquals(config.hashCode(), config2.hashCode());
-    }
-
-    @Test public void buf() {
-        assertEquals("ABC", config.buf().toString());
+        assertEquals(config, config2);
     }
 
     @Test public void ddd() {
@@ -78,7 +65,7 @@ public class GonfigGeneratedTest {
     }
 
     @Test public void fromStringEnum() {
-        assertEquals(AllCorrect.FromStringEnum.BBB, config.fromStringEnum());
+        assertEquals(AllCorrect.FromStringEnum.AAA, config.fromStringEnum());
     }
 
     @Test public void intValue() {

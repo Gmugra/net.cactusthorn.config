@@ -36,7 +36,6 @@ public class TOMLToMapParserTest {
         try (Reader reader = reader("correct.toml")) {
             TOMLToMapParser parser = new TOMLToMapParser();
             Map<String, String> result = parser.parse(reader);
-            System.out.println(result);
             assertEquals("frontend", result.get("servers.alpha.role"));
         }
     }

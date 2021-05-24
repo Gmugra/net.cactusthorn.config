@@ -55,8 +55,6 @@ import java.util.*;
 
     SortedSet<Float> sorted();
 
-    StringBuilder buf();
-
     Double ddd();
 
     char myChar();

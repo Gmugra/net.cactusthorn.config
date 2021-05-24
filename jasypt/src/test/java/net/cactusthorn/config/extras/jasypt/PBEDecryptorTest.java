@@ -30,7 +30,7 @@ import net.cactusthorn.config.core.ConfigFactory;
 
 public class PBEDecryptorTest {
 
-    @Test public void map() {
+    @Test public void doIt() {
         System.setProperty("pbe-password", "megapass");
 
         Map<String, String> properties = new HashMap<>();

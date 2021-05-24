@@ -17,23 +17,34 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler.configbuildergenerator;
+package net.cactusthorn.config.core.util;
 
-import javax.lang.model.element.Modifier;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
-
-import net.cactusthorn.config.compiler.Generator;
-import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.loader.Loaders;
 
-public class ConstructorPart implements GeneratorPart {
+public abstract class ConfigInitializer {
 
-    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(Loaders.class, "loaders", Modifier.FINAL).addStatement("super(loaders)");
-        classBuilder.addMethod(constructorBuilder.build());
+    public static final String CONFIG_CLASSNAME_PREFIX = "Config_";
+    public static final String INITIALIZER_CLASSNAME_PREFIX = "ConfigInitializer_";
+
+    protected static final ConcurrentHashMap<Class<?>, Converter<?>> CONVERTERS = new ConcurrentHashMap<>();
+
+    private final Loaders loaders;
+
+    protected ConfigInitializer(Loaders loaders) {
+        this.loaders = loaders;
     }
 
+    public abstract Map<String, Object> initialize();
+
+    @SuppressWarnings("unchecked") protected <T> T convert(Class<? extends Converter<T>> clazz, String value, String[] parameters) {
+        return (T) CONVERTERS.get(clazz).convert(value, parameters);
+    }
+
+    protected Loaders loaders() {
+        return loaders;
+    }
 }

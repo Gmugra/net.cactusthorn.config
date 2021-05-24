@@ -17,34 +17,33 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler.configbuildergenerator;
+package net.cactusthorn.config.compiler.configinitgenerator;
 
-import javax.lang.model.element.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
-import com.squareup.javapoet.ArrayTypeName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
+import javax.lang.model.element.TypeElement;
+
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.compiler.InterfaceInfo;
+import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.core.util.ConfigInitializer;
 
-public class UrisPart implements GeneratorPart {
+public final class ConfigBuilderGenerator extends Generator {
 
-    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        Annotations.ConfigInfo configInfo = generator.interfaceInfo().configInfo();
+    private static final List<GeneratorPart> PARTS = Arrays.asList(new UrisPart(), new ConstructorPart(), new InitializePart());
 
-        CodeBlock.Builder block = CodeBlock.builder();
-        for (int i = 0; i < configInfo.sources().length; i++) {
-            if (i != 0) {
-                block.add(", ");
-            }
-            block.add("$S", configInfo.sources()[i]);
-        }
+    public ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
+        super(interfaceElement, methodsInfo, ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX, interfaceInfo);
+    }
 
-        FieldSpec fieldSpec = FieldSpec.builder(ArrayTypeName.of(STRING), URIS_ATTR, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-                .initializer("new $T[] {$L}", String.class, block.build()).build();
-        classBuilder.addField(fieldSpec);
+    @Override public JavaFile generate() {
+        TypeSpec.Builder classBuilder = classBuilder().superclass(ConfigInitializer.class);
+        PARTS.forEach(p -> p.addPart(classBuilder, this));
+        return JavaFile.builder(packageName(), classBuilder.build()).build();
     }
 }
