@@ -1,22 +1,3 @@
-/*
-* Copyright (C) 2021, Alexei Khatskevich
-*
-* Licensed under the BSD 3-Clause license.
-* You may obtain a copy of the License at
-*
-* https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
 package net.cactusthorn.config.core;
 
 import java.lang.Object;
@@ -29,17 +10,17 @@ import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.util.ConfigBuilder;
+import net.cactusthorn.config.core.util.ConfigInitializer;
 
-public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestConfig> {
+public final class ConfigInitializer_TestConfig extends ConfigInitializer {
   private static final String[] URIS = new String[] {""};
 
-  public ConfigBuilder_TestConfig(final Loaders loaders) {
+  ConfigInitializer_TestConfig(final Loaders loaders) {
     super(loaders);
   }
 
   @Override
-  public Config_TestConfig build() {
+  public Map<String, Object> initialize() {
     ConfigHolder ch = loaders().load(Config_TestConfig.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
     CONVERTERS.computeIfAbsent(DurationConverter.class, c -> new DurationConverter());
     CONVERTERS.computeIfAbsent(ToTestConverter.class, c -> new ToTestConverter());
@@ -67,6 +48,6 @@ public final class ConfigBuilder_TestConfig extends ConfigBuilder<Config_TestCon
     values.put("test.sort", ch.getSortedSet(s -> s, "test.sort", ","));
     values.put("test.string", ch.get(s -> s, "test.string"));
     values.put("test.testconverter", ch.get(s -> convert(ToTestConverter.class, s, Converter.EMPTY), "test.testconverter", "default"));
-    return new Config_TestConfig(values);
+    return values;
   }
 }

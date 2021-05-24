@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.cactusthorn.config.compiler.configbuildergenerator.ConfigBuilderGenerator;
 import net.cactusthorn.config.compiler.configgenerator.ConfigGenerator;
+import net.cactusthorn.config.compiler.configinitgenerator.ConfigBuilderGenerator;
 import net.cactusthorn.config.compiler.methodvalidator.*;
 import net.cactusthorn.config.core.Accessible;
 import net.cactusthorn.config.core.Config;
@@ -127,13 +127,13 @@ public final class ConfigProcessor extends AbstractProcessor {
 
                 validateMethodExist(element, methodsInfo);
 
-                JavaFile configFile = new ConfigGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
-                //System.out.println(configFile.toString());
-                configFile.writeTo(processingEnv.getFiler());
-
                 JavaFile configBuilderFile = new ConfigBuilderGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
                 //System.out.println(configBuilderFile.toString());
                 configBuilderFile.writeTo(processingEnv.getFiler());
+
+                JavaFile configFile = new ConfigGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+                //System.out.println(configFile.toString());
+                configFile.writeTo(processingEnv.getFiler());
             }
         } catch (ProcessorException e) {
             if (e.getAnnotationMirror() != null) {

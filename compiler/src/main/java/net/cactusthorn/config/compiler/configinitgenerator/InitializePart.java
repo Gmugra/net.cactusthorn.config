@@ -17,7 +17,7 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler.configbuildergenerator;
+package net.cactusthorn.config.compiler.configinitgenerator;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -31,7 +31,6 @@ import java.util.SortedMap;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
-import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
 
 import com.squareup.javapoet.MethodSpec;
@@ -47,16 +46,14 @@ import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
-import net.cactusthorn.config.core.util.ConfigBuilder;
+import net.cactusthorn.config.core.util.ConfigInitializer;
 
-public class BuildPart implements GeneratorPart {
+public class InitializePart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        ClassName configClass = ClassName.get(generator.packageName(),
-                ConfigBuilder.CONFIG_CLASSNAME_PREFIX + generator.interfaceName().simpleName());
 
-        MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
-                .returns(configClass);
+        MethodSpec.Builder buildBuilder = MethodSpec.methodBuilder("initialize").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+                .returns(MAP_STRING_OBJECT);
 
         addConfigHolder(buildBuilder, generator);
 
@@ -65,7 +62,7 @@ public class BuildPart implements GeneratorPart {
         buildBuilder.addStatement("$T<$T,$T> values = new $T<>()", Map.class, String.class, Object.class, HashMap.class);
         generator.methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi)));
 
-        classBuilder.addMethod(buildBuilder.addStatement("return new $T(values)", configClass).build());
+        classBuilder.addMethod(buildBuilder.addStatement("return values").build());
     }
 
     private static final String CONFIG_HOLDER = "ch";
@@ -77,7 +74,7 @@ public class BuildPart implements GeneratorPart {
         CodeBlock strategyBlock = CodeBlock.builder().add("$T.$L", LoadStrategy.class, configInfo.loadStrategy().name()).build();
 
         buildBuilder.addStatement("$T $L = loaders().load($L.class.getClassLoader(), $L, $L)", ConfigHolder.class, CONFIG_HOLDER,
-                ConfigBuilder.CONFIG_CLASSNAME_PREFIX + generator.interfaceName().simpleName(), strategyBlock, URIS_ATTR);
+                ConfigInitializer.CONFIG_CLASSNAME_PREFIX + generator.interfaceName().simpleName(), strategyBlock, URIS_ATTR);
     }
 
     private void addConverters(MethodSpec.Builder buildBuilder, List<MethodInfo> methodInfo) {

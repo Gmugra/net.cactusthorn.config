@@ -37,7 +37,6 @@ public class GonfigBuilderGeneratedTest {
 
     @BeforeAll static void setUp() {
         Map<String, String> properties = new HashMap<>();
-        properties.put("buf", "ABC");
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
@@ -51,10 +50,6 @@ public class GonfigBuilderGeneratedTest {
         properties.put("myChar", "YXZ");
 
         config = ConfigFactory.builder().setSource(properties).build().create(AllCorrect.class);
-    }
-
-    @Test public void buf() {
-        assertEquals("ABC", config.buf().toString());
     }
 
     @Test public void ddd() {

@@ -17,33 +17,23 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core.util;
+package net.cactusthorn.config.compiler.configinitgenerator;
 
-import java.util.concurrent.ConcurrentHashMap;
+import javax.lang.model.element.Modifier;
 
-import net.cactusthorn.config.core.converter.Converter;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
+
+import net.cactusthorn.config.compiler.Generator;
+import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.core.loader.Loaders;
 
-public abstract class ConfigBuilder<C> {
+public class ConstructorPart implements GeneratorPart {
 
-    public static final String CONFIG_CLASSNAME_PREFIX = "Config_";
-    public static final String BUILDER_CLASSNAME_PREFIX = "ConfigBuilder_";
-
-    protected static final ConcurrentHashMap<Class<?>, Converter<?>> CONVERTERS = new ConcurrentHashMap<>();
-
-    private final Loaders loaders;
-
-    protected ConfigBuilder(Loaders loaders) {
-        this.loaders = loaders;
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
+        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addParameter(Loaders.class, "loaders", Modifier.FINAL)
+                .addStatement("super(loaders)");
+        classBuilder.addMethod(constructorBuilder.build());
     }
 
-    public abstract C build();
-
-    @SuppressWarnings("unchecked") protected <T> T convert(Class<? extends Converter<T>> clazz, String value, String[] parameters) {
-        return (T) CONVERTERS.get(clazz).convert(value, parameters);
-    }
-
-    protected Loaders loaders() {
-        return loaders;
-    }
 }

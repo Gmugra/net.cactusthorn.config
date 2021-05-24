@@ -37,7 +37,6 @@ public class ConfigFactoryTest {
 
     @BeforeAll static void setUp() {
         Map<String, String> properties = new HashMap<>();
-        properties.put("buf", "ABC");
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
@@ -64,7 +63,7 @@ public class ConfigFactoryTest {
     }
 
     @Test public void accessibleKeys() {
-        assertEquals(12, config.keys().size());
+        assertEquals(11, config.keys().size());
         assertThrows(UnsupportedOperationException.class, () -> config.keys().clear());
     }
 
@@ -73,7 +72,7 @@ public class ConfigFactoryTest {
     }
 
     @Test public void accessibleAsMap() {
-        assertEquals(12, config.asMap().size());
+        assertEquals(11, config.asMap().size());
         assertEquals("simpleString", config.asMap().get("value"));
         assertThrows(UnsupportedOperationException.class, () -> config.asMap().clear());
     }

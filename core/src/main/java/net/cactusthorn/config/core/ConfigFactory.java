@@ -42,11 +42,11 @@ import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.util.ConfigBuilder;
+import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class ConfigFactory {
 
-    private static final MethodType BUILDER_CONSTRUCTOR = MethodType.methodType(void.class, Loaders.class);
+    private static final MethodType CONFIG_CONSTRUCTOR = MethodType.methodType(void.class, Loaders.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
     private final Loaders loaders;
@@ -145,11 +145,10 @@ public final class ConfigFactory {
         }
     }
 
-    @SuppressWarnings("unchecked") public <T> T create(Class<T> sourceInterface) {
+    public <T> T create(Class<T> sourceInterface) {
         try {
-            MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findBuilderConstructor);
-            @SuppressWarnings("rawtypes") ConfigBuilder builder = (ConfigBuilder) methodHandler.invoke(loaders);
-            return (T) builder.build();
+            MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findConfigConstructor);
+            return (T) methodHandler.invoke(loaders);
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }
@@ -163,13 +162,13 @@ public final class ConfigFactory {
         return configHolder(ConfigFactory.class.getClassLoader());
     }
 
-    private <T> MethodHandle findBuilderConstructor(Class<T> sourceInterface) {
+    private <T> MethodHandle findConfigConstructor(Class<T> sourceInterface) {
         Package interfacePackage = sourceInterface.getPackage();
         String interfaceName = sourceInterface.getSimpleName();
-        String builderClassName = interfacePackage.getName() + '.' + ConfigBuilder.BUILDER_CLASSNAME_PREFIX + interfaceName;
+        String builderClassName = interfacePackage.getName() + '.' + ConfigInitializer.CONFIG_CLASSNAME_PREFIX + interfaceName;
         try {
             Class<?> builderClass = Class.forName(builderClassName);
-            return MethodHandles.publicLookup().findConstructor(builderClass, BUILDER_CONSTRUCTOR);
+            return MethodHandles.publicLookup().findConstructor(builderClass, CONFIG_CONSTRUCTOR);
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_FIND_CONFIGBUILDER, sourceInterface.getName()), e);
         }

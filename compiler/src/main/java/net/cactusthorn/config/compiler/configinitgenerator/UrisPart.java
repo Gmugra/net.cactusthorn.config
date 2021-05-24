@@ -17,33 +17,34 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler.configgenerator;
+package net.cactusthorn.config.compiler.configinitgenerator;
 
 import javax.lang.model.element.Modifier;
 
-import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ArrayTypeName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeSpec;
 
+import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
-import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.util.ConfigInitializer;
 
-final class ConstructorPart implements GeneratorPart {
+public class UrisPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        // @formatter:off
-        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
-            .addModifiers(Modifier.PUBLIC)
-            .addParameter(Loaders.class, "loaders", Modifier.FINAL)
-            .addStatement("$L$L initializer = new $L$L(loaders)",
-                    ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX,
-                    generator.interfaceName().simpleName(),
-                    ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX,
-                    generator.interfaceName().simpleName()
-            )
-            .addStatement("$L.putAll(initializer.initialize())", VALUES_ATTR);
-        // @formatter:on
-        classBuilder.addMethod(constructorBuilder.build());
+        Annotations.ConfigInfo configInfo = generator.interfaceInfo().configInfo();
+
+        CodeBlock.Builder block = CodeBlock.builder();
+        for (int i = 0; i < configInfo.sources().length; i++) {
+            if (i != 0) {
+                block.add(", ");
+            }
+            block.add("$S", configInfo.sources()[i]);
+        }
+
+        FieldSpec fieldSpec = FieldSpec.builder(ArrayTypeName.of(STRING), URIS_ATTR, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new $T[] {$L}", String.class, block.build()).build();
+        classBuilder.addField(fieldSpec);
     }
 }
