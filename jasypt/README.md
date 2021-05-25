@@ -4,7 +4,7 @@ The module provides a parameterized converter to decrypt properties that were en
 ## Example
 e.g. 
 my.properties:
-```
+```properties
 encrypted=U79blAyCnFylcjX5wpCl/TVDHmy+MSSw
 ```
 interface:
