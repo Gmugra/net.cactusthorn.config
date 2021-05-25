@@ -189,7 +189,9 @@ date = 2005-11-12
 ### Property not found : `@Default` or `Optional`
 There are three ways for dealing with properties that are not found in sources:
 1.  If method return type is not `Optional` and the method do not annotated with `@Default`, the `ConfigFactory.create` method will throw runtime exception "property ... not found"
+
 2.  If method return type is `Optional` ->  method will return `Optional.empty()`
+
 3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
 FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
@@ -255,9 +257,9 @@ The return type of the interface methods must either:
     -   e.g. [StringBuilder](https://docs.oracle.com/javase/8/docs/api/java/lang/StringBuilder.html#StringBuilder-java.lang.String-)
 
 3.  Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
-    -  e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
-    -  e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
-    -  If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
+    -   e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
+    -   e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
+    -   If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
 
 4.  Be 
     -   `java.net.URL`
@@ -315,7 +317,9 @@ e.g. `2011-12-03T10:15:30Z`
 
 2.  "unit strings" format: 
     1.   Bare numbers are taken to be in milliseconds: `10`
+
     2.   Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
+
     3.   The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
          -   `ns`, `nano`, `nanos`, `nanosecond`, `nanoseconds`
          -   `us`, `µs`, `micro`, `micros`, `microsecond`, `microseconds`
@@ -330,7 +334,9 @@ e.g. `2011-12-03T10:15:30Z`
 
 2.  "unit strings" format: 
     1.   Bare numbers are taken to be in days: `10`
+
     2.   Strings are parsed as a number plus an optional unit string: `10y`, `10 days`
+
     3.   The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
          -   `d`, `day`, `days`
          -   `w`, `week`, `weeks`
@@ -350,23 +356,23 @@ public interface MyByteSize {
 }
 ```
 The supported unit strings for `ByteSize` are case sensitive and must be lowercase. Exactly these strings are supported:
-   -   `byte`, `bytes`, `b`
-   -   `kilobyte`, `kilobytes`, `k`, `ki`, `kib`
-   -   `kibibyte`, `kibibytes`, `kb`
-   -   `megabyte`, `megabytes`, `m`, `mi`, `mib`
-   -   `mebibyte`, `mebibytes`, `mb`
-   -   `gigabyte`, `gigabytes`, `g`, `gi`, `gib`
-   -   `gibibyte`, `gibibytes`, `gb`
-   -   `terabyte`, `terabytes`, `t`, `ti`, `tib`
-   -   `tebibyte`, `tebibytes`, `tb`
-   -   `petabyte`, `petabytes`, `p`, `pi`, `pib`
-   -   `pebibyte`, `pebibytes`, `pb`
-   -   `exabyte`, `exabytes`, `e`, `ei`, `eib`
-   -   `exbibyte`, `exbibytes`, `eb`
-   -   `zettabyte`, `zettabytes`, `z`, `zi`, `zib`
-   -   `zebibyte`, `zebibytes`, `zb`
-   -   `yottabyte`, `yottabytes`, `y`, `yi`, `yib`
-   -   `yobibyte`, `yobibytes`, `yb`
+-   `byte`, `bytes`, `b`
+-   `kilobyte`, `kilobytes`, `k`, `ki`, `kib`
+-   `kibibyte`, `kibibytes`, `kb`
+-   `megabyte`, `megabytes`, `m`, `mi`, `mib`
+-   `mebibyte`, `mebibytes`, `mb`
+-   `gigabyte`, `gigabytes`, `g`, `gi`, `gib`
+-   `gibibyte`, `gibibytes`, `gb`
+-   `terabyte`, `terabytes`, `t`, `ti`, `tib`
+-   `tebibyte`, `tebibytes`, `tb`
+-   `petabyte`, `petabytes`, `p`, `pi`, `pib`
+-   `pebibyte`, `pebibytes`, `pb`
+-   `exabyte`, `exabytes`, `e`, `ei`, `eib`
+-   `exbibyte`, `exbibytes`, `eb`
+-   `zettabyte`, `zettabytes`, `z`, `zi`, `zib`
+-   `zebibyte`, `zebibytes`, `zb`
+-   `yottabyte`, `yottabytes`, `y`, `yi`, `yib`
+-   `yobibyte`, `yobibytes`, `yb`
 
 ### Custom converters
 If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
@@ -419,10 +425,10 @@ public interface MyConfig {
 ```
 
 Several of these annotations shipped with the library:
-*   `@LocalDateParser`
-*   `@LocalDateTimeParser`
-*   `@ZonedDateTimeParser`
-*   `@OffsetDateTimeParser`
+-   `@LocalDateParser`
+-   `@LocalDateTimeParser`
+-   `@ZonedDateTimeParser`
+-   `@OffsetDateTimeParser`
 
 ## Loaders
 
@@ -431,28 +437,28 @@ Several of these annotations shipped with the library:
  
 2.  Environment variables: `system:env`
 
-3.  properties file from class-path : classpath:*relative-path-to-name*.properties[#charset]
+3.  properties file from class-path : `classpath:relative-path-to-name.properties[#charset]`
     -   Default charset (if URI fragment not present) is **UTF-8**
     -   e.g. `classpath:config/my.properties#ISO-5589-1`
 
-4.  properties file from any URI convertable to URL: *whatever-what-supported*.properties[#charset]
+4.  properties file from any URI convertable to URL: `whatever-what-supported.properties[#charset]`
     -   Default charset (if URI fragment not present) is **UTF-8**
     -   e.g. the file from the working directory: `file:./my.properties`
     -   e.g. Windows file: `file:///C:/my.properties`
     -   e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.properties`
     -   e.g. jar in file-system: `jar:file:path/to/some.jar!/path/to/your.properties`
 
-5.  XML file from class-path : classpath:*relative-path-to-name*.xml[#charset]
+5.  XML file from class-path : `classpath:relative-path-to-name.xml[#charset]`
     -   XML format: [properties.dtd](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) or [OWNER](http://owner.aeonbits.org/docs/xml-support/)
     -   Default charset (if URI fragment not present) is **UTF-8**
     -   e.g. `classpath:config/my.xml#ISO-5589-1`
 
-6.  XML file from any URI convertable to URL: *whatever-what-supported*.xml[#charset]
+6.  XML file from any URI convertable to URL: `whatever-what-supported.xml[#charset]`
     -   XML format: [properties.dtd](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html) or [OWNER](http://owner.aeonbits.org/docs/xml-support/)
     -   Default charset (if URI fragment not present) is **UTF-8**
     -   e.g. `file:./my.xml`
 
-7.  META-INF/MANIFEST.MF: classpath:jar:manifest?*attribute*[=value]
+7.  META-INF/MANIFEST.MF: `classpath:jar:manifest?attribute[=value]`
     -   The loader scans all JARs in classpath for META-INF/MANIFEST.MF files. First META-INF/MANIFEST.MF, which contain *attribute* (with optional value) from the URI will be used as source.
     -   e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**:   
 `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
@@ -578,8 +584,8 @@ In this case generated class will also get methods for this interface:
 
 ### Extras
 "Extras" are optional extensions (converters and loaders) that need external dependencies and, because of this, can't be integrated into the core library.
-*   **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
-*   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
+-   **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
+-   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
@@ -619,10 +625,10 @@ java -Dmyapp.profile=DEV -jar myapp.jar
 
 ### Integration with DI containers
 Example with [Dagger 2](https://dagger.dev):
-- Config Interface: [AppInfo](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
-- Dagger 2 module: [CoreModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
-- One nore config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
-- One nore Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
+-   Config Interface: [AppInfo](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
+-   Dagger 2 module: [CoreModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
+-   One nore config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
+-   One nore Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
 
 ## FYI : Eclipse
 It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
