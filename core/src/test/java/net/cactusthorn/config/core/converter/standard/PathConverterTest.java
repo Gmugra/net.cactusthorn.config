@@ -31,7 +31,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class PathConverterTest {
 
-    static Converter<Path> converter = new PathConverter();
+    private static Converter<Path> converter = new PathConverter();
 
     @Test public void correct() throws MalformedURLException {
         assertEquals(Paths.get("my.xml"), converter.convert("my.xml"));

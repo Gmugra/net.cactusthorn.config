@@ -31,7 +31,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class URLConverterTest {
 
-    static Converter<URL> converter = new URLConverter();
+    private static Converter<URL> converter = new URLConverter();
 
     @Test public void correct() throws MalformedURLException {
         URL url = converter.convert("https://github.com");

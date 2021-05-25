@@ -32,7 +32,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class PeriodConverterTest {
 
-    static Converter<Period> converter = new PeriodConverter();
+    private static Converter<Period> converter = new PeriodConverter();
 
     @Test public void iso8601() {
         assertEquals(Period.ofYears(2), converter.convert("P2Y"));

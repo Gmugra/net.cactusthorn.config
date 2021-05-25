@@ -28,7 +28,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class PBEConverterTest {
 
-    static Converter<String> converter = new PBEConverter();
+    private static Converter<String> converter = new PBEConverter();
 
     @Test public void correct() {
         System.setProperty("bpe-pass", "megapass");

@@ -20,7 +20,10 @@
 package net.cactusthorn.config.compiler.methodvalidator;
 
 import static net.cactusthorn.config.compiler.CompilerMessages.msg;
-import static net.cactusthorn.config.compiler.CompilerMessages.Key.*;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACE_ARG_EMPTY;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACE_ARG_WILDCARD;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACES;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACE_ARG_INTERFACE;
 
 import java.util.Arrays;
 import java.util.HashMap;

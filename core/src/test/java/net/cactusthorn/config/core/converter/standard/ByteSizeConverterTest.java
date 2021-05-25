@@ -32,7 +32,7 @@ import net.cactusthorn.config.core.converter.bytesize.ByteSizeUnit;
 
 public class ByteSizeConverterTest {
 
-    static Converter<ByteSize> converter = new ByteSizeConverter();
+    private static Converter<ByteSize> converter = new ByteSizeConverter();
 
     @ParameterizedTest //
     @ValueSource(strings = { "10 bytes", "10byte", "10 byte" }) //
