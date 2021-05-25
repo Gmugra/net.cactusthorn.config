@@ -1,4 +1,3 @@
-
 # net.cactusthorn.config
 
 The Java library with the goal of minimizing the code required to handle application configuration.
@@ -9,21 +8,21 @@ The Java library with the goal of minimizing the code required to handle applica
 The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
 
 So, this project is providing library with similar with *OWNER* API, but
-- Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
-- Required at least Java 8, as result it support "more fresh" language features.
+-   Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
+-   Required at least Java 8, as result it support "more fresh" language features.
 
 ## Features
-- Plain Java 8 without any external dependencies
-- Uses no reflection or runtime bytecode generation; generates plain Java source code.
-- Small (< 100KB) & lightweight core runtime part
-- Multiple configuration sources and/or formats (.properties, .xml, .toml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
-- Multiple loading strategies (configuration sources fallback/merging)
-- Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
-- Parameterized type converters
-- Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
-- Caching
-- Seamless integration with DI containers
-- Thread-safe
+-   Plain Java 8 without any external dependencies
+-   Uses no reflection or runtime bytecode generation; generates plain Java source code.
+-   Small (< 100KB) & lightweight core runtime part
+-   Multiple configuration sources and/or formats (.properties, .xml, .toml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
+-   Multiple loading strategies (configuration sources fallback/merging)
+-   Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
+-   Parameterized type converters
+-   Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
+-   Caching
+-   Seamless integration with DI containers
+-   Thread-safe
 
 ## Basics
 
@@ -59,7 +58,7 @@ It's also need to include the compiler used to convert annotated "source"-interf
 FYI: With this configuration, Maven will output the generated code into `target/generated-sources/annotations`.
 
 Same with Gradle:
-```
+```groovy
 compile 'net.cactusthorn.config:config-core:0.31'
 annotationProcessor 'net.cactusthorn.config:config-compiler:0.31'
 ```
@@ -90,9 +89,9 @@ public interface MyConfig {
     LocalDate date();
 }
 ```
-- An interface must be annotated with `@Config`.
-- An interface must contain at least one method declaration (but methods decalaration can be also in super interface(s)).
-- All methods must be without parameters
+-   An interface must be annotated with `@Config`.
+-   An interface must contain at least one method declaration (but methods decalaration can be also in super interface(s)).
+-   All methods must be without parameters
 
 Based on the interface, the annotation processor will generate an implementation, that can be obtained using `ConfigFactory`:
 ```java
@@ -153,32 +152,39 @@ date = 2005-11-12
 
 ### Annotations
 
-1. `@Config`
-   - `@Target(TYPE)`
-   - The "source" interface must be annotated with this annotation.
-1. `@Prefix`
-   - `@Target(TYPE)`
-   - Set global prefix for all property names
-1. `@Key`
-   - `@Target(METHOD)`
-   - Set property name for the method. If this annotation is not present method-name will be used as property name
-1. `@Default`
-   - `@Target(METHOD)`
-   - Set default value (if property will not found in sources, the default value will be used).
-   - Can't be used for methods with `Optional` return type.
-1. `@Disable`
-   - `@Target(METHOD)`
-   - Disable "global"-level features for this method.
-1. `@Split`
-   - `@Target({TYPE, METHOD})`
-   - Set splitter regular expression for splitting value for collections, or key+value "entries" for maps.
-   - If this annotation is not present, default "splitter" is comma : `,`
-1. `@ConverterClass`
-   - `@Target({METHOD, ANNOTATION_TYPE})`
-   - apply custom converter implementation
-1. `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`
-   - `@Target(METHOD)`
-   - apply a parameterized by formats converter to the relevant java.time.* type
+1.  `@Config`
+    -   `@Target(TYPE)`
+    -   The "source" interface must be annotated with this annotation.
+
+2.  `@Prefix`
+    -   `@Target(TYPE)`
+    -   Set global prefix for all property names
+
+3.  `@Key`
+    -   `@Target(METHOD)`
+    -   Set property name for the method. If this annotation is not present method-name will be used as property name
+
+4.  `@Default`
+    -   `@Target(METHOD)`
+    -   Set default value (if property will not found in sources, the default value will be used).
+    -   Can't be used for methods with `Optional` return type.
+
+5.  `@Disable`
+    -   `@Target(METHOD)`
+    -   Disable "global"-level features for this method.
+
+6.  `@Split`
+    -   `@Target({TYPE, METHOD})`
+    -   Set splitter regular expression for splitting value for collections, or key+value "entries" for maps.
+    -   If this annotation is not present, default "splitter" is comma : `,`
+
+7.  `@ConverterClass`
+    -   `@Target({METHOD, ANNOTATION_TYPE})`
+    -   apply custom converter implementation
+
+8.  `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`
+    -   `@Target(METHOD)`
+    -   apply a parameterized by formats converter to the relevant java.time.* type
 
 ### Property not found : `@Default` or `Optional`
 There are three ways for dealing with properties that are not found in sources:
@@ -198,9 +204,9 @@ public interface ConfigOverride {
     String string();
 }
 ```
-1. If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
-1. If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
-1. Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
+1.  If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
+2.  If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
+3.  Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
 
 ## The `ConfigFactory`
 The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
@@ -291,19 +297,20 @@ public interface ConfigMap {
 }
 ```
 FYI:
-1. In case of Maps, `@Split` annotation set spliter for key+value "entries" (default "splitter" is comma : `,`).
-1. In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ZonedDateTimeParser` etc.) only affect the Map values.
+1.  In case of Maps, `@Split` annotation set spliter for key+value "entries" (default "splitter" is comma : `,`).
+2.  In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ZonedDateTimeParser` etc.) only affect the Map values.
 
 ### `java.time.Instant` format
 The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
 e.g. `2011-12-03T10:15:30Z`
 
 ### `java.time.Duration` formats
-1. Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
-1.  "unit strings" format: 
-    1. Bare numbers are taken to be in milliseconds: `10`
-    1. Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
-    1. The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
+1.  Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
+
+2.  "unit strings" format: 
+    1.   Bare numbers are taken to be in milliseconds: `10`
+    2.   Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
+    3.   The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
        - `ns`, `nano`, `nanos`, `nanosecond`, `nanoseconds`
        - `us`, `µs`, `micro`, `micros`, `microsecond`, `microseconds`
        - `ms`, `milli`, `millis`, `millisecond`, `milliseconds`
@@ -609,4 +616,3 @@ It does not have annotation-processing enabled by default. To get it, you must i
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
-
