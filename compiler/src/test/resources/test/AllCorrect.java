@@ -13,7 +13,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.time.Instant;
 
-@Config(sources = {"classpath:my.properties", "system.properties"}, loadStrategy = LoadStrategy.FIRST) //
+@Config(sources = { "classpath:my.properties", "system.properties" }, loadStrategy = LoadStrategy.FIRST) //
 @Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
 
     long serialVersionUID = 100L;
@@ -60,11 +60,11 @@ import java.time.Instant;
 
     char myChar();
 
-    Optional<Map<String,UUID>> map();
+    Optional<Map<String, UUID>> map();
 
-    Optional<SortedMap<String,UUID>> sortedMap();
+    Optional<SortedMap<String, UUID>> sortedMap();
 
     Optional<List<Character>> charList();
 
-    Optional<Map<Instant,String>> defaultConverterKey();
+    Optional<Map<Instant, String>> defaultConverterKey();
 }

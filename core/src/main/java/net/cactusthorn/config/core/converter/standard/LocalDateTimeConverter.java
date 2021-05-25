@@ -29,7 +29,7 @@ import net.cactusthorn.config.core.converter.Converter;
 public class LocalDateTimeConverter implements Converter<LocalDateTime> {
 
     @Override public LocalDateTime convert(String value, String[] parameters) {
-        if (parameters == null || parameters.length == 0 || parameters.length == 1 && "".equals(parameters[0])) {
+        if (parameters == null || parameters.length == 0 || (parameters.length == 1 && "".equals(parameters[0]))) {
             return LocalDateTime.parse(value);
         }
         DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();

@@ -5,5 +5,5 @@ import java.util.NavigableMap;
 
 @Config interface WrongInterfaceArgEmpty {
 
-    NavigableMap<String,String> map();
+    NavigableMap<String, String> map();
 }

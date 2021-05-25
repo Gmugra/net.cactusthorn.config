@@ -2,6 +2,6 @@ package test;
 
 import net.cactusthorn.config.core.Config;
 
-@Config interface WithoutClass {
+@Config public interface WithoutMethods {
     String XXX = "YYY";
 }

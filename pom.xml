@@ -222,6 +222,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <verbose>true</verbose>
+                    <rulesets>${project.basedir}/../pmd-ruleset.xml</rulesets>
                 </configuration>
                 <executions>
                     <execution>

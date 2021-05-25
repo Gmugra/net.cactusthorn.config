@@ -6,5 +6,5 @@ import java.util.NavigableMap;
 
 @Config interface WrongOptionalArgWrongInterface {
 
-    Optional<NavigableMap<?,?>> map();
+    Optional<NavigableMap<?, ?>> map();
 }
