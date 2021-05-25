@@ -48,6 +48,7 @@
         <require.version>3.5.0-beta-1</require.version>
 
         <pmd.skip>true</pmd.skip>
+        <checkstyle.skip>true</checkstyle.skip>
 
         <dependency.junit>5.7.2</dependency.junit>
         <dependency.mockito>3.6.28</dependency.mockito>
@@ -195,6 +196,23 @@
                         <phase>clean</phase>
                         <goals>
                             <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <logViolationsToConsole>true</logViolationsToConsole>
+                    <configLocation>${project.basedir}/../checkstyle_checks.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-validate</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
