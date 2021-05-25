@@ -1,7 +1,7 @@
 # net.cactusthorn.config.jasypt
 The module provides a parameterized converter to decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
 
-### Example
+## Example
 e.g. 
 my.properties:
 ```
@@ -20,11 +20,11 @@ public interface ConfigPBE {
 }
 ```
 usage:
-```
+```console
 java -Dpbepassword=megapass -jar myapp.jar
 ```
 
-### Installing
+## Installing
 Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config).   
 Download: [GitHub Packages](https://github.com/Gmugra?tab=packages&repo_name=net.cactusthorn.config).
 
@@ -37,12 +37,9 @@ In order to use the library in a project, it's need to add the dependency to the
 </dependency>
 ```
 or with Gradle:
-```
+```groovy
 compile 'net.cactusthorn.config:config-jasypt:0.31'
 ```
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
-
-
-
