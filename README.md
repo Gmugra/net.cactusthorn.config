@@ -321,13 +321,13 @@ e.g. `2011-12-03T10:15:30Z`
     2.   Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
 
     3.   The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
-         -   `ns`, `nano`, `nanos`, `nanosecond`, `nanoseconds`
-         -   `us`, `µs`, `micro`, `micros`, `microsecond`, `microseconds`
-         -   `ms`, `milli`, `millis`, `millisecond`, `milliseconds`
-         -   `s`, `second`, `seconds`
-         -   `m`, `minute`, `minutes`
-         -   `h`, `hour`, `hours`
-         -   `d`, `day`, `days`
+         -  `ns`, `nano`, `nanos`, `nanosecond`, `nanoseconds`
+         -  `us`, `µs`, `micro`, `micros`, `microsecond`, `microseconds`
+         -  `ms`, `milli`, `millis`, `millisecond`, `milliseconds`
+         -  `s`, `second`, `seconds`
+         -  `m`, `minute`, `minutes`
+         -  `h`, `hour`, `hours`
+         -  `d`, `day`, `days`
 
 ### `java.time.Period` formats
 1.  Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Period](https://docs.oracle.com/javase/8/docs/api/java/time/Period.html#parse-java.lang.CharSequence-). e.g. `P1Y2M3W4D`
@@ -338,10 +338,10 @@ e.g. `2011-12-03T10:15:30Z`
     2.   Strings are parsed as a number plus an optional unit string: `10y`, `10 days`
 
     3.   The supported unit strings for duration are case sensitive and must be lowercase. Exactly these strings are supported:
-         -   `d`, `day`, `days`
-         -   `w`, `week`, `weeks`
-         -   `m`, `mo`, `month`, `months`
-         -   `y`, `year`, `years`
+         -  `d`, `day`, `days`
+         -  `w`, `week`, `weeks`
+         -  `m`, `mo`, `month`, `months`
+         -  `y`, `year`, `years`
 
 ### `net.cactusthorn.config.core.converter.bytesize.ByteSize` format
 It based on [OWNER](http://owner.aeonbits.org/docs/type-conversion/) classes to represent data sizes.
@@ -460,10 +460,8 @@ Several of these annotations shipped with the library:
 
 7.  META-INF/MANIFEST.MF: `classpath:jar:manifest?attribute[=value]`
     -   The loader scans all JARs in classpath for META-INF/MANIFEST.MF files. First META-INF/MANIFEST.MF, which contain *attribute* (with optional value) from the URI will be used as source.
-    -   e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**:   
-`classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
-    -   e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value:   
-`classpath:jar:manifest?exotic-unique-attribite`
+    -   e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**: `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
+    -   e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value: `classpath:jar:manifest?exotic-unique-attribite`
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
