@@ -18,9 +18,9 @@ import net.cactusthorn.config.core.converter.standard.DurationConverter;
 
     @LocalDateParser LocalDate localDate();
 
-    @LocalDateParser({"dd.MM.yyyy","yyyy-MM-dd"}) LocalDate localDate2();
+    @LocalDateParser({"dd.MM.yyyy", "yyyy-MM-dd"}) LocalDate localDate2();
 
-    public static final class ToTestConverter implements Converter<String> {
+    final class ToTestConverter implements Converter<String> {
 
         @Override public String convert(String value, String[] parameters) {
             return "test::" + value;

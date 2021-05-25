@@ -29,7 +29,7 @@ import net.cactusthorn.config.core.converter.Converter;
 public class ZonedDateTimeConverter implements Converter<ZonedDateTime> {
 
     @Override public ZonedDateTime convert(String value, String[] parameters) {
-        if (parameters == null || parameters.length == 0 || parameters.length == 1 && "".equals(parameters[0])) {
+        if (parameters == null || parameters.length == 0 || (parameters.length == 1 && "".equals(parameters[0]))) {
             return ZonedDateTime.parse(value);
         }
         DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();

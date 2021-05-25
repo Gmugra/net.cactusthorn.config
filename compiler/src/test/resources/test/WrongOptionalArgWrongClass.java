@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 @Config interface WrongOptionalArgWrongClass {
 
-    Optional<ArrayList> map();
+    @SuppressWarnings("rawtypes") Optional<ArrayList> map();
 }

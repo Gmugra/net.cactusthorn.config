@@ -5,5 +5,5 @@ import java.util.Optional;
 
 @Config interface WrongOptionalArgEmpty {
 
-    Optional map();
+    @SuppressWarnings("rawtypes") Optional map();
 }

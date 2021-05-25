@@ -29,7 +29,7 @@ import net.cactusthorn.config.core.converter.Converter;
 public class OffsetDateTimeConverter implements Converter<OffsetDateTime> {
 
     @Override public OffsetDateTime convert(String value, String[] parameters) {
-        if (parameters == null || parameters.length == 0 || parameters.length == 1 && "".equals(parameters[0])) {
+        if (parameters == null || parameters.length == 0 || (parameters.length == 1 && "".equals(parameters[0]))) {
             return OffsetDateTime.parse(value);
         }
         DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();

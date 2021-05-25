@@ -5,5 +5,5 @@ import java.util.List;
 
 @Config interface WrongInterface {
 
-    List map();
+    @SuppressWarnings("rawtypes") List map();
 }
