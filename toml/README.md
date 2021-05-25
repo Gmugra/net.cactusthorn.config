@@ -1,19 +1,20 @@
 # net.cactusthorn.config.toml
 The module provides loaders for files in [TOML](https://toml.io) format
 
-1. TOML file from class-path : `classpath:relative-path-to-name.toml[#charset]`
-   -   Default charset (if URI fragment not present) is **UTF-8**
-   -   e.g. `classpath:config/my.toml#ISO-5589-1`
-1. TOML file from any URI convertable to URL: `whatever-what-supported.toml[#charset]`
-   -   Default charset (if URI fragment not present) is **UTF-8**
-   -   e.g. the file from the working directory: `file:./my.toml`
-   -   e.g. Windows file: `file:///C:/my.toml`
-   -   e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.toml`
+1.  TOML file from class-path : `classpath:relative-path-to-name.toml[#charset]`
+    -   Default charset (if URI fragment not present) is **UTF-8**
+    -   e.g. `classpath:config/my.toml#ISO-5589-1`
+
+2.  TOML file from any URI convertable to URL: `whatever-what-supported.toml[#charset]`
+    -   Default charset (if URI fragment not present) is **UTF-8**
+    -   e.g. the file from the working directory: `file:./my.toml`
+    -   e.g. Windows file: `file:///C:/my.toml`
+    -   e.g. web: `https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.toml`
 
 ## Restrictions
 1.  arrays in array (e.g. `data = [ ["delta", "phi"], [3.14] ]`) are **not supported**.
-1.  tables in array (e.g. `points = [{x = 1, y = 2}, { x = 7, y = 8}, {x = 2, y = 4}]`) are **not supported**.
-1.  arrays are converter in comma `,` separated string.
+2.  tables in array (e.g. `points = [{x = 1, y = 2}, { x = 7, y = 8}, {x = 2, y = 4}]`) are **not supported**.
+3.  arrays are converter in comma `,` separated string.
 
 ## Example
 e.g. 
