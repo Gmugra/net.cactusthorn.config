@@ -39,26 +39,11 @@
 
     <properties>
         <pmd.skip>false</pmd.skip>
+        <checkstyle.skip>false</checkstyle.skip>
     </properties>
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <logViolationsToConsole>true</logViolationsToConsole>
-                    <configLocation>${project.parent.basedir}/checkstyle_checks.xml</configLocation>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>checkstyle-validate</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
              <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
