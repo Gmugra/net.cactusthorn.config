@@ -27,7 +27,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class CharacterConverterTest {
 
-    static Converter<Character> converter = new CharacterConverter();
+    private static Converter<Character> converter = new CharacterConverter();
 
     @Test public void correct() {
         assertEquals('A', converter.convert("ABC"));

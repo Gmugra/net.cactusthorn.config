@@ -29,7 +29,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class InstantConverterTest {
 
-    static Converter<Instant> converter = new InstantConverter();
+    private static Converter<Instant> converter = new InstantConverter();
 
     @Test public void correct() {
         Instant instant = converter.convert("2007-12-03T10:15:30.00Z");

@@ -33,7 +33,7 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class DurationConverterTest {
 
-    static Converter<Duration> converter = new DurationConverter();
+    private static Converter<Duration> converter = new DurationConverter();
 
     @Test public void emptySuffix() {
         assertEquals(Duration.of(10, ChronoUnit.MILLIS), converter.convert("10"));

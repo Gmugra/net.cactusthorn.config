@@ -85,12 +85,12 @@ public class MethodValidatorTest {
         assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACE_ARG_WILDCARD));
     }
 
-    @Test public void WrongInterfaceArgInterface() {
+    @Test public void wrongInterfaceArgInterface() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongInterfaceArgAbstract.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACE_ARG_INTERFACE));
     }
 
-    @Test public void WrongInterfaceArgWrongClass() {
+    @Test public void wrongInterfaceArgWrongClass() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongInterfaceArgWrongClass.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_STRING_CLASS));
     }
@@ -115,7 +115,7 @@ public class MethodValidatorTest {
         assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
     }
 
-    @Test public void WrongOptionalDefaultAnnotation() {
+    @Test public void wrongOptionalDefaultAnnotation() {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalDefaultAnnotation.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_OPTIONAL_DEFAULT));
     }

@@ -29,8 +29,8 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class LocalDateTimeConverterTest {
 
-    static final LocalDateTime DATE = LocalDateTime.of(2016, 3, 10, 8, 11, 33);
-    static final Converter<LocalDateTime> CONVERTER = new LocalDateTimeConverter();
+    private static final LocalDateTime DATE = LocalDateTime.of(2016, 3, 10, 8, 11, 33);
+    private static final Converter<LocalDateTime> CONVERTER = new LocalDateTimeConverter();
 
     @Test public void simple() {
         LocalDateTime result = CONVERTER.convert("2016-03-10T08:11:33");

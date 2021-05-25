@@ -30,8 +30,8 @@ import net.cactusthorn.config.core.converter.Converter;
 
 public class OffsetDateTimeConverterTest {
 
-    static final OffsetDateTime DATETIME = OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00"));
-    static final Converter<OffsetDateTime> CONVERTER = new OffsetDateTimeConverter();
+    private static final OffsetDateTime DATETIME = OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00"));
+    private static final Converter<OffsetDateTime> CONVERTER = new OffsetDateTimeConverter();
 
     @Test public void simple() {
         OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00");

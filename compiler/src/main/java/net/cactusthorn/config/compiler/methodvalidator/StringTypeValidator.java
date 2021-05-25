@@ -99,10 +99,7 @@ public class StringTypeValidator extends MethodValidatorAncestor {
     // Method must contain single String parameter
     private boolean checkParameter(Element methodElement) {
         List<? extends TypeMirror> parameters = ((ExecutableType) methodElement.asType()).getParameterTypes();
-        if (parameters.size() == 1 && processingEnv().getTypeUtils().isSameType(stringTM, parameters.get(0))) {
-            return true;
-        }
-        return false;
+        return parameters.size() == 1 && processingEnv().getTypeUtils().isSameType(stringTM, parameters.get(0));
     }
 
     // Method can throws only RuntimeExceptions
