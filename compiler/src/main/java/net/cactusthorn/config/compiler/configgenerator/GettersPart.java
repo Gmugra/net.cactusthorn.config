@@ -36,16 +36,13 @@ final class GettersPart implements GeneratorPart {
     }
 
     private void addGetter(TypeSpec.Builder classBuilder, MethodInfo methodInfo) {
-        // @formatter:off
-        MethodSpec getter =
-            MethodSpec.methodBuilder(methodInfo.name())
-            .addModifiers(Modifier.PUBLIC)
-            .addAnnotation(Override.class)
-            .addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build())
-            .returns(methodInfo.returnTypeName())
-            .addStatement("return ($T)$L.get($S)", methodInfo.returnTypeName(), VALUES_ATTR, methodInfo.key())
-            .build();
-        // @formatter:on
-        classBuilder.addMethod(getter);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodInfo.name()).addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class);
+        if (methodInfo.returnInterface().isPresent() || methodInfo.returnOptional()) {
+            builder.addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build());
+        }
+        builder.returns(methodInfo.returnTypeName()).addStatement("return ($T)$L.get($S)", methodInfo.returnTypeName(), VALUES_ATTR,
+                methodInfo.key());
+        classBuilder.addMethod(builder.build());
     }
 }

@@ -240,7 +240,6 @@ public final class Config_TestConfig implements TestConfig {
     if (!this.set().equals(other.set())) return false;
     if (!this.sort().equals(other.sort())) return false;
     if (!this.str().equals(other.str())) return false;
-    if (!this.testconverter().equals(other.testconverter())) return false;
-    return true;
+    return this.testconverter().equals(other.testconverter());
   }
 }

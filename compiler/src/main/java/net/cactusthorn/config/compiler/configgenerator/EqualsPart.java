@@ -19,14 +19,18 @@
 */
 package net.cactusthorn.config.compiler.configgenerator;
 
+import java.util.List;
+
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 
 final class EqualsPart implements GeneratorPart {
 
@@ -42,14 +46,27 @@ final class EqualsPart implements GeneratorPart {
             .addStatement("if (!(o instanceof $L)) return false", generator.className())
             .addStatement("$L other = ($L) o", generator.className(), generator.className());
         // @formatter:on
-        generator.methodsInfo().forEach(mi -> {
-            if (mi.returnTypeName().isPrimitive()) {
-                equalsBuilder.addStatement("if (this.$L() != other.$L()) return false", mi.name(), mi.name());
-            } else {
-                equalsBuilder.addStatement("if (!this.$L().equals(other.$L())) return false", mi.name(), mi.name());
-            }
-        });
-        equalsBuilder.addStatement("return true");
+        List<MethodInfo> methodsInfo = generator.methodsInfo();
+        for (int i = 0; i < methodsInfo.size() - 1; i++) {
+            equalsBuilder.addStatement(createIf(methodsInfo.get(i)));
+        }
+        equalsBuilder.addStatement(createFinalReturn(methodsInfo.get(methodsInfo.size() - 1)));
         classBuilder.addMethod(equalsBuilder.build());
+    }
+
+    private CodeBlock createIf(MethodInfo mi) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        if (mi.returnTypeName().isPrimitive()) {
+            return builder.add("if (this.$L() != other.$L()) return false", mi.name(), mi.name()).build();
+        }
+        return builder.add("if (!this.$L().equals(other.$L())) return false", mi.name(), mi.name()).build();
+    }
+
+    private CodeBlock createFinalReturn(MethodInfo mi) {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        if (mi.returnTypeName().isPrimitive()) {
+            return builder.add("return this.$L() == other.$L()", mi.name(), mi.name()).build();
+        }
+        return builder.add("return this.$L().equals(other.$L())", mi.name(), mi.name()).build();
     }
 }

@@ -40,7 +40,6 @@ public final class Config_ConfigOverride implements ConfigOverride {
     if (o == this) return true;
     if (!(o instanceof Config_ConfigOverride)) return false;
     Config_ConfigOverride other = (Config_ConfigOverride) o;
-    if (!this.string().equals(other.string())) return false;
-    return true;
+    return this.string().equals(other.string());
   }
 }
