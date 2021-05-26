@@ -10,5 +10,3 @@
 .gitattributes text
 .gitignore text
 *.md text
-
-banner.txt text eol=lf
