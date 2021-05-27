@@ -129,4 +129,9 @@ public class MethodValidatorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/ConfigDefaultConverters.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
+
+    @Test public void keyWithSysProperty() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/KeyWithSysProperty.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
 }

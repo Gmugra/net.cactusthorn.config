@@ -19,6 +19,9 @@
 */
 package net.cactusthorn.config.core.converter.standard;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
@@ -30,22 +33,28 @@ public class ZonedDateTimeConverterTest {
     private static final Converter<ZonedDateTime> CONVERTER = new ZonedDateTimeConverter();
 
     @Test public void simple() {
-        CONVERTER.convert("2016-03-10T08:11:33Z");
+        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z");
+        assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
     @Test public void simpleNullParameters() {
-        CONVERTER.convert("2016-03-10T08:11:33Z", null);
+        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", null);
+        assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
     @Test public void simpleEmptyParameters() {
-        CONVERTER.convert("2016-03-10T08:11:33Z", new String[0]);
+        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[0]);
+        assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
     @Test public void complex() {
-        CONVERTER.convert("10.03.2016 08:11:33Z", new String[] { "yyyy-MM-dd'T'HH:mm:sszzz", "dd.MM.yyyy' 'HH:mm:sszzz" });
+        ZonedDateTime zdt = CONVERTER.convert("10.03.2016 08:11:33Z",
+                new String[] {"yyyy-MM-dd'T'HH:mm:sszzz", "dd.MM.yyyy' 'HH:mm:sszzz"});
+        assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
     @Test public void singleParam() {
-        CONVERTER.convert("2016-03-10T08:11:33Z", new String[] { "yyyy-MM-dd'T'HH:mm:sszzz" });
+        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[] {"yyyy-MM-dd'T'HH:mm:sszzz"});
+        assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 }
