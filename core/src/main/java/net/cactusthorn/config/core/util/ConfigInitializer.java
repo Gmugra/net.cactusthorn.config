@@ -19,6 +19,7 @@
 */
 package net.cactusthorn.config.core.util;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -46,5 +47,13 @@ public abstract class ConfigInitializer {
 
     protected Loaders loaders() {
         return loaders;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" }) protected String expandKey(String key) {
+        Map<String, String> values = new HashMap<>(System.getenv());
+        values.putAll((Map) System.getProperties());
+        String result = new VariablesParser(key).replace(values);
+        result = result.replaceAll("\\.+", ".").replaceAll("^\\.+", "").replaceAll("\\.+$", "");
+        return result;
     }
 }

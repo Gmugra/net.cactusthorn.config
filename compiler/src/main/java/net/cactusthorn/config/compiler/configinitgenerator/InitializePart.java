@@ -100,15 +100,14 @@ public class InitializePart implements GeneratorPart {
     private CodeBlock convert(MethodInfo mi) {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
-        return
-            mi.returnMapKeyInfo().map(keyInfo -> {
-                builder.add("$L, ", function(keyInfo.returnConverter(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
-                builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-                return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
-            }).orElseGet(() -> {
-                builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-                return builder.add("$S", mi.key()).add(split(mi)).add(defaultValue).add(")").build();
-            });
+        return mi.returnMapKeyInfo().map(keyInfo -> {
+            builder.add("$L, ", function(keyInfo.returnConverter(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
+            builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
+            return builder.add("$L", getKey(mi.key())).add(split(mi)).add(defaultValue).add(")").build();
+        }).orElseGet(() -> {
+            builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
+            return builder.add("$L", getKey(mi.key())).add(split(mi)).add(defaultValue).add(")").build();
+        });
     }
 
     private CodeBlock.Builder findGetMethod(MethodInfo mi) {
@@ -189,5 +188,12 @@ public class InitializePart implements GeneratorPart {
             builder.add("$S", parameters[i]);
         }
         return builder.add("}").build();
+    }
+
+    private CodeBlock getKey(String key) {
+        if (key.indexOf('{') == -1) {
+            return CodeBlock.builder().add("$S", key).build();
+        }
+        return CodeBlock.builder().add("expandKey($S)", key).build();
     }
 }

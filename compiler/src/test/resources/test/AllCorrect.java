@@ -67,4 +67,8 @@ import java.time.Instant;
     Optional<List<Character>> charList();
 
     Optional<Map<Instant, String>> defaultConverterKey();
+
+    Map<Instant, String> requredMap();
+
+    SortedMap<Instant, String> SortedMap();
 }
