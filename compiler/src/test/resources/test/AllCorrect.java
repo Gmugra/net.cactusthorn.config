@@ -70,5 +70,5 @@ import java.time.Instant;
 
     Map<Instant, String> requredMap();
 
-    SortedMap<Instant, String> SortedMap();
+    SortedMap<Instant, String> requredSortedMap();
 }

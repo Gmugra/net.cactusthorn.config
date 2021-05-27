@@ -29,6 +29,8 @@ import net.cactusthorn.config.core.loader.Loaders;
 
 public class ConfigInitializerTest {
 
+    private static final InitIt INIT_IT = new InitIt(null);
+
     public static final class InitIt extends ConfigInitializer {
 
         protected InitIt(Loaders loaders) {
@@ -43,8 +45,6 @@ public class ConfigInitializerTest {
             return expandKey(key);
         }
     }
-
-    private static final InitIt INIT_IT = new InitIt(null);
 
     @Test public void simple() {
         assertEquals("value", INIT_IT.key("value"));
