@@ -210,6 +210,59 @@ public interface ConfigOverride {
 2.  If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
 3.  Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
 
+### System properties and/or environment variables in `@Key` and/or `@Prefix`
+This feature makes it possible to store, for example, settings for different environments in a single configuration file. e.g. (TOML):
+```toml
+host = "https://www.google.com/"
+port = 80
+
+[dev]
+host = "https://github.com/"
+port = 90
+
+[prod]
+host = "https://www.wikipedia.org/"
+port = 100
+```
+
+Syntax: {*name*}
+
+e.g.
+```java
+@Config
+public interface MyServer {
+    @Key("{env}.host") URL host();
+    @Key("{env}.port") int port();
+}
+```
+or (with same result)
+```java
+@Config
+@Prefix("{env}")
+public interface MyServer {
+    URL host();
+    int port();
+}
+```
+usage e.g.:
+```console
+java -Denv=dev -jar myapp.jar
+```
+
+FYI:
+1.  If a system property or environment variable does not exist, an *empty string* will be used as the value.
+2.  After expanding, start & end points `.` will be dropped.
+3.  After expanding, multiple points (e.g `...`) inside the key name will be substituted to single `.`.
+
+| system property value | key config | resulting key |
+| --- | --- | --- |
+| dev | {env}.host | dev.host |
+| | {env}.host | host |
+| dev | server.{env}.host | server.dev.host |
+| | server.{env}.host | server.host |
+| dev | host.{env} | host.dev |
+| | host.{env} | host |
+
 ## The `ConfigFactory`
 The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
 Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
