@@ -15,10 +15,17 @@ So, this project is providing library with similar with *OWNER* API, but
 -   Plain Java 8 without any external dependencies
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
 -   Small (< 100KB) & lightweight core runtime part
--   Multiple configuration sources and/or formats (.properties, .xml, .toml, MANIFEST.MF; load form files, classpath, URLs, environment variables; etc. ); expandable with custom source loaders
--   Multiple loading strategies (configuration sources fallback/merging)
--   Powerful type conversions (collections, maps, enums etc. ); expandable with custom converters
+-   Supports files in Multiple formats:
+    -   [Java properties](https://en.wikipedia.org/wiki/.properties)
+    -   [Java properties represented by the XML document](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#loadFromXML-java.io.InputStream-)
+    -   [OWNER user’s specified XML format](http://owner.aeonbits.org/docs/xml-support/)
+    -   [TOML](https://toml.io/en/)
+-   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
+-   Supports multiple loading strategies (configuration sources fallback/merging)
+-   Expandable with custom source loaders
+-   Powerful type conversions: collections, maps, enums, etc.
 -   Parameterized type converters
+-   Expandable with custom type converters
 -   Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
 -   Caching
 -   Seamless integration with DI containers
@@ -544,7 +551,7 @@ ConfigFactory factory =
     .build();
 ```
 FYI:
--   Custom loaders always have the highest priority: last added -> first used.
+-   Custom loaders always have the highest priority if added using `ConfigFactory.Builder.addLoader` method: last added -> first used.
 -   Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ### SPI
@@ -552,6 +559,7 @@ FYI:
 e.g.   
 -   [core module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/core/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 -   [tests module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/tests/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
+-   [toml module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/toml/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 
 ### System properties and/or environment variables in sources URIs
 Syntax: {*name*}
