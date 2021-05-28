@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import net.cactusthorn.config.compiler.configgenerator.ConfigGenerator;
-import net.cactusthorn.config.compiler.configinitgenerator.ConfigBuilderGenerator;
+import net.cactusthorn.config.compiler.configinitgenerator.ConfigInitGenerator;
 import net.cactusthorn.config.compiler.methodvalidator.*;
 import net.cactusthorn.config.core.Accessible;
 import net.cactusthorn.config.core.Config;
@@ -127,7 +127,7 @@ public final class ConfigProcessor extends AbstractProcessor {
 
                 validateMethodExist(element, methodsInfo);
 
-                JavaFile configBuilderFile = new ConfigBuilderGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+                JavaFile configBuilderFile = new ConfigInitGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
                 //System.out.println(configBuilderFile.toString());
                 configBuilderFile.writeTo(processingEnv.getFiler());
 

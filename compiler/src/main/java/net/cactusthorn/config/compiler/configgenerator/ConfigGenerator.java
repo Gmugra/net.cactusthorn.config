@@ -45,6 +45,6 @@ public final class ConfigGenerator extends Generator {
     @Override public JavaFile generate() {
         TypeSpec.Builder classBuilder = classBuilder().addSuperinterface(interfaceElement().asType());
         PARTS.forEach(p -> p.addPart(classBuilder, this));
-        return JavaFile.builder(packageName(), classBuilder.build()).build();
+        return JavaFile.builder(packageName(), classBuilder.build()).skipJavaLangImports(true).build();
     }
 }

@@ -13,22 +13,35 @@ So, this project is providing library with similar with *OWNER* API, but
 
 ## Features
 -   Plain Java 8 without any external dependencies
+
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
+
 -   Small (< 100KB) & lightweight core runtime part
+
 -   Supports files in Multiple formats:
     -   [Java properties](https://en.wikipedia.org/wiki/.properties)
     -   [Java properties represented by the XML document](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#loadFromXML-java.io.InputStream-)
     -   [OWNER user’s specified XML format](http://owner.aeonbits.org/docs/xml-support/)
     -   [TOML](https://toml.io/en/)
+
 -   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
+
 -   Supports multiple loading strategies (configuration sources fallback/merging)
+
 -   Expandable with custom source loaders
+
 -   Powerful type conversions: collections, maps, enums, etc.
+
 -   Parameterized type converters
+
 -   Expandable with custom type converters
+
 -   Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
+
 -   Caching
+
 -   Seamless integration with DI containers
+
 -   Thread-safe
 
 ## Basics

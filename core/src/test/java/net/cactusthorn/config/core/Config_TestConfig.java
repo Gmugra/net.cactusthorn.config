@@ -1,10 +1,5 @@
 package net.cactusthorn.config.core;
 
-import java.lang.Object;
-import java.lang.Override;
-import java.lang.String;
-import java.lang.StringBuilder;
-import java.lang.SuppressWarnings;
 import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
