@@ -33,17 +33,17 @@ import net.cactusthorn.config.compiler.InterfaceInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
-public final class ConfigBuilderGenerator extends Generator {
+public final class ConfigInitGenerator extends Generator {
 
     private static final List<GeneratorPart> PARTS = Arrays.asList(new UrisPart(), new ConstructorPart(), new InitializePart());
 
-    public ConfigBuilderGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
+    public ConfigInitGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
         super(interfaceElement, methodsInfo, ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX, interfaceInfo);
     }
 
     @Override public JavaFile generate() {
         TypeSpec.Builder classBuilder = classBuilder().superclass(ConfigInitializer.class);
         PARTS.forEach(p -> p.addPart(classBuilder, this));
-        return JavaFile.builder(packageName(), classBuilder.build()).build();
+        return JavaFile.builder(packageName(), classBuilder.build()).skipJavaLangImports(true).build();
     }
 }
