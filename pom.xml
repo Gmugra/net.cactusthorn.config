@@ -56,6 +56,7 @@
         <dependency.javapoet>1.13.0</dependency.javapoet>
         <dependency.jasypt>1.9.3</dependency.jasypt>
         <dependency.tomlj>1.0.0</dependency.tomlj>
+        <dependency.gson>2.8.7</dependency.gson>
 
         <plugin.compiler>3.8.1</plugin.compiler>
         <plugin.jar>3.2.0</plugin.jar>
@@ -91,6 +92,7 @@
         <module>compiler</module>
         <module>jasypt</module>
         <module>toml</module>
+        <module>json</module>
         <module>tests</module>
     </modules>
 
@@ -134,6 +136,12 @@
                 <groupId>org.tomlj</groupId>
                 <artifactId>tomlj</artifactId>
                 <version>${dependency.tomlj}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${dependency.gson}</version>
             </dependency>
 
             <dependency>
