@@ -37,6 +37,9 @@ import net.cactusthorn.config.core.loader.Loader;
 
 public class ClasspathJSONLoaderTest {
 
+    private static final Loader LOADER = new ClasspathJSONLoader();
+    private static final ClassLoader CL = ClasspathJSONLoaderTest.class.getClassLoader();
+
     @BeforeAll static void setUpLogger() {
         Logger rootLogger = LogManager.getLogManager().getLogger("");
         rootLogger.setLevel(Level.FINE);
@@ -45,9 +48,6 @@ public class ClasspathJSONLoaderTest {
             h.setLevel(Level.OFF);
         }
     }
-
-    private static final Loader LOADER = new ClasspathJSONLoader();
-    private static final ClassLoader CL = ClasspathJSONLoaderTest.class.getClassLoader();
 
     @Test public void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.json")));
