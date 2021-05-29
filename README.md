@@ -23,6 +23,7 @@ So, this project is providing library with similar with *OWNER* API, but
     -   [Java properties represented by the XML document](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#loadFromXML-java.io.InputStream-)
     -   [OWNER user’s specified XML format](http://owner.aeonbits.org/docs/xml-support/)
     -   [TOML](https://toml.io/en/)
+    -   [JSON](https://www.json.org/json-en.html)
 
 -   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
 
@@ -122,6 +123,7 @@ MyConfig myConfig =
         .addSource("classpath:config/myconfig-owner.xml")
         .addSource("jar:file:path/to/some.jar!/path/to/myconfig.properties")
         .addSource("https://somewhere.com/myconfig.toml")
+        .addSource("file:./myconfig.json")
         .build()
         .create(MyConfig.class);
 ```
@@ -168,6 +170,17 @@ number = 10
 uri = "http://java.sun.com/j2se/1.3/"
 units = ["DAYS", "HOURS", "MICROSECONDS"]
 date = 2005-11-12
+```
+e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
+```json
+{
+    "ids" : ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454", "123e4567-e89b-12d3-a456-556642440000"],
+    "val" : "ABC",
+    "number" : 10,
+    "uri" : "http://java.sun.com/j2se/1.3/"
+    "units" : ["DAYS", "HOURS", "MICROSECONDS"],
+    "date" : "2005-11-12"
+}
 ```
 
 ### Annotations
@@ -655,9 +668,11 @@ In this case generated class will also get methods for this interface:
 ## Miscellaneous
 
 ### Extras
-"Extras" are optional extensions (converters and loaders) that need external dependencies and, because of this, can't be integrated into the core library.
+"Extras" are optional extensions (converters and loaders) that need external dependencies and therefore can't be integrated into the core library.
 -   **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
 -   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
+-   **[json](https://github.com/Gmugra/net.cactusthorn.config/tree/main/json)** : provide loaders for files in [JSON](https://www.json.org/json-en.html) format
+
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).

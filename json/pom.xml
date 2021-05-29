@@ -10,10 +10,11 @@
         <version>${revision}${changelist}</version>
     </parent>
 
-    <artifactId>tests</artifactId>
+    <artifactId>config-json</artifactId>
     <packaging>jar</packaging>
 
-    <name>Config :: Tests</name>
+    <name>Config :: JSON</name>
+    <description>Config :: JSON</description>
 
     <licenses>
         <license>
@@ -39,7 +40,6 @@
     <properties>
         <pmd.skip>false</pmd.skip>
         <checkstyle.skip>false</checkstyle.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <dependencies>
@@ -51,15 +51,8 @@
         </dependency>
 
         <dependency>
-            <groupId>net.cactusthorn.config</groupId>
-            <artifactId>config-toml</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.cactusthorn.config</groupId>
-            <artifactId>config-json</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
 
     </dependencies>
@@ -77,6 +70,17 @@
                             <version>${project.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>net.cactusthorn.config.json</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
 
