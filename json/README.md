@@ -11,9 +11,10 @@ The module provides loaders for files in [JSON](https://www.json.org/json-en.htm
     -   e.g. Windows file: `file:///C:/my.json`
 
 ## Restrictions
-1.  arrays in array (e.g. `"data" : [ ["delta", "phi"], [3.14] ]`) are **not supported**.
-2.  object in array (e.g. `"points" : [{"x" = 1, "y" = 2}, { "x" = 7, "y" = 8}, {"x" = 2, "y" = 4}]`) are **not supported**.
-3.  arrays are converter in comma `,` separated string.
+1.  root must be object (not array)
+2.  arrays in array (e.g. `"data" : [ ["delta", "phi"], [3.14] ]`) are **not supported**.
+3.  object in array (e.g. `"points" : [{"x" = 1, "y" = 2}, { "x" = 7, "y" = 8}, {"x" = 2, "y" = 4}]`) are **not supported**.
+4.  arrays are converter in comma `,` separated string.
 
 ## Example
 e.g. 
@@ -23,7 +24,7 @@ my.json:
     "id" : ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454", "123e4567-e89b-12d3-a456-556642440000"],
     "database" : {
         "enabled" : true,
-        "ports" : [8000, 8001, null, 8002],
+        "ports" : [8000, 8001, 8002],
         "temp_targets" : {
             "cpu" : 79.5,
             "case" : 72.0
