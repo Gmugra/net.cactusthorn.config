@@ -175,11 +175,13 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
 ```json
 {
     "ids" : ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454", "123e4567-e89b-12d3-a456-556642440000"],
-    "val" : "ABC",
-    "number" : 10,
-    "uri" : "http://java.sun.com/j2se/1.3/",
-    "units" : ["DAYS", "HOURS", "MICROSECONDS"],
-    "date" : "2005-11-12"
+    "app" : {
+        "val" : "ABC",
+        "number" : 10,
+        "uri" : "http://java.sun.com/j2se/1.3/",
+        "units" : ["DAYS", "HOURS", "MICROSECONDS"],
+        "date" : "2005-11-12"
+    }
 }
 ```
 
