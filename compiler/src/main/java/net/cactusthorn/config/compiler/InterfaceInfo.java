@@ -33,6 +33,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.core.Accessible;
+import net.cactusthorn.config.core.Reloadable;
 
 public final class InterfaceInfo {
 
@@ -40,6 +41,7 @@ public final class InterfaceInfo {
     private final String split;
     private final Optional<Long> serialVersionUID;
     private final boolean accessible;
+    private final boolean reloadable;
     private final Annotations.ConfigInfo configInfo;
 
     InterfaceInfo(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
@@ -48,7 +50,8 @@ public final class InterfaceInfo {
         split = a.split().orElse(DEFAULT_SPLIT);
         configInfo = a.config();
         serialVersionUID = findSerializable(processingEnv, interfaceTypeElement);
-        accessible = findAccessible(processingEnv, interfaceTypeElement);
+        accessible = findInterface(processingEnv, interfaceTypeElement, Accessible.class);
+        reloadable = findInterface(processingEnv, interfaceTypeElement, Reloadable.class);
     }
 
     public String prefix() {
@@ -67,12 +70,16 @@ public final class InterfaceInfo {
         return accessible;
     }
 
+    public boolean reloadable() {
+        return reloadable;
+    }
+
     public Annotations.ConfigInfo configInfo() {
         return configInfo;
     }
 
-    private boolean findAccessible(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
-        TypeMirror accessibleType = processingEnv.getElementUtils().getTypeElement(Accessible.class.getName()).asType();
+    private boolean findInterface(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement, Class<?> interfaceClass) {
+        TypeMirror accessibleType = processingEnv.getElementUtils().getTypeElement(interfaceClass.getName()).asType();
         return processingEnv.getTypeUtils().isAssignable(interfaceTypeElement.asType(), accessibleType);
     }
 

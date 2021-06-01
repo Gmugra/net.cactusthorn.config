@@ -19,32 +19,24 @@
 */
 package net.cactusthorn.config.compiler.configgenerator;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.lang.model.element.Modifier;
 
-import javax.lang.model.element.TypeElement;
-
-import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
-import net.cactusthorn.config.compiler.InterfaceInfo;
 import net.cactusthorn.config.compiler.GeneratorPart;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
-import net.cactusthorn.config.core.util.ConfigInitializer;
 
-public final class ConfigGenerator extends Generator {
+public class ReloadablePart implements GeneratorPart {
 
-    private static final List<GeneratorPart> PARTS = Arrays.asList(new SerialVersionUIDPart(), new ValuesFieldPart(), new ConstructorPart(),
-            new GettersPart(), new HashCodePart(), new ToStringPart(), new EqualsPart(), new AccessiblePart(), new ReloadablePart());
-
-    public ConfigGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
-        super(interfaceElement, methodsInfo, ConfigInitializer.CONFIG_CLASSNAME_PREFIX, interfaceInfo);
-    }
-
-    @Override public JavaFile generate() {
-        TypeSpec.Builder classBuilder = classBuilder().addSuperinterface(interfaceElement().asType());
-        PARTS.forEach(p -> p.addPart(classBuilder, this));
-        return JavaFile.builder(packageName(), classBuilder.build()).skipJavaLangImports(true).build();
+    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
+        if (!generator.interfaceInfo().reloadable()) {
+            return;
+        }
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("reload").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class);
+        builder.addStatement("$T reloaded = $L.initialize()", MAP_STRING_OBJECT, INITIALIZER_ATTR);
+        builder.addStatement("$L.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()))", VALUES_ATTR);
+        builder.addStatement("$L.replaceAll((k,v) -> reloaded.get(k))", VALUES_ATTR);
+        classBuilder.addMethod(builder.build());
     }
 }

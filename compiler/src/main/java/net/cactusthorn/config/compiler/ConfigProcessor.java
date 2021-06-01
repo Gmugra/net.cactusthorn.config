@@ -37,6 +37,7 @@ import net.cactusthorn.config.compiler.configinitgenerator.ConfigInitGenerator;
 import net.cactusthorn.config.compiler.methodvalidator.*;
 import net.cactusthorn.config.core.Accessible;
 import net.cactusthorn.config.core.Config;
+import net.cactusthorn.config.core.Reloadable;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -82,6 +83,7 @@ public final class ConfigProcessor extends AbstractProcessor {
 
     private List<ExecutableElement> objectMethods;
     private List<ExecutableElement> accessibleMethods;
+    private List<ExecutableElement> reloadableMethods;
 
     @Override public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -90,6 +92,8 @@ public final class ConfigProcessor extends AbstractProcessor {
                 .methodsIn(processingEnv.getElementUtils().getTypeElement(Object.class.getName()).getEnclosedElements());
         accessibleMethods = ElementFilter
                 .methodsIn(processingEnv.getElementUtils().getTypeElement(Accessible.class.getName()).getEnclosedElements());
+        reloadableMethods = ElementFilter
+                .methodsIn(processingEnv.getElementUtils().getTypeElement(Reloadable.class.getName()).getEnclosedElements());
 
         // @formatter:off
         typeValidator =
@@ -120,6 +124,7 @@ public final class ConfigProcessor extends AbstractProcessor {
                      .stream()
                      .filter(e -> !objectMethods.contains(e))
                      .filter(e -> !(interfaceInfo.accessible() && accessibleMethods.contains(e)))
+                     .filter(e -> !(interfaceInfo.reloadable() && reloadableMethods.contains(e)))
                      .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo))
                      .sorted(METHODINFO_COMPARATOR)
                      .collect(Collectors.toList());

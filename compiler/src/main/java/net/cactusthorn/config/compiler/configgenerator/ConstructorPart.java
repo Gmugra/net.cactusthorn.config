@@ -21,6 +21,7 @@ package net.cactusthorn.config.compiler.configgenerator;
 
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
@@ -32,8 +33,17 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
 final class ConstructorPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
+        if (generator.interfaceInfo().reloadable()) {
+            classBuilder.addField(initializer());
+            classBuilder.addMethod(reloadableConstructor(generator));
+        } else {
+            classBuilder.addMethod(simpleConstructor(generator));
+        }
+    }
+
+    private MethodSpec simpleConstructor(Generator generator) {
         // @formatter:off
-        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder()
+        return MethodSpec.constructorBuilder()
             .addModifiers(Modifier.PUBLIC)
             .addParameter(Loaders.class, "loaders", Modifier.FINAL)
             .addStatement("$L$L initializer = new $L$L(loaders)",
@@ -42,8 +52,27 @@ final class ConstructorPart implements GeneratorPart {
                     ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX,
                     generator.interfaceName().simpleName()
             )
-            .addStatement("$L.putAll(initializer.initialize())", VALUES_ATTR);
+            .addStatement("$L.putAll(initializer.initialize())", VALUES_ATTR)
+            .build();
         // @formatter:on
-        classBuilder.addMethod(constructorBuilder.build());
+    }
+
+    public FieldSpec initializer() {
+        return FieldSpec.builder(ConfigInitializer.class, INITIALIZER_ATTR, Modifier.PRIVATE, Modifier.FINAL).build();
+    }
+
+    private MethodSpec reloadableConstructor(Generator generator) {
+        // @formatter:off
+        return MethodSpec.constructorBuilder()
+            .addModifiers(Modifier.PUBLIC)
+            .addParameter(Loaders.class, "loaders", Modifier.FINAL)
+            .addStatement("$L = new $L$L(loaders)",
+                    INITIALIZER_ATTR,
+                    ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX,
+                    generator.interfaceName().simpleName()
+            )
+            .addStatement("$L.putAll($L.initialize())", VALUES_ATTR, INITIALIZER_ATTR)
+            .build();
+        // @formatter:on
     }
 }
