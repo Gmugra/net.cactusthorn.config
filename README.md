@@ -18,14 +18,14 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Small (< 100KB) & lightweight core runtime part
 
+-   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
+
 -   Supports files in Multiple formats:
     -   [Java properties](https://en.wikipedia.org/wiki/.properties)
     -   [Java properties represented by the XML document](https://docs.oracle.com/javase/8/docs/api/java/util/Properties.html#loadFromXML-java.io.InputStream-)
     -   [OWNER user’s specified XML format](http://owner.aeonbits.org/docs/xml-support/)
     -   [TOML](https://toml.io/en/)
     -   [JSON](https://www.json.org/json-en.html)
-
--   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
 
 -   Supports multiple loading strategies (configuration sources fallback/merging)
 
@@ -37,7 +37,7 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Expandable with custom type converters
 
--   Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`)
+-   Special support for `java.util.Optional`, `java.time.*`, byte-size settings (e.g. `10Mb`), [Jasypt](http://www.jasypt.org) password-based encryption
 
 -   Caching
 
@@ -220,6 +220,10 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
 8.  `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`
     -   `@Target(METHOD)`
     -   apply a parameterized by formats converter to the relevant java.time.* type
+
+9.  `@PBEDecryptor`
+    -   `@Target(METHOD)`
+    -   decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption. FYI: [jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)
 
 ### Property not found : `@Default` or `Optional`
 There are three ways for dealing with properties that are not found in sources:
@@ -715,6 +719,7 @@ java -Dmyapp.profile=DEV -jar myapp.jar
 Example with [Dagger 2](https://dagger.dev):
 -   Config Interface: [AppInfo](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
 -   Dagger 2 module: [CoreModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
+-   Usage (DI over constructor): [Banner](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/banner/Banner.java)
 -   One nore config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
 -   One nore Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
 
