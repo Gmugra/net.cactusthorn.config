@@ -44,6 +44,7 @@ public interface GeneratorPart {
 
     String VALUES_ATTR = "VALUES";
     String URIS_ATTR = "URIS";
+    String INITIALIZER_ATTR = "INITIALIZER";
 
     void addPart(TypeSpec.Builder classBuilder, Generator generator);
 }

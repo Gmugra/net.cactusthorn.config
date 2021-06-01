@@ -667,6 +667,14 @@ In this case generated class will also get methods for this interface:
     Map<String, Object> asMap();
 ```
 
+### `net.cactusthorn.config.core.Reloadable`
+"config"-interface can extends (directly or over super-interface) `net.cactusthorn.config.core.Reloadable`.
+In this case generated class will also get methods for this interface:
+```java
+    void reload();
+```
+FYI: The method reload **not cached** sources (see *Caching*)
+
 ## Miscellaneous
 
 ### Extras

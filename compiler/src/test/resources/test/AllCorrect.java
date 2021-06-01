@@ -1,6 +1,7 @@
 package test;
 
 import net.cactusthorn.config.core.Accessible;
+import net.cactusthorn.config.core.Reloadable;
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.Prefix;
 import net.cactusthorn.config.core.Disable;
@@ -14,7 +15,7 @@ import java.util.*;
 import java.time.Instant;
 
 @Config(sources = { "classpath:my.properties", "system.properties" }, loadStrategy = LoadStrategy.FIRST) //
-@Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible {
+@Prefix("prefix") @Split(";") interface AllCorrect extends Serializable, Accessible, Reloadable {
 
     long serialVersionUID = 100L;
 
