@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import net.cactusthorn.config.core.loader.Loader;
+import net.cactusthorn.config.extras.toml.util.TOMLToMapParser;
 
 public class ClasspathTOMLLoader implements Loader {
 

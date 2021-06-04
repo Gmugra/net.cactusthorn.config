@@ -17,7 +17,12 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.extras.json;
+package net.cactusthorn.config.extras.json.util;
+
+import static net.cactusthorn.config.extras.json.util.JsonMessages.msg;
+import static net.cactusthorn.config.extras.json.util.JsonMessages.Key.ROOT_OBJECT;
+import static net.cactusthorn.config.extras.json.util.JsonMessages.Key.OBJECTS_IN_ARRAY;
+import static net.cactusthorn.config.extras.json.util.JsonMessages.Key.ARRAYS_IN_ARRAY;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -43,7 +48,7 @@ public class JSONToMapParser {
             return Collections.emptyMap();
         }
         if (!rootElement.isJsonObject()) {
-            throw new UnsupportedOperationException("root must be object");
+            throw new UnsupportedOperationException(msg(ROOT_OBJECT));
         }
         Map<String, String> result = new HashMap<>();
         processObjectElement(new ArrayDeque<>(), result, rootElement.getAsJsonObject());
@@ -74,10 +79,10 @@ public class JSONToMapParser {
                 continue;
             }
             if (arrayElement.isJsonObject()) {
-                throw new UnsupportedOperationException(keyAsString + " - objects in array are not supported");
+                throw new UnsupportedOperationException(msg(OBJECTS_IN_ARRAY, keyAsString));
             }
             if (arrayElement.isJsonArray()) {
-                throw new UnsupportedOperationException(keyAsString + " - arrays in array are not supported");
+                throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, keyAsString));
             }
             joiner.add(arrayElement.getAsString());
         }

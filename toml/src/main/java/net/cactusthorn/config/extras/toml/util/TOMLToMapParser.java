@@ -17,7 +17,11 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.extras.toml;
+package net.cactusthorn.config.extras.toml.util;
+
+import static net.cactusthorn.config.extras.toml.util.TomlMessages.msg;
+import static net.cactusthorn.config.extras.toml.util.TomlMessages.Key.ARRAYS_IN_ARRAY;
+import static net.cactusthorn.config.extras.toml.util.TomlMessages.Key.TABLES_IN_ARRAY;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -60,10 +64,10 @@ public final class TOMLToMapParser {
             return null;
         }
         if (tomlArray.containsArrays()) {
-            throw new UnsupportedOperationException(key + " - arrays in array are not supported");
+            throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, key));
         }
         if (tomlArray.containsTables()) {
-            throw new UnsupportedOperationException(key + " - tables in array are not supported");
+            throw new UnsupportedOperationException(msg(TABLES_IN_ARRAY, key));
         }
         return tomlArray.toList().stream().map(o -> o.toString()).collect(Collectors.joining(","));
     }
