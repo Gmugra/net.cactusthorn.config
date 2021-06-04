@@ -17,11 +17,9 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.extras.json;
+package net.cactusthorn.config.extras.toml.util;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,53 +30,51 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.gson.JsonSyntaxException;
-
-public class JSONToMapParserTest {
+public class TOMLToMapParserTest {
 
     @Test public void correct() throws IOException {
-        try (Reader reader = reader("correct.json")) {
-            Map<String, String> result = new JSONToMapParser().parse(reader);
-            assertEquals("true", result.get("database.enabled"));
-        }
-    }
-
-    @Test public void wrongRoot() throws IOException {
-        try (Reader reader = reader("wrongroot.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
-            assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
+        try (Reader reader = reader("correct.toml")) {
+            Map<String, String> result = new TOMLToMapParser().parse(reader);
+            assertEquals("frontend", result.get("servers.alpha.role"));
         }
     }
 
     @Test public void wrong() throws IOException {
-        try (Reader reader = reader("wrong.txt")) {
-            JSONToMapParser parser = new JSONToMapParser();
-            assertThrows(JsonSyntaxException.class, () -> parser.parse(reader));
+        try (Reader reader = reader("wrong.toml")) {
+            TOMLToMapParser parser = new TOMLToMapParser();
+            assertThrows(IOException.class, () -> parser.parse(reader));
         }
     }
 
     @Test public void empty() throws IOException {
-        try (Reader reader = reader("empty.json")) {
-            assertTrue(new JSONToMapParser().parse(reader).isEmpty());
+        try (Reader reader = reader("empty.toml")) {
+            assertTrue(new TOMLToMapParser().parse(reader).isEmpty());
         }
     }
 
     @Test public void arrayInArray() throws IOException {
-        try (Reader reader = reader("arrayInArray.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
+        try (Reader reader = reader("arrayInArray.toml")) {
+            TOMLToMapParser parser = new TOMLToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void objectInArray() throws IOException {
-        try (Reader reader = reader("objectInArray.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
+    @Test public void emptyArray() throws IOException {
+        try (Reader reader = reader("emptyArray.toml")) {
+            TOMLToMapParser parser = new TOMLToMapParser();
+            assertTrue(parser.parse(reader).isEmpty());
+        }
+    }
+
+    @Test public void tableInArray() throws IOException {
+        try (Reader reader = reader("tableInArray.toml")) {
+            TOMLToMapParser parser = new TOMLToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
     private Reader reader(String resource) {
-        InputStream is = JSONToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
+        InputStream is = TOMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 }
