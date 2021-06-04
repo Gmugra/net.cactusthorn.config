@@ -36,7 +36,7 @@ public class ReloadablePart implements GeneratorPart {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("reload").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class);
         builder.addStatement("$T reloaded = $L.initialize()", MAP_STRING_OBJECT, INITIALIZER_ATTR);
         builder.addStatement("$L.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()))", VALUES_ATTR);
-        builder.addStatement("$L.replaceAll((k,v) -> reloaded.get(k))", VALUES_ATTR);
+        builder.addStatement("$L.putAll(reloaded)", VALUES_ATTR);
         classBuilder.addMethod(builder.build());
     }
 }
