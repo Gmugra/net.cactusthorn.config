@@ -33,12 +33,12 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-jasypt</artifactId>
-    <version>0.31</version>
+    <version>0.40</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-compile 'net.cactusthorn.config:config-jasypt:0.31'
+compile 'net.cactusthorn.config:config-jasypt:0.40'
 ```
 
 ## LICENSE
