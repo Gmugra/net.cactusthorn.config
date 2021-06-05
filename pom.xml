@@ -51,7 +51,6 @@
         <checkstyle.skip>true</checkstyle.skip>
 
         <dependency.junit>5.7.2</dependency.junit>
-        <dependency.mockito>3.6.28</dependency.mockito>
         <dependency.compile-testing>0.19</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
         <dependency.jasypt>1.9.3</dependency.jasypt>
