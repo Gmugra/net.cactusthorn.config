@@ -56,20 +56,20 @@ public class CustomLoaderTest {
 
     @Test public void standard() {
         System.setProperty("testKey", "realValue");
-        ConfigHolder holder = ConfigFactory.builder().addSourceNoCache("system:properties").build().configHolder();
+        ConfigHolder holder = ConfigFactory.builder().addSource("nocache:system:properties").build().configHolder();
         assertEquals("realValue", holder.getString("testKey"));
     }
 
     @Test public void custom() {
         System.setProperty("testKey", "realValue");
-        ConfigHolder holder = ConfigFactory.builder().addLoader(new TestLoader()).addSourceNoCache("system:properties").build()
+        ConfigHolder holder = ConfigFactory.builder().addLoader(new TestLoader()).addSource("nocache:system:properties").build()
                 .configHolder();
         assertEquals("FromTestLoader", holder.getString("testKey"));
     }
 
     @Test public void customAsClass() {
         System.setProperty("testKey", "realValue");
-        ConfigHolder holder = ConfigFactory.builder().addLoader(TestLoader.class).addSourceNoCache("system:properties").build()
+        ConfigHolder holder = ConfigFactory.builder().addLoader(TestLoader.class).addSource("nocache:system:properties").build()
                 .configHolder();
         assertEquals("FromTestLoader", holder.getString("testKey"));
     }

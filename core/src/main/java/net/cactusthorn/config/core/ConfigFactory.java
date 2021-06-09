@@ -113,22 +113,14 @@ public final class ConfigFactory {
         }
 
         public Builder addSource(URI... uri) {
-            return addSources(u -> new UriTemplate(u, true), uri);
-        }
-
-        public Builder addSourceNoCache(URI... uri) {
-            return addSources(u -> new UriTemplate(u, false), uri);
+            return addSources(u -> new UriTemplate(u), uri);
         }
 
         public Builder addSource(String... uri) {
-            return addSources(u -> new UriTemplate(u, true), uri);
+            return addSources(u -> new UriTemplate(u), uri);
         }
 
-        public Builder addSourceNoCache(String... uri) {
-            return addSources(u -> new UriTemplate(u, false), uri);
-        }
-
-        @SuppressWarnings({ "unchecked" }) private <T> Builder addSources(Function<T, UriTemplate> mapper, T... uri) {
+        @SuppressWarnings({"unchecked"}) private <T> Builder addSources(Function<T, UriTemplate> mapper, T... uri) {
             if (uri == null) {
                 throw new IllegalArgumentException(isNull("uri"));
             }

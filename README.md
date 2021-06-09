@@ -332,9 +332,9 @@ There is two major use-cases for the feature: unit-tests & console applications.
 For console applications, it is convenient to provide command line arguments to the `ConfigFactory` using this feature.
 
 ### Caching
-By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. To not cache properties related to the URI(s), use the `addSourceNoCache` methods instead of `addSource`.
+By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. 
 
-Alternative, it's possible to use URI-prefix `nocache:` this also will switch off caching for the URI.
+To not cache properties related to the URI(s), use URI-prefix `nocache:` this will switch off caching for the URI.
 e.g.
 `nocache:system:properties`
 `nocache:file:~/my.properties`
