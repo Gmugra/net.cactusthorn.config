@@ -31,7 +31,7 @@ public class ConfigFactoryCachingTest {
 
     @Test public void cached() {
         ConfigFactory factory = ConfigFactory.builder().addSource("system:properties").build();
-        
+
         System.setProperty("myKey", "firstValue");
         ConfigHolder holder = factory.configHolder();
         assertEquals("firstValue", holder.getString("myKey"));
@@ -42,7 +42,7 @@ public class ConfigFactoryCachingTest {
     }
 
     @Test public void notCached() {
-        ConfigFactory factory = ConfigFactory.builder().addSourceNoCache(URI.create("system:properties")).build();
+        ConfigFactory factory = ConfigFactory.builder().addSource(URI.create("nocache:system:properties")).build();
 
         System.setProperty("myKey", "firstValue");
         ConfigHolder holder = factory.configHolder();

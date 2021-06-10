@@ -42,12 +42,12 @@ public final class Loaders {
         private boolean variable = false;
         private boolean cachable = true;
 
-        public UriTemplate(URI uri, boolean cachable) {
-            this.uri = replace(uri, cachable);
+        public UriTemplate(URI uri) {
+            this.uri = replace(uri);
         }
 
-        public UriTemplate(String template, boolean cachable) {
-            this.template = replace(template, cachable);
+        public UriTemplate(String template) {
+            this.template = replace(template);
             if (template.indexOf("{") != -1) {
                 variable = true;
             } else {
@@ -55,7 +55,7 @@ public final class Loaders {
             }
         }
 
-        @SuppressWarnings({ "rawtypes", "unchecked" }) URI uri() {
+        @SuppressWarnings({"rawtypes", "unchecked"}) URI uri() {
             if (!variable) {
                 return uri;
             }
@@ -70,21 +70,19 @@ public final class Loaders {
 
         private static final String USERHOME_PREFIX = "file:~/";
 
-        private URI replace(URI u, boolean cache) {
-            String tmp = replace(u.toString(), cache);
+        private URI replace(URI u) {
+            String tmp = replace(u.toString());
             return URI.create(tmp);
         }
 
         private static final String NOCACHE = "nocache:";
         private static final String USER_HOME = "user.home";
 
-        private String replace(String str, boolean cache) {
+        private String replace(String str) {
             String result = str;
             if (result.indexOf(NOCACHE) == 0) {
                 this.cachable = false;
                 result = result.substring(NOCACHE.length());
-            } else {
-                this.cachable = cache;
             }
             if (result.indexOf(USERHOME_PREFIX) == -1) {
                 return result;
@@ -120,7 +118,7 @@ public final class Loaders {
         } else {
             withTemplates = new LinkedHashSet<>();
             for (String uri : uris) {
-                withTemplates.add(new UriTemplate(uri, true));
+                withTemplates.add(new UriTemplate(uri));
             }
         }
         return load(classLoader, withStrategy, withTemplates);
