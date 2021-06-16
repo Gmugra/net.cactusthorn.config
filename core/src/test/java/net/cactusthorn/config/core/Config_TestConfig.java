@@ -2,19 +2,23 @@ package net.cactusthorn.config.core;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 import net.cactusthorn.config.core.loader.Loaders;
+import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class Config_TestConfig implements TestConfig {
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
+  private final ConfigInitializer INITIALIZER;
+
   public Config_TestConfig(final Loaders loaders) {
-    ConfigInitializer_TestConfig initializer = new ConfigInitializer_TestConfig(loaders);
-    VALUES.putAll(initializer.initialize());
+    INITIALIZER = new ConfigInitializer_TestConfig(loaders);
+    VALUES.putAll(INITIALIZER.initialize());
   }
 
   @Override
@@ -236,5 +240,12 @@ public final class Config_TestConfig implements TestConfig {
     if (!this.sort().equals(other.sort())) return false;
     if (!this.str().equals(other.str())) return false;
     return this.testconverter().equals(other.testconverter());
+  }
+
+  @Override
+  public void reload() {
+    Map<String, Object> reloaded = INITIALIZER.initialize();
+    VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
+    VALUES.putAll(reloaded);
   }
 }

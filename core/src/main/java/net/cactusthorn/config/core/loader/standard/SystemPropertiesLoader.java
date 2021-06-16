@@ -38,4 +38,7 @@ public final class SystemPropertiesLoader implements Loader {
         return new HashMap<>((Map) System.getProperties());
     }
 
+    @Override public long contentHashCode(URI uri, ClassLoader classLoader) {
+        return System.getProperties().hashCode();
+    }
 }

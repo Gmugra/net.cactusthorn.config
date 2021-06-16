@@ -29,7 +29,7 @@ import java.util.SortedSet;
 
 import net.cactusthorn.config.core.converter.ConverterClass;
 
-@Config @Prefix("test") public interface TestConfig {
+@Config @Prefix("test") public interface TestConfig extends Reloadable {
 
     @Disable(PREFIX) @Default("ddd") String aaa();
 

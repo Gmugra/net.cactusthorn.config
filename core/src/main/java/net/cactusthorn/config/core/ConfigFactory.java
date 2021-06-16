@@ -68,6 +68,7 @@ public final class ConfigFactory {
 
         private Map<String, String> props = Collections.emptyMap();
         private LoadStrategy loadStrategy = LoadStrategy.MERGE;
+        private long autoReloadPeriodInSeconds = 0L;
 
         private Builder() {
             ServiceLoader<Loader> serviceLoader = ServiceLoader.load(Loader.class);
@@ -120,6 +121,11 @@ public final class ConfigFactory {
             return addSources(u -> new UriTemplate(u), uri);
         }
 
+        public Builder autoReload(long periodInSeconds) {
+            this.autoReloadPeriodInSeconds = periodInSeconds;
+            return this;
+        }
+
         @SuppressWarnings({"unchecked"}) private <T> Builder addSources(Function<T, UriTemplate> mapper, T... uri) {
             if (uri == null) {
                 throw new IllegalArgumentException(isNull("uri"));
@@ -132,7 +138,7 @@ public final class ConfigFactory {
         }
 
         public ConfigFactory build() {
-            Loaders allLoaders = new Loaders(loadStrategy, templates, loaders, props);
+            Loaders allLoaders = new Loaders(loadStrategy, templates, loaders, props, autoReloadPeriodInSeconds);
             return new ConfigFactory(allLoaders);
         }
     }
@@ -140,7 +146,11 @@ public final class ConfigFactory {
     public <T> T create(Class<T> sourceInterface) {
         try {
             MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findConfigConstructor);
-            return (T) methodHandler.invoke(loaders);
+            T configImpl = (T) methodHandler.invoke(loaders);
+            if (configImpl instanceof Reloadable) {
+                loaders.register((Reloadable) configImpl);
+            }
+            return configImpl;
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }

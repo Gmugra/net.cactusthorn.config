@@ -71,21 +71,13 @@ public class UrlPropertiesLoaderTest {
     }
 
     @Test public void load(@TempDir Path path) throws IOException {
-        Path file = path.resolve("test.properties");
-        try (InputStream stream = CL.getResourceAsStream("test.properties")) {
-            Files.copy(stream, file);
-        }
-        URI uri = file.toUri();
+        URI uri = prepareTempFile(path, "test.properties");
         Map<String, String> properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
     @Test public void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
-        Path file = path.resolve("test.properties");
-        try (InputStream stream = CL.getResourceAsStream("test.properties")) {
-            Files.copy(stream, file);
-        }
-        URI uri = file.toUri();
+        URI uri = prepareTempFile(path, "test.properties");
         uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
         Map<String, String> properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
@@ -101,5 +93,36 @@ public class UrlPropertiesLoaderTest {
     @Test public void notLoad() throws IOException {
         Map<String, String> properties = LOADER.load(URI.create("file:./a.properties"), CL);
         assertTrue(properties.isEmpty());
+    }
+
+    @Test public void contentHashCodeNotFile() {
+        long hashCode = LOADER.contentHashCode(URI.create("https://github.com/a.properties"), CL);
+        assertEquals(0L, hashCode);
+    }
+
+    @Test public void contentHashCodeFileNotExist() {
+        long hashCode = LOADER.contentHashCode(URI.create("file:./a.properties"), CL);
+        assertEquals(0L, hashCode);
+    }
+
+    @Test public void contentHashCodeFile(@TempDir Path path) throws IOException, URISyntaxException {
+        URI uri = prepareTempFile(path, "test.properties");
+        long hashCode = LOADER.contentHashCode(uri, CL);
+        assertTrue(hashCode > 0L);
+    }
+
+    @Test public void contentHashCodeFileFragment(@TempDir Path path) throws IOException, URISyntaxException {
+        URI uri = prepareTempFile(path, "test.properties");
+        uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
+        long hashCode = LOADER.contentHashCode(uri, CL);
+        assertTrue(hashCode > 0L);
+    }
+
+    private URI prepareTempFile(Path tempDir, String fileName) throws IOException {
+        Path file = tempDir.resolve(fileName);
+        try (InputStream stream = CL.getResourceAsStream(fileName)) {
+            Files.copy(stream, file);
+        }
+        return file.toUri();
     }
 }
