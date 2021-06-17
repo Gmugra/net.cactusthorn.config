@@ -635,17 +635,25 @@ To activate auto-reloading need to set "periodInSeconds" using `autoReload` meth
 ConfigFactory factory =
     ConfigFactory.builder()
         .addSource("file:/myconfig.properties")
-        .autoReload(5) //realod every 5 seconds
+        .autoReload(5) //reload every 5 seconds
         .build();
 ```
-Warning: if you do not call `autoReload` method, auto reloading will not work.
+*Warning: If you do not call `autoReload` method, auto reloading will not work.*
 
-But, the source will be reloaded only if it *changed*.
-`Loader` implementation should implement `contentHashCode` method which return hash-code; it should be changed, when URI related content is changed.
-If Loader implementation do not support auto-reloading (which is default behavior) the method is returns always same value (e.g. 0)
+But, the source will be reloaded only if it *changed*.   
+`Loader`-implementation should implement `contentHashCode` method which return hash-code. (The method return value should be changed, when URI related content is changed).   
+If `Loader`-implementation do not support auto-reloading (which is default behavior) the method is returns always same value (e.g. `0`).   
 As result, for the moment, auto reloading only supported for:
 -   `system:properties`
--...URIs with **file:** scheme. (FYI: file last-modified-time is used as hash-code)
+-   URIs with **file:** scheme (only files related URIs). FYI: file last-modified-time is used as hash-code.
+
+*Warning: Be careful, non-cached(`nocache:`) sources will always be reloaded, whether they are modified or not.*
+
+> **Filesystems quirks**   
+> The date resolution vary from filesystem to filesystem.   
+> For instance, for Ext3, ReiserFS and HSF+ the date resolution is of 1 second.   
+> For FAT32 the date resolution for the last modified time is 2 seconds.   
+> For Ext4 the date resolution is in nanoseconds.
 
 ## Interfaces
 
