@@ -638,7 +638,8 @@ ConfigFactory factory =
         .autoReload(5) //reload every 5 seconds
         .build();
 ```
-*Warning: If you do not call `autoReload` method, auto reloading will not work.*
+
+Warning: If you do not call `autoReload` method, auto reloading will not work.
 
 But, the source will be reloaded only if it *changed*.   
 `Loader`-implementation should implement `contentHashCode` method which return hash-code. (The method return value should be changed, when URI related content is changed).   
@@ -647,7 +648,7 @@ As result, for the moment, auto reloading only supported for:
 -   `system:properties`
 -   URIs with **file:** scheme (only files related URIs). FYI: file last-modified-time is used as hash-code.
 
-*Warning: Be careful, non-cached(`nocache:`) sources will always be reloaded, whether they are modified or not.*
+Warning: Be careful, non-cached(`nocache:`) sources will always be reloaded, whether they are modified or not.
 
 > **Filesystems quirks**   
 > The date resolution vary from filesystem to filesystem.   
