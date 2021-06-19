@@ -50,22 +50,22 @@ public class ConfigFactoryHashAndReloadingTest {
     }
 
     @Test public void updateFile(@TempDir Path path) throws IOException {
-        URI uri = prepareTempFile(path, "test.properties", "test.properties");
+        URI uri = prepareTempFile(path, "testF.properties", "test.properties");
         ConfigFactory factory = ConfigFactory.builder().addSource(uri).build();
         ConfigHolder holder = factory.configHolder();
         assertEquals("bbb", holder.getString("aaa"));
-        prepareTempFile(path, "test.properties", "test2.properties");
+        prepareTempFile(path, "testF.properties", "test2.properties");
         holder = factory.configHolder();
         assertEquals("zzz", holder.getString("aaa"));
     }
 
     @Test public void updateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
-        URI uri = prepareTempFile(path, "test.properties", "test.properties");
+        URI uri = prepareTempFile(path, "testFA.properties", "test.properties");
         ConfigFactory factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
         TestConfig testConfig = factory.create(TestConfig.class);
         assertEquals("bbb", testConfig.aaa());
         Thread.sleep(1000);
-        prepareTempFile(path, "test.properties", "test2.properties");
+        prepareTempFile(path, "testFA.properties", "test2.properties");
         Thread.sleep(3000);
         assertEquals("zzz", testConfig.aaa());
     }
