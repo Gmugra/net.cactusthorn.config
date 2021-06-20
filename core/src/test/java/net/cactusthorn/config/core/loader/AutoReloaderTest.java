@@ -17,26 +17,36 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core.loader.standard;
+package net.cactusthorn.config.core.loader;
 
-import java.io.Reader;
-import java.net.URI;
-import java.util.Map;
+import static org.junit.jupiter.api.Assertions.*;
 
-import net.cactusthorn.config.core.loader.UrlLoader;
-import net.cactusthorn.config.core.util.XMLToMapParser;
+import org.junit.jupiter.api.Test;
 
-public class UrlXMLLoader extends UrlLoader {
+import net.cactusthorn.config.core.Reloadable;
 
-    private static final String EXTENTION = ".xml";
+public class AutoReloaderTest {
 
-    private static final XMLToMapParser PARSER = new XMLToMapParser();
+    private static int counter = 0;
 
-    @Override public boolean accept(URI uri) {
-        return accept(uri, EXTENTION);
+    public static class TestIt implements Reloadable {
+        @Override public void reload() {
+            counter++;
+        }
     }
 
-    @Override protected Map<String, String> load(Reader reader) throws Exception {
-        return PARSER.parse(reader);
+    @Test public void simple() throws InterruptedException {
+        counter = 0;
+        AutoReloader reloader = new AutoReloader(1);
+        Thread.sleep(3000);
+        assertEquals(0, counter);
+
+        reloader.register(new TestIt());
+        Thread.sleep(5000);
+        assertTrue(counter >= 2);
+
+        reloader.register(new TestIt());
+        Thread.sleep(5000);
+        assertTrue(counter >= 7);
     }
 }

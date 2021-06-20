@@ -45,6 +45,8 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Thread-safe
 
+-   Periodical auto reloading
+
 ## Basics
 
 ### Installing
@@ -303,7 +305,8 @@ FYI:
 | | host.{env} | host |
 
 ## The `ConfigFactory`
-The `ConfigFactory` is thread-safe, but not stateless. It stores loaded properties in the internal cache (see *Caching*).
+The `ConfigFactory` is thread-safe, but not stateless.   
+It stores loaded properties in the internal cache (see *Caching*), and also control auto reloading.   
 Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
 
 ### Direct access to properties
@@ -334,10 +337,12 @@ For console applications, it is convenient to provide command line arguments to 
 ### Caching
 By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. 
 
-To not cache properties related to the URI(s), use URI-prefix `nocache:` this will switch off caching for the URI.
+To not cache properties related to the URI(s), use URI-prefix `nocache:` this will switch off caching for the URI.   
 e.g.
-`nocache:system:properties`
-`nocache:file:~/my.properties`
+-   `nocache:system:properties`
+-   `nocache:file:~/my.properties`
+
+
 
 ## Type conversion
 
@@ -623,6 +628,34 @@ Loading strategies:
 
 Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
+### Periodical auto reloading
+ConfigFactory can automatically reload configurations which extends `net.cactusthorn.config.core.Reloadable` interface.
+To activate auto-reloading need to set "periodInSeconds" using `autoReload` method:
+```java
+ConfigFactory factory =
+    ConfigFactory.builder()
+        .addSource("file:/myconfig.properties")
+        .autoReload(5) //reload every 5 seconds
+        .build();
+```
+
+Warning: If you do not call `autoReload` method, auto reloading will not work.
+
+But, the source will be reloaded only if it *changed*.   
+`Loader`-implementation should implement `contentHashCode` method which return hash-code. (The method return value should be changed, when URI related content is changed).   
+If `Loader`-implementation do not support auto-reloading (which is default behavior) the method is returns always same value (e.g. `0`).   
+As result, for the moment, auto reloading only supported for:
+-   `system:properties`
+-   URIs with **file:** scheme (only files related URIs). FYI: file last-modified-time is used as hash-code.
+
+Warning: Be careful, non-cached(`nocache:`) sources will always be reloaded, whether they are modified or not.
+
+> **Filesystems quirks**   
+> The date resolution vary from filesystem to filesystem.   
+> For instance, for Ext3, ReiserFS and HSF+ the date resolution is of 1 second.   
+> For FAT32 the date resolution for the last modified time is 2 seconds.   
+> For Ext4 the date resolution is in nanoseconds.
+
 ## Interfaces
 
 ### Interfaces inheritance
@@ -677,7 +710,7 @@ In this case generated class will also get methods for this interface:
 ```java
     void reload();
 ```
-FYI: The method reload **not cached** sources (see *Caching*)
+FYI: The method always reload *not cached* sources, even if they not changed (see *Caching*)
 
 ## Miscellaneous
 

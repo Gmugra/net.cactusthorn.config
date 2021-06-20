@@ -27,16 +27,36 @@ public interface Loader {
      /**
      * Indicates whether this Loader does accept the URI.
      *
-     * @param uri  the URI as String
-     * @return URI, if the loader is able to handle the content of the URI.
+     * @param   uri   the {@link URI} as String
+     * @return  {@code true}, if the loader is able to handle the content of the URI.
      */
     boolean accept(URI uri);
 
      /**
      * Loads the given {@link URI uri}
      *
-     * @param uri the {@link URI} from where to load the properties.
-     * @return immutable Map, can't be null.
+     * @param   uri   the {@link URI} from where to load the properties.
+     * @param   classLoader   the {@link ClassLoader}
+     * @return  immutable Map, can't be null.
      */
     Map<String, String> load(URI uri, ClassLoader classLoader);
+
+    /**
+    * Returns a hash code value for the content of the {@link URI uri}.
+    * <p>
+    * This method is for auto reloading:
+    * <ul>
+    * <li>if the content has changed, the method should return the new value
+    * <li>if the {@link URI} not support auto reloading, the method should always return same value e.g. {@code 0L}
+    * </ul>
+    * <p>
+    * The default implementation always returns {@code 0L}
+    *
+    * @param   uri   the {@link URI} from where to load the properties.
+    * @param   classLoader   the {@link ClassLoader}
+    * @return  a hash code value for the content.
+    */
+    default long contentHashCode(URI uri, ClassLoader classLoader) {
+        return 0L;
+    }
 }

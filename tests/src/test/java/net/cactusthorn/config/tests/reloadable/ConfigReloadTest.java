@@ -29,19 +29,10 @@ public class ConfigReloadTest {
 
     @Test public void simple() {
         System.setProperty("superValue", "SV");
-        ConfigReload config = ConfigFactory.builder().addSource("nocache:system:properties").build().create(ConfigReload.class);
-        assertEquals("SV", config.superValue());
-        System.setProperty("superValue", "SVR");
-        config.reload();
-        assertEquals("SVR", config.superValue());
-    }
-
-    @Test public void cached() {
-        System.setProperty("superValue", "SV");
         ConfigReload config = ConfigFactory.builder().addSource("system:properties").build().create(ConfigReload.class);
         assertEquals("SV", config.superValue());
         System.setProperty("superValue", "SVR");
         config.reload();
-        assertEquals("SV", config.superValue());
+        assertEquals("SVR", config.superValue());
     }
 }

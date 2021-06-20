@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.cactusthorn.config.core.Reloadable;
 import net.cactusthorn.config.core.util.VariablesParser;
 
 public final class Loaders {
@@ -92,18 +93,28 @@ public final class Loaders {
         }
     }
 
+    private final AutoReloader reloader;
+
     private final ConcurrentHashMap<URI, Map<String, String>> cache = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<URI, Long> hashCodes = new ConcurrentHashMap<>();
 
     private final LoadStrategy loadStrategy;
     private final LinkedHashSet<UriTemplate> templates;
     private final Deque<Loader> loaders;
     private final Map<String, String> properties;
 
-    public Loaders(LoadStrategy loadStrategy, LinkedHashSet<UriTemplate> templates, Deque<Loader> loaders, Map<String, String> properties) {
+    public Loaders(LoadStrategy loadStrategy, LinkedHashSet<UriTemplate> templates, Deque<Loader> loaders, Map<String, String> properties,
+            long hotReloadPeriodInSeconds) {
         this.loadStrategy = loadStrategy;
         this.templates = templates;
         this.loaders = loaders;
         this.properties = properties;
+        this.reloader = new AutoReloader(hotReloadPeriodInSeconds);
+    }
+
+    public void register(Reloadable reloadable) {
+        // TODO debug log
+        reloader.register(reloadable);
     }
 
     public ConfigHolder load(ClassLoader classLoader) {
@@ -130,14 +141,27 @@ public final class Loaders {
             URI uri = template.uri();
             Loader loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
                     .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
-            Map<String, String> uriProperties;
-            if (template.cachable()) {
-                uriProperties = cache.computeIfAbsent(uri, u -> loader.load(u, classLoader));
-            } else {
-                uriProperties = loader.load(uri, classLoader);
-            }
-            values.add(uriProperties);
+            values.add(load(classLoader, loader, template.cachable(), uri));
         }
         return new ConfigHolder(strategy.combine(values, properties));
+    }
+
+    private Map<String, String> load(ClassLoader classLoader, Loader loader, boolean cachable, URI uri) {
+        validateContentHashCode(classLoader, loader, uri);
+        if (cachable) {
+            return cache.computeIfAbsent(uri, u -> loader.load(u, classLoader));
+        }
+        return loader.load(uri, classLoader);
+    }
+
+    private void validateContentHashCode(ClassLoader classLoader, Loader loader, URI uri) {
+        long newHashCode = loader.contentHashCode(uri, classLoader);
+        Long currentHashCode = hashCodes.get(uri);
+        if (currentHashCode == null) {
+            hashCodes.putIfAbsent(uri, newHashCode);
+        } else if (currentHashCode != newHashCode) {
+            cache.remove(uri);
+            hashCodes.put(uri, newHashCode);
+        }
     }
 }
