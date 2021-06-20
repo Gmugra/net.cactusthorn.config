@@ -49,11 +49,12 @@ public class ConfigFactoryHashAndReloadingTest {
         }
     }
 
-    @Test public void updateFile(@TempDir Path path) throws IOException {
+    @Test public void updateFile(@TempDir Path path) throws IOException, InterruptedException {
         URI uri = prepareTempFile(path, "testF.properties", "test.properties");
         ConfigFactory factory = ConfigFactory.builder().addSource(uri).build();
         ConfigHolder holder = factory.configHolder();
         assertEquals("bbb", holder.getString("aaa"));
+        Thread.sleep(1000);
         prepareTempFile(path, "testF.properties", "test2.properties");
         holder = factory.configHolder();
         assertEquals("zzz", holder.getString("aaa"));
