@@ -26,6 +26,12 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Set default value (if property will not found in sources, the default value will be used).<br>
+ * Can't be used for methods with {@link java.util.Optional} return type.<br>
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Retention(SOURCE) @Target(METHOD) public @interface Default {
     String value();
 }

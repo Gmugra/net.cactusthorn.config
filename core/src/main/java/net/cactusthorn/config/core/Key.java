@@ -26,6 +26,12 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Set property name for the method.<br>
+ * If this annotation is not present method-name will be used as property name<br>
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Retention(SOURCE) @Target(METHOD) public @interface Key {
     String value();
     char KEY_SEPARATOR = '.';

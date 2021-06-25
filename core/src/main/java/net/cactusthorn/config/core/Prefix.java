@@ -26,6 +26,11 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Set global prefix for all property names
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Retention(SOURCE) @Target(TYPE) public @interface Prefix {
     String value();
 }

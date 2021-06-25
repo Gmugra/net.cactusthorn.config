@@ -27,6 +27,30 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Set splitter {@link java.util.regex.Pattern regular-expression} or single character for splitting value for collections,<br>
+ * or key+value "entries" for maps.<br>
+ * <br>
+ * If this annotation is not present, default "splitter" is <b>,</b> (comma).
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * &#064;Config
+ * public interface MyConfiguration {
+ *
+ *     &#064;Split("[,:;]")
+ *     &#064;Default("DAYS:HOURS")
+ *     Set&lt;TimeUnit&gt; units();
+ *
+ *     &#064;Split(";")
+ *     &#064;Default("10000|10;20000|20") //as key-value separator can be used only | (pipe character)
+ *     Optional&lt;Map&lt;Integer, Byte&gt;&gt; theMap();
+ * }
+ * </pre>
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Retention(SOURCE) @Target({ TYPE, METHOD }) public @interface Split {
     String value();
     String DEFAULT_SPLIT = ",";

@@ -26,6 +26,23 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+/**
+ * Disable "global"-level features.
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * &#064;Config
+ * &#064;Prefix("app")
+ * public interface MyConfiguration {
+ *
+ *     &#064;Disable(PREFIX)
+ *     String value();
+ * }
+ * </pre>
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Retention(SOURCE) @Target(METHOD) public @interface Disable {
     Feature[] value();
 

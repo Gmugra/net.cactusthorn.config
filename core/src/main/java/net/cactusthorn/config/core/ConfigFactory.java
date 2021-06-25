@@ -44,6 +44,62 @@ import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
+/**
+ * The ConfigFactory is thread-safe, but not stateless.<br>
+ * It stores loaded properties in the internal cache, and also control auto reloading.<br>
+ * Therefore, it certainly makes sense to create and use one single instance of ConfigFactory for the whole application.<br>
+ *
+ * <h3>Example</h3>
+ * <pre>
+ * &#064;Config
+ * public interface MyConfiguration {
+ *
+ *     String myValue();
+ * }
+ * </pre><pre> {@code
+ * MyConfiguration myConfig =
+ *      ConfigFactory.builder()
+ *          .setLoadStrategy(LoadStrategy.FIRST)
+ *          .addSource("file:./myconfig.properties")
+ *          .addSource("classpath:config/myconfig.properties", "system:properties")
+ *          .build()
+ *          .create(MyConfiguration.class);
+ * } </pre>
+ *
+ * <h3>Caching</h3>
+ * By default, ConfigFactory caches loaded properties using source-URI<br>
+ * (after resolving system properties and/or environment variable in it) as a cache key.<br>
+ * To not cache properties related to the URI(s), use URI-prefix <b>nocache:</b> this will switch off caching for the URI. e.g.:<br>
+ * <ul>
+ * <li> <b>nocache:system:properties</b>
+ * <li> <b>nocache:file:~/my.properties</b>
+ * </ul>
+ *
+ * <h3>Direct access to properties</h3>
+ * It's possible to get loaded properties without define config-interface using {@link net.cactusthorn.config.core.loader.ConfigHolder}:
+ * <pre> {@code
+ * ConfigHolder holder =
+ *      ConfigFactory.builder()
+ *          .setLoadStrategy(LoadStrategy.FIRST)
+ *          .addSource("file:./myconfig.properties")
+ *          .addSource("classpath:config/myconfig.properties", "system:properties")
+ *          .build()
+ *          .configHolder();
+ *
+ *  String val = holder.getString("app.val", "unknown");
+ *  int intVal = holder.getInt("app.number");
+ *  Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+ *  Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
+ * } </pre>
+ *
+ * <h3>Manually added properties</h3>
+ * The {@link ConfigFactory.Builder} contains a method for adding properties manually: {@link ConfigFactory.Builder#setSource}.<br>
+ * Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties,<br>
+ * independent of loading strategy. In other words:
+ * the manually added properties will always override (sure, when the property keys are same) properties loaded by URI(s).
+ *
+ * @author Alexei Khatskevich
+ */
 public final class ConfigFactory {
 
     private static final MethodType CONFIG_CONSTRUCTOR = MethodType.methodType(void.class, Loaders.class);

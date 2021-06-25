@@ -22,6 +22,12 @@ package net.cactusthorn.config.core;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * "config"-interface can extends this interface (directly or over super-interface)<br>
+ * In this case generated class will also get methods for this interface<br>
+ *
+ * @author Alexei Khatskevich
+ */
 public interface Accessible {
     Set<String> keys();
 

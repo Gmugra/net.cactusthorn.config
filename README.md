@@ -5,7 +5,7 @@ The Java library with the goal of minimizing the code required to handle applica
 [![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e95b3233c26d4b8ab31e1956c16fcc0d)](https://www.codacy.com/gh/Gmugra/net.cactusthorn.config/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Gmugra/net.cactusthorn.config&amp;utm_campaign=Badge_Grade) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/config-core/0.40)](https://search.maven.org/search?q=g:net.cactusthorn.config) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Motivation
-The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintened anymore, and it's not really support "new" langauge features from Java 8+.
+The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintained anymore, and it's not really support "new" language features from Java 8+.
 
 So, this project is providing library with similar with *OWNER* API, but
 -   Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
@@ -113,7 +113,7 @@ public interface MyConfig {
 }
 ```
 -   An interface must be annotated with `@Config`.
--   An interface must contain at least one method declaration (but methods decalaration can be also in super interface(s)).
+-   An interface must contain at least one method declaration (but methods declaration can be also in super interface(s)).
 -   All methods must be without parameters
 
 Based on the interface, the annotation processor will generate an implementation, that can be obtained using `ConfigFactory`:
@@ -247,7 +247,7 @@ public interface ConfigOverride {
     String string();
 }
 ```
-1.  If `sources` parameter is present, all sources added in the `ConfigFactory` (usign `ConfigFactory.Builder.addSource` methods) will be ignored.
+1.  If `sources` parameter is present, all sources added in the `ConfigFactory` (using `ConfigFactory.Builder.addSource` methods) will be ignored.
 2.  If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
 3.  Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
 
@@ -310,7 +310,7 @@ It stores loaded properties in the internal cache (see *Caching*), and also cont
 Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
 
 ### Direct access to properties
-It's possible to get loaded propeties without define config-interface.
+It's possible to get loaded properties without define config-interface.
 ```java
 ConfigHolder holder =
     ConfigFactory.builder()
@@ -402,7 +402,7 @@ public interface ConfigMap {
 }
 ```
 FYI:
-1.  In case of Maps, `@Split` annotation set spliter for key+value "entries" (default "splitter" is comma : `,`).
+1.  In case of Maps, `@Split` annotation set splitter for key+value "entries" (default "splitter" is comma : `,`).
 2.  In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ZonedDateTimeParser` etc.) only affect the Map values.
 
 ### `java.time.Instant` format
@@ -410,7 +410,7 @@ The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki
 e.g. `2011-12-03T10:15:30Z`
 
 ### `java.time.Duration` formats
-1.  Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
+1.  Standard *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
 
 2.  "unit strings" format: 
     1.  Bare numbers are taken to be in milliseconds: `10`
@@ -427,7 +427,7 @@ e.g. `2011-12-03T10:15:30Z`
         -   `d`, `day`, `days`
 
 ### `java.time.Period` formats
-1.  Standart *ISO 8601* format, as described in the [JavaDoc for java.time.Period](https://docs.oracle.com/javase/8/docs/api/java/time/Period.html#parse-java.lang.CharSequence-). e.g. `P1Y2M3W4D`
+1.  Standard *ISO 8601* format, as described in the [JavaDoc for java.time.Period](https://docs.oracle.com/javase/8/docs/api/java/time/Period.html#parse-java.lang.CharSequence-). e.g. `P1Y2M3W4D`
 
 2.  "unit strings" format: 
     1.  Bare numbers are taken to be in days: `10`
@@ -509,7 +509,7 @@ public @interface MySuperParser {
 ```
 FYI: 
 -   the annotation must contains `String[] value() default ""` parameter, otherwise parameters will be ignored by compiler
--   the annotation can be made for any converter (even for converter which ia actually not need parameters)
+-   the annotation can be made for any converter (even for converter which is, actually, not need parameters)
 
 usage:
 ```java
@@ -557,8 +557,8 @@ Several of these annotations shipped with the library:
 
 7.  META-INF/MANIFEST.MF: `classpath:jar:manifest?attribute[=value]`
     -   The loader scans all JARs in classpath for META-INF/MANIFEST.MF files. First META-INF/MANIFEST.MF, which contain *attribute* (with optional value) from the URI will be used as source.
-    -   e.g. MANIFEST.MF must containt attribute **Bundle-Name** with value **JUnit Jupiter API**: `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
-    -   e.g. MANIFEST.MF must containt attribute **exotic-unique-attribite** with any value: `classpath:jar:manifest?exotic-unique-attribite`
+    -   e.g. MANIFEST.MF must contain attribute **Bundle-Name** with value **JUnit Jupiter API**: `classpath:jar:manifest?Bundle-Name=JUnit%20Jupiter%20API`
+    -   e.g. MANIFEST.MF must contain attribute **exotic-unique-attribute** with any value: `classpath:jar:manifest?exotic-unique-attribute`
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
@@ -742,7 +742,7 @@ java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
 ```
 
 ### Profiles
-There is no specific support for profiles, but it is easy to achieve similar behaviour using *System properties and/or environment variables* in sources URIs,
+There is no specific support for profiles, but it is easy to achieve similar behavior using *System properties and/or environment variables* in sources URIs,
 e.g.:
 ```java
 ConfigFactory.builder()

@@ -22,6 +22,9 @@ package net.cactusthorn.config.core.loader;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * @author Alexei Khatskevich
+ */
 public interface Loader {
 
      /**
@@ -33,7 +36,7 @@ public interface Loader {
     boolean accept(URI uri);
 
      /**
-     * Loads the given {@link URI uri}
+     * Loads content for the given {@link URI uri}
      *
      * @param   uri   the {@link URI} from where to load the properties.
      * @param   classLoader   the {@link ClassLoader}
