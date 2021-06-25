@@ -27,7 +27,39 @@ import java.lang.annotation.Target;
 
 import net.cactusthorn.config.core.loader.LoadStrategy;
 
+/**
+ * The "source" interface must be annotated with this annotation.
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * &#064;Config(
+ *     sources = {"classpath:config/testconfig2.properties","nocache:system:properties"},
+ *     loadStrategy = LoadStrategy.FIRST
+ * )
+ * public interface MyConfiguration {
+ *
+ *     String value();
+ * }
+ * </pre>
+ *
+ * @author Alexei Khatskevich
+ */
 @Documented @Target(ElementType.TYPE) @Retention(RetentionPolicy.SOURCE) public @interface Config {
+
+    /**
+     * If returns not empty string,
+     * all sources added in the {@link ConfigFactory} (using {@link ConfigFactory.Builder#addSource} methods) will be ignored.
+     *
+     * @return an array of source URIs
+     */
     String[] sources() default "";
+
+    /**
+     * If returns not {@link LoadStrategy#UNKNOWN},
+     * it will be used instead of loadStrategy from {@link ConfigFactory}.
+     *
+     * @return loading strategy
+     */
     LoadStrategy loadStrategy() default LoadStrategy.UNKNOWN;
 }

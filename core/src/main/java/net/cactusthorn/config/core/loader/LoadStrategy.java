@@ -26,12 +26,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * {@link net.cactusthorn.config.core.ConfigFactory} saves the sequence in which the sources URIs were added.<br>
+ * <br>
+ * Default strategy is {@link LoadStrategy#MERGE}
+ *
+ * @author Alexei Khatskevich
+ */
 public enum LoadStrategy {
 
     // @formatter:off
+    /**
+     * Only the first (in the sequence of adding) existing and not empty source will be used.
+     */
     FIRST(l -> first(new HashMap<>(), l)),
+    /**
+     * merging all properties from first added to last added.
+     */
     MERGE(l -> merge(new HashMap<>(), l)),
+    /**
+     * same with {@link LoadStrategy#FIRST}, but property keys are case insensitive
+     */
     FIRST_KEYCASEINSENSITIVE(l -> first(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
+    /**
+     * same with {@link LoadStrategy#MERGE}, but property keys are case insensitive
+     */
     MERGE_KEYCASEINSENSITIVE(l -> merge(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
     UNKNOWN(l -> {
         throw new UnsupportedOperationException();

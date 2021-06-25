@@ -19,6 +19,12 @@
  */
 package net.cactusthorn.config.core;
 
+/**
+ * "config"-interface can extends this interface (directly or over super-interface)<br>
+ * In this case generated class will also get methods for this interface<br>
+ *
+ * @author Alexei Khatskevich
+ */
 public interface Reloadable {
     void reload();
 }
