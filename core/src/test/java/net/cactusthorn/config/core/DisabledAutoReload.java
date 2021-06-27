@@ -19,35 +19,7 @@
 */
 package net.cactusthorn.config.core;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+@Config @Disable(Disable.Feature.AUTO_RELOAD) public interface DisabledAutoReload extends Reloadable {
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-/**
- * Disable "global"-level features.
- *
- * <h3>Example</h3>
- *
- * <pre>
- * &#064;Config
- * &#064;Prefix("app")
- * public interface MyConfiguration {
- *
- *     &#064;Disable(PREFIX)
- *     String value();
- * }
- * </pre>
- *
- * @author Alexei Khatskevich
- */
-@Documented @Retention(SOURCE) @Target({TYPE, METHOD}) public @interface Disable {
-    Feature[] value();
-
-    enum Feature {
-        PREFIX, AUTO_RELOAD;
-    }
+    String aaa();
 }

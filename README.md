@@ -650,6 +650,15 @@ As result, for the moment, auto reloading only supported for:
 
 Warning: Be careful, non-cached(`nocache:`) sources will always be reloaded, whether they are modified or not.
 
+It is possible to disable auto reloading for the "config"-interface, even if it is activated:
+```java
+@Config
+@Disable(Disable.Feature.AUTO_RELOAD)
+public interface MyConfig extends Reloadable {
+    String value();
+}
+```
+
 > **Filesystems quirks**   
 > The date resolution vary from filesystem to filesystem.   
 > For instance, for Ext3, ReiserFS and HSF+ the date resolution is of 1 second.   

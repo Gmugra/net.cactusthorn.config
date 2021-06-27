@@ -21,6 +21,7 @@ package net.cactusthorn.config.compiler;
 
 import static net.cactusthorn.config.core.Key.KEY_SEPARATOR;
 import static net.cactusthorn.config.core.Split.DEFAULT_SPLIT;
+import static net.cactusthorn.config.core.Disable.Feature.AUTO_RELOAD;
 
 import java.io.Serializable;
 import java.util.Optional;
@@ -42,12 +43,14 @@ public final class InterfaceInfo {
     private final Optional<Long> serialVersionUID;
     private final boolean accessible;
     private final boolean reloadable;
+    private final boolean autoReloadable;
     private final Annotations.ConfigInfo configInfo;
 
     InterfaceInfo(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
         Annotations a = new Annotations(interfaceTypeElement);
         prefix = a.prefix().map(s -> s + KEY_SEPARATOR).orElse("");
         split = a.split().orElse(DEFAULT_SPLIT);
+        autoReloadable = !a.disable().contains(AUTO_RELOAD);
         configInfo = a.config();
         serialVersionUID = findSerializable(processingEnv, interfaceTypeElement);
         accessible = findInterface(processingEnv, interfaceTypeElement, Accessible.class);
@@ -72,6 +75,10 @@ public final class InterfaceInfo {
 
     public boolean reloadable() {
         return reloadable;
+    }
+
+    public boolean autoReloadable() {
+        return autoReloadable;
     }
 
     public Annotations.ConfigInfo configInfo() {

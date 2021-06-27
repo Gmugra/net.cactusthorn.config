@@ -51,7 +51,8 @@ import java.lang.annotation.Target;
  *
  * @author Alexei Khatskevich
  */
-@Documented @Retention(SOURCE) @Target({ TYPE, METHOD }) public @interface Split {
+@Documented @Retention(SOURCE) @Target({TYPE, METHOD}) public @interface Split {
     String value();
+
     String DEFAULT_SPLIT = ",";
 }
