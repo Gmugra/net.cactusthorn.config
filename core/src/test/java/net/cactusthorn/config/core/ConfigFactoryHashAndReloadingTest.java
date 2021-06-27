@@ -71,6 +71,17 @@ public class ConfigFactoryHashAndReloadingTest {
         assertEquals("zzz", testConfig.aaa());
     }
 
+    @Test public void disableUpdateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
+        URI uri = prepareTempFile(path, "testDFA.properties", "test.properties");
+        ConfigFactory factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
+        DisabledAutoReload config = factory.create(DisabledAutoReload.class);
+        assertEquals("bbb", config.aaa());
+        Thread.sleep(1000);
+        prepareTempFile(path, "testDFA.properties", "test2.properties");
+        Thread.sleep(3000);
+        assertEquals("bbb", config.aaa());
+    }
+
     private URI prepareTempFile(Path tempDir, String fileName, String resourceName) throws IOException {
         Path file = tempDir.resolve(fileName);
         try (InputStream stream = ConfigFactoryHashAndReloadingTest.class.getClassLoader().getResourceAsStream(resourceName)) {

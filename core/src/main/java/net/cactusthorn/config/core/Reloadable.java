@@ -26,5 +26,10 @@ package net.cactusthorn.config.core;
  * @author Alexei Khatskevich
  */
 public interface Reloadable {
+
     void reload();
+
+    default boolean autoReloadable() {
+        return true;
+    }
 }

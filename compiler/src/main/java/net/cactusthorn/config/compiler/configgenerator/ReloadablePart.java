@@ -27,16 +27,30 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 
-public class ReloadablePart implements GeneratorPart {
+public final class ReloadablePart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         if (!generator.interfaceInfo().reloadable()) {
             return;
         }
+        addReload(classBuilder);
+        autoReloadable(classBuilder, generator);
+    }
+
+    private void addReload(TypeSpec.Builder classBuilder) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("reload").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class);
         builder.addStatement("$T reloaded = $L.initialize()", MAP_STRING_OBJECT, INITIALIZER_ATTR);
         builder.addStatement("$L.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()))", VALUES_ATTR);
         builder.addStatement("$L.putAll(reloaded)", VALUES_ATTR);
+        classBuilder.addMethod(builder.build());
+    }
+
+    private void autoReloadable(TypeSpec.Builder classBuilder, Generator generator) {
+        if (generator.interfaceInfo().autoReloadable()) {
+            return;
+        }
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("autoReloadable").returns(boolean.class).addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class).addStatement("return false");
         classBuilder.addMethod(builder.build());
     }
 }

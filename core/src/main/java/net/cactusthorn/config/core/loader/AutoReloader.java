@@ -55,6 +55,9 @@ public class AutoReloader {
         if (periodInSeconds == 0L) {
             return;
         }
+        if (!reloadable.autoReloadable()) {
+            return;
+        }
         configs.add(reloadable);
         start();
     }

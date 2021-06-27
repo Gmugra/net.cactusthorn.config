@@ -51,10 +51,13 @@ public class ConfigProcessorTest {
     }
 
     @Test public void extendsInterface() {
-        Compilation compilation = compiler().compile(
-            JavaFileObjects.forResource("test/AllCorrect.java"),
-            JavaFileObjects.forResource("test/SubOne.java"),
-            JavaFileObjects.forResource("test/SubTwo.java"));
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"),
+                JavaFileObjects.forResource("test/SubOne.java"), JavaFileObjects.forResource("test/SubTwo.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
+
+    @Test public void disableAutoReload() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/DisableAutoReload.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 }

@@ -28,10 +28,21 @@ import net.cactusthorn.config.core.Reloadable;
 public class AutoReloaderTest {
 
     private static int counter = 0;
+    private static int counter2 = 0;
 
     public static class TestIt implements Reloadable {
         @Override public void reload() {
             counter++;
+        }
+    }
+
+    public static class DisableIt implements Reloadable {
+        @Override public void reload() {
+            counter2++;
+        }
+
+        @Override public boolean autoReloadable() {
+            return false;
         }
     }
 
@@ -48,5 +59,15 @@ public class AutoReloaderTest {
         reloader.register(new TestIt());
         Thread.sleep(5000);
         assertTrue(counter >= 7);
+    }
+
+    @Test public void disableIt() throws InterruptedException {
+        counter2 = 0;
+        AutoReloader reloader = new AutoReloader(1);
+        Thread.sleep(3000);
+        assertEquals(0, counter2);
+        reloader.register(new DisableIt());
+        Thread.sleep(5000);
+        assertEquals(0, counter2);
     }
 }
