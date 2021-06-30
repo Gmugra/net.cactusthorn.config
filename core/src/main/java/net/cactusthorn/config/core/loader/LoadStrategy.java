@@ -19,6 +19,8 @@
 */
 package net.cactusthorn.config.core.loader;
 
+import static net.cactusthorn.config.core.util.RelaxedComparator.RELAXED_ORDER;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.TreeMap;
@@ -27,7 +29,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * {@link net.cactusthorn.config.core.ConfigFactory} saves the sequence in which the sources URIs were added.<br>
+ * {@link net.cactusthorn.config.core.ConfigFactory} saves the sequence in which
+ * the sources URIs were added.<br>
  * <br>
  * Default strategy is {@link LoadStrategy#MERGE}
  *
@@ -41,17 +44,44 @@ public enum LoadStrategy {
      */
     FIRST(l -> first(new HashMap<>(), l)),
     /**
-     * merging all properties from first added to last added.
+     * Merging all properties from first added to last added.
      */
     MERGE(l -> merge(new HashMap<>(), l)),
     /**
-     * same with {@link LoadStrategy#FIRST}, but property keys are case insensitive
+     * Same with {@link LoadStrategy#FIRST}, but property keys are case insensitive.
      */
     FIRST_KEYCASEINSENSITIVE(l -> first(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
     /**
-     * same with {@link LoadStrategy#MERGE}, but property keys are case insensitive
+     * Same with {@link LoadStrategy#MERGE}, but property keys are case insensitive.
      */
     MERGE_KEYCASEINSENSITIVE(l -> merge(new TreeMap<>(String.CASE_INSENSITIVE_ORDER), l)),
+    /**
+     * Same with {@link LoadStrategy#FIRST}, but property keys are "relaxed".
+     *
+     * <p>Relaxed rules:
+     * <ul>
+     * <li>keys are case insensitive
+     * <li>.(dot), -(minus) and _(underscore) characters are ignored
+     * </ul>
+     *
+     * <p>For example: <b>person.first-name</b>, <b>person.firstName</b> and <b>PERSON_FIRSTNAME</b> can all be used interchangeably.
+     */
+    FIRST_KEYRELAXED(l -> first(new TreeMap<>(RELAXED_ORDER), l)),
+    /**
+     * Same with {@link LoadStrategy#MERGE}, but property keys are "relaxed".
+     *
+     * <p>Relaxed rules:
+     * <ul>
+     * <li>keys are case insensitive
+     * <li>.(dot), -(minus) and _(underscore) characters are ignored
+     * </ul>
+     *
+     * <p>For example: <b>person.first-name</b>, <b>person.firstName</b> and <b>PERSON_FIRSTNAME</b> can all be used interchangeably.
+     */
+    MERGE_KEYRELAXED(l -> merge(new TreeMap<>(RELAXED_ORDER), l)),
+    /**
+     * Never use it. For internal needs only.
+     */
     UNKNOWN(l -> {
         throw new UnsupportedOperationException();
     });
