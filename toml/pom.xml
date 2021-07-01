@@ -40,6 +40,7 @@
     <properties>
         <pmd.skip>false</pmd.skip>
         <checkstyle.skip>false</checkstyle.skip>
+        <copy.license.skip>false</copy.license.skip>
     </properties>
 
     <dependencies>

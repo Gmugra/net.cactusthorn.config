@@ -49,6 +49,7 @@
 
         <pmd.skip>true</pmd.skip>
         <checkstyle.skip>true</checkstyle.skip>
+        <copy.license.skip>true</copy.license.skip>
 
         <dependency.junit>5.7.2</dependency.junit>
         <dependency.compile-testing>0.19</dependency.compile-testing>
@@ -280,6 +281,7 @@
                                     </includes>
                                 </resource>
                             </resources>
+                            <skip>${copy.license.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -535,6 +537,19 @@
                                                 <versionRange>${plugin.flatten}</versionRange>
                                                 <goals>
                                                     <goal>flatten</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <ignore />
+                                            </action>
+                                        </pluginExecution>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>org.apache.maven.plugins</groupId>
+                                                <artifactId>maven-resources-plugin</artifactId>
+                                                <versionRange>${plugin.resources}</versionRange>
+                                                <goals>
+                                                    <goal>copy-resources</goal>
                                                 </goals>
                                             </pluginExecutionFilter>
                                             <action>

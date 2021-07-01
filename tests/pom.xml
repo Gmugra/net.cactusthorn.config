@@ -40,6 +40,7 @@
         <pmd.skip>false</pmd.skip>
         <checkstyle.skip>false</checkstyle.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <copy.license.skip>false</copy.license.skip>
     </properties>
 
     <dependencies>

@@ -624,7 +624,13 @@ Loading strategies:
 -   **MERGE** - merging all properties from first added to last added.
 -   **FIRST_KEYCASEINSENSITIVE** - same with **FIRST**, but property keys are case insensitive
 -   **MERGE_KEYCASEINSENSITIVE** - same with **MERGE**, but property keys are case insensitive
+-   **FIRST_KEYRELAXED** - same with **FIRST**, but property keys are "relaxed".
+-   **MERGE_KEYRELAXED** - same with **MERGE**, but property keys are "relaxed".
 -   Default strategy is **MERGE**
+
+"Relaxed" rules:
+-   keys are case insensitive
+-   `.`(dot), `-`(minus) and `_`(underscore) characters are ignored
 
 Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
