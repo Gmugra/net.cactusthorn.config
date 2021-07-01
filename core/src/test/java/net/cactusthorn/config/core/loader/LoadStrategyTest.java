@@ -17,7 +17,7 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.loader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.loader.ConfigHolder;
-import net.cactusthorn.config.core.loader.LoadStrategy;
+import net.cactusthorn.config.core.ConfigFactory;
+import net.cactusthorn.config.core.TestConfig;
 
 public class LoadStrategyTest {
 
@@ -118,6 +118,24 @@ public class LoadStrategyTest {
                 .addSource("classpath:config/testconfigIgnoreKeyCase.properties", "classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("IGNORECASE", testConfig.str());
+    }
+
+    @Test public void firstRelaxed() {
+        Map<String, String> manual = new HashMap<>();
+        manual.put("test-String", "STRr");
+        manual.put("TEST.LIST", "qq,ss");
+        manual.put("tEst_SET", "a,v,x");
+        manual.put("tEst.sort", "a,v,v");
+        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYRELAXED).setSource(manual).build()
+                .create(TestConfig.class);
+        assertEquals("STRr", testConfig.str());
+    }
+
+    @Test public void mergeRelaxed() {
+        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYRELAXED)
+                .addSource("classpath:config/testconfigRelaxedKey.properties", "classpath:config/testconfig.properties").build()
+                .create(TestConfig.class);
+        assertEquals("RELAXED", testConfig.str());
     }
 
     @Test public void unknown() {
