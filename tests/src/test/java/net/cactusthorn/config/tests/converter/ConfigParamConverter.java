@@ -21,14 +21,20 @@ package net.cactusthorn.config.tests.converter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.converter.LocalDateParser;
 import net.cactusthorn.config.core.converter.LocalDateTimeParser;
+import net.cactusthorn.config.core.converter.LocalTimeParser;
 import net.cactusthorn.config.core.converter.OffsetDateTimeParser;
+import net.cactusthorn.config.core.converter.YearMonthParser;
+import net.cactusthorn.config.core.converter.YearParser;
 import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
 
 @Config public interface ConfigParamConverter {
@@ -39,7 +45,13 @@ import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
 
     @ZonedDateTimeParser({"dd.MM.yyyy' 'HH:mm:sszzz"}) Optional<ZonedDateTime> zonedDateTime();
 
-    @OffsetDateTimeParser({ "yyyy-MM-dd'T'HH:mm:ssXXX", "dd.MM.yyyy'T'HH:mm:ssXXX" }) Optional<OffsetDateTime> offsetDateTime();
+    @OffsetDateTimeParser({"yyyy-MM-dd'T'HH:mm:ssXXX", "dd.MM.yyyy'T'HH:mm:ssXXX"}) Optional<OffsetDateTime> offsetDateTime();
+
+    @LocalTimeParser({"HH:mm:ss", "HH'-'mm'-'ss"}) Optional<LocalTime> localTime();
+
+    @YearParser({"'A:'yyyy", "'B:'yyyy"}) Optional<Year> year();
+
+    @YearMonthParser({"yyyy-MM", "yyyy:MM"}) Optional<YearMonth> yearMonth();
 
     Optional<LocalDate> localDateDefault();
 }
