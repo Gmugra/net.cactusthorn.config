@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.Year;
 import java.time.YearMonth;
 import java.time.ZonedDateTime;
@@ -33,6 +34,7 @@ import net.cactusthorn.config.core.converter.LocalDateParser;
 import net.cactusthorn.config.core.converter.LocalDateTimeParser;
 import net.cactusthorn.config.core.converter.LocalTimeParser;
 import net.cactusthorn.config.core.converter.OffsetDateTimeParser;
+import net.cactusthorn.config.core.converter.OffsetTimeParser;
 import net.cactusthorn.config.core.converter.YearMonthParser;
 import net.cactusthorn.config.core.converter.YearParser;
 import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
@@ -52,6 +54,8 @@ import net.cactusthorn.config.core.converter.ZonedDateTimeParser;
     @YearParser({"'A:'yyyy", "'B:'yyyy"}) Optional<Year> year();
 
     @YearMonthParser({"yyyy-MM", "yyyy:MM"}) Optional<YearMonth> yearMonth();
+
+    @OffsetTimeParser({"HH:mm:ssXXX", "HH'-'mm'-'ssXXX"}) Optional<OffsetTime> offsetTime();
 
     Optional<LocalDate> localDateDefault();
 }
