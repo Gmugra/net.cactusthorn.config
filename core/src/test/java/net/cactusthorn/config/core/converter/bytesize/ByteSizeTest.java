@@ -90,7 +90,7 @@ public class ByteSizeTest {
 
     @Test public void eqWrongObject() {
         ByteSize bs = new ByteSize(1024);
-        assertFalse(bs.equals("wrong"));
+        assertFalse(bs.equals((Object)"wrong"));
     }
 
     @Test public void parse() {

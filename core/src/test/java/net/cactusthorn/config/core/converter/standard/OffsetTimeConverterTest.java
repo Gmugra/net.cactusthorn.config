@@ -21,41 +21,40 @@ package net.cactusthorn.config.core.converter.standard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.ZoneOffset;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class OffsetDateTimeConverterTest {
+public class OffsetTimeConverterTest {
 
-    private static final OffsetDateTime DATETIME = OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00"));
-    private static final Converter<OffsetDateTime> CONVERTER = new OffsetDateTimeConverter();
+    private static final OffsetTime TIME = OffsetTime.of(1, 30, 0, 0, ZoneOffset.of("+02:00"));
+    private static final Converter<OffsetTime> CONVERTER = new OffsetTimeConverter();
 
     @Test public void simple() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00");
-        assertEquals(DATETIME, result);
+        OffsetTime result = CONVERTER.convert("01:30:00+02:00");
+        assertEquals(TIME, result);
     }
 
     @Test public void simpleEmptyParameters() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00", new String[0]);
-        assertEquals(DATETIME, result);
+        OffsetTime result = CONVERTER.convert("01:30:00+02:00", new String[0]);
+        assertEquals(TIME, result);
     }
 
     @Test public void simpleNullParameter() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00", null);
-        assertEquals(DATETIME, result);
+        OffsetTime result = CONVERTER.convert("01:30:00+02:00", null);
+        assertEquals(TIME, result);
     }
 
     @Test public void complex() {
-        OffsetDateTime result = CONVERTER.convert("12.11.2011T01:30:00+02:00",
-                new String[] {"yyyy-MM-dd'T'HH:mm:ssXXX", "dd.MM.yyyy'T'HH:mm:ssXXX"});
-        assertEquals(DATETIME, result);
+        OffsetTime result = CONVERTER.convert("01:30:00+02:00", new String[] {"HH:mm:ssXXX", "HH'-'mm'-'ssXXX"});
+        assertEquals(TIME, result);
     }
 
     @Test public void singleParam() {
-        OffsetDateTime result = CONVERTER.convert("12.11.2011T01:30:00+02:00", new String[] {"dd.MM.yyyy'T'HH:mm:ssXXX"});
-        assertEquals(DATETIME, result);
+        OffsetTime result = CONVERTER.convert("01-30-00+02:00", new String[] {"HH'-'mm'-'ssXXX"});
+        assertEquals(TIME, result);
     }
 }

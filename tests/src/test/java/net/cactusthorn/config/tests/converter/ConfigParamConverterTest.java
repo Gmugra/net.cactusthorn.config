@@ -23,7 +23,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
@@ -71,5 +75,37 @@ public class ConfigParamConverterTest {
         properties.put("offsetDateTime", "12.11.2011T01:30:00+02:00");
         ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
         assertEquals(OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetDateTime().get());
+    }
+
+    @Test public void localTime() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("localTime", "01:30:00");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(LocalTime.of(1, 30, 0), config.localTime().get());
+    }
+
+    @Test public void year() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("year", "B:2016");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(Year.of(2016), config.year().get());
+    }
+
+    @Test public void yearMonth() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("yearMonth", "2016:11");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(YearMonth.of(2016, 11), config.yearMonth().get());
+    }
+
+    @Test public void offsetTime() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("offsetTime", "01-30-00+02:00");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(OffsetTime.of(1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetTime().get());
     }
 }
