@@ -207,7 +207,7 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
     -   Can't be used for methods with `Optional` return type.
 
 5.  `@Disable`
-    -   `@Target(METHOD)`
+    -   `@Target({TYPE, METHOD})`
     -   Disable "global"-level features for this method.
 
 6.  `@Split`
@@ -219,7 +219,7 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
     -   `@Target({METHOD, ANNOTATION_TYPE})`
     -   apply custom converter implementation
 
-8.  `@LocalDateParser`, `@LocalDateTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`
+8.  `@LocalDateParser`, `@LocalDateTimeParser`, `@LocalTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`, `@OffsetTimeParser`, `@YearParser`, `@YearMonthParser`
     -   `@Target(METHOD)`
     -   apply a parameterized by formats converter to the relevant java.time.* type
 
@@ -367,8 +367,12 @@ The return type of the interface methods must either:
     -   `java.time.Period`
     -   `java.time.LocalDate`
     -   `java.time.LocalDateTime`
+    -   `java.time.LocalTime`
     -   `java.time.ZonedDateTime`
     -   `java.time.OffsetDateTime`
+    -   `java.time.OffsetTime`
+    -   `java.time.Year`
+    -   `java.time.YearMonth`
     -   `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 
 5.  Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
@@ -517,15 +521,20 @@ usage:
 public interface MyConfig {
 
     @MySuperParser({"param1", "param1"})
-    MyClass localDate();
+    MyClass myValue();
 }
 ```
 
 Several of these annotations shipped with the library:
 -   `@LocalDateParser`
 -   `@LocalDateTimeParser`
+-   `@LocalTimeParser`
 -   `@ZonedDateTimeParser`
 -   `@OffsetDateTimeParser`
+-   `@OffsetTimeParser`
+-   `@YearParser`
+-   `@YearMonthParser`
+
 
 ## Loaders
 
@@ -628,11 +637,12 @@ Loading strategies:
 -   **MERGE_KEYRELAXED** - same with **MERGE**, but property keys are "relaxed".
 -   Default strategy is **MERGE**
 
-"Relaxed" rules:
+"Relaxed":
 -   keys are case insensitive
 -   `.`(dot), `-`(minus) and `_`(underscore) characters are ignored
+-   For example: **person.first-name**, **person.firstName** and **PERSON_FIRSTNAME** can all be used interchangeably.
 
-Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
+Warning: Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
 ### Periodical auto reloading
 ConfigFactory can automatically reload configurations which extends `net.cactusthorn.config.core.Reloadable` interface.
