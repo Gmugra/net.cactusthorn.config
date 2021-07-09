@@ -84,6 +84,7 @@
             <dependency.spotbugs>4.3.0</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.4</dependency.jaxb-runtime>
+        <plugin.duplicate-finder>1.5.0</plugin.duplicate-finder>
 
     </properties>
 
@@ -487,6 +488,12 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.basepom.maven</groupId>
+                    <artifactId>duplicate-finder-maven-plugin</artifactId>
+                    <version>${plugin.duplicate-finder}</version>
                 </plugin>
 
             </plugins>
