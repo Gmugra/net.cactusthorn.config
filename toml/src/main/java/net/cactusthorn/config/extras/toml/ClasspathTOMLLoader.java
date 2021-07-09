@@ -28,11 +28,11 @@ import net.cactusthorn.config.extras.toml.util.TOMLToMapParser;
 
 public class ClasspathTOMLLoader extends ClasspathLoader {
 
-    private static final String EXTENTION = ".toml";
+    private static final String EXTENSION = ".toml";
     private static final TOMLToMapParser PARSER = new TOMLToMapParser();
 
     @Override public boolean accept(URI uri) {
-        return accept(uri, EXTENTION);
+        return accept(uri, EXTENSION);
     }
 
     @Override protected Map<String, String> load(Reader reader) throws Exception {

@@ -40,8 +40,8 @@ public abstract class UrlLoader implements Loader {
 
     protected static final String FILE_SCHEME = "file";
 
-    protected boolean accept(URI uri, String extention) {
-        if (!uri.getSchemeSpecificPart().endsWith(extention)) {
+    protected boolean accept(URI uri, String extension) {
+        if (!uri.getSchemeSpecificPart().endsWith(extension)) {
             return false;
         }
         try {

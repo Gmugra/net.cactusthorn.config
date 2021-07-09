@@ -28,10 +28,10 @@ import net.cactusthorn.config.core.loader.ClasspathLoader;
 
 public final class ClasspathPropertiesLoader extends ClasspathLoader {
 
-    private static final String EXTENTION = ".properties";
+    private static final String EXTENSION = ".properties";
 
     @Override public boolean accept(URI uri) {
-        return accept(uri, EXTENTION);
+        return accept(uri, EXTENSION);
     }
 
     @Override protected Map<String, String> load(Reader reader) throws Exception {

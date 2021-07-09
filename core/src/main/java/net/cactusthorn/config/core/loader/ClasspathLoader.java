@@ -19,8 +19,8 @@ public abstract class ClasspathLoader implements Loader {
 
     protected static final String CLASSPATH_SCHEME = "classpath";
 
-    protected boolean accept(URI uri, String extention) {
-        return uri.isOpaque() && CLASSPATH_SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().endsWith(extention);
+    protected boolean accept(URI uri, String extension) {
+        return uri.isOpaque() && CLASSPATH_SCHEME.equals(uri.getScheme()) && uri.getSchemeSpecificPart().endsWith(extension);
     }
 
     protected abstract Map<String, String> load(Reader reader) throws Exception;
