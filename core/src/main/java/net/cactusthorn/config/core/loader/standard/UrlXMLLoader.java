@@ -28,12 +28,12 @@ import net.cactusthorn.config.core.util.XMLToMapParser;
 
 public class UrlXMLLoader extends UrlLoader {
 
-    private static final String EXTENTION = ".xml";
+    private static final String EXTENSION = ".xml";
 
     private static final XMLToMapParser PARSER = new XMLToMapParser();
 
     @Override public boolean accept(URI uri) {
-        return accept(uri, EXTENTION);
+        return accept(uri, EXTENSION);
     }
 
     @Override protected Map<String, String> load(Reader reader) throws Exception {
