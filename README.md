@@ -362,6 +362,7 @@ The return type of the interface methods must either:
     -   `java.net.URL`
     -   `java.net.URI`
     -   `java.nio.file.Path`
+    -   `java.util.Currency`
     -   `java.time.Instant`
     -   `java.time.Duration`
     -   `java.time.Period`
