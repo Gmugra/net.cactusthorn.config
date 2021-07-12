@@ -19,7 +19,6 @@
 */
 package net.cactusthorn.config.core;
 
-import static net.cactusthorn.config.core.loader.Loaders.UriTemplate;
 import static net.cactusthorn.config.core.util.ApiMessages.*;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
@@ -27,18 +26,9 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.net.URI;
-import java.util.ArrayDeque;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
@@ -46,178 +36,129 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
 
 /**
  * The ConfigFactory is thread-safe, but not stateless.<br>
- * It stores loaded properties in the internal cache, and also control auto reloading.<br>
- * Therefore, it certainly makes sense to create and use one single instance of ConfigFactory for the whole application.<br>
+ * It stores loaded properties in the internal cache, and also control auto
+ * reloading.<br>
+ * Therefore, it certainly makes sense to create and use one single instance of
+ * ConfigFactory for the whole application.<br>
  *
  * <h3>Example</h3>
+ *
  * <pre>
- * &#064;Config
- * public interface MyConfiguration {
+ * &#064;Config public interface MyConfiguration {
  *
  *     String myValue();
  * }
- * </pre><pre> {@code
- * MyConfiguration myConfig =
- *      ConfigFactory.builder()
- *          .setLoadStrategy(LoadStrategy.FIRST)
- *          .addSource("file:./myconfig.properties")
- *          .addSource("classpath:config/myconfig.properties", "system:properties")
- *          .build()
- *          .create(MyConfiguration.class);
- * } </pre>
+ * </pre>
  *
- * <h3>Caching</h3>
- * By default, ConfigFactory caches loaded properties using source-URI<br>
- * (after resolving system properties and/or environment variable in it) as a cache key.<br>
- * To not cache properties related to the URI(s), use URI-prefix <b>nocache:</b> this will switch off caching for the URI. e.g.:<br>
+ * <pre>
+ * {
+ *     &#64;code MyConfiguration myConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+ *          .addSource("file:./myconfig.properties")
+ *          .addSource("classpath:config/myconfig.properties", "system:properties").build().create(MyConfiguration.class);
+ * }
+ * </pre>
+ *
+ * <h3>Caching</h3> By default, ConfigFactory caches loaded properties using
+ * source-URI<br>
+ * (after resolving system properties and/or environment variable in it) as a
+ * cache key.<br>
+ * To not cache properties related to the URI(s), use URI-prefix <b>nocache:</b>
+ * this will switch off caching for the URI. e.g.:<br>
  * <ul>
- * <li> <b>nocache:system:properties</b>
- * <li> <b>nocache:file:~/my.properties</b>
+ * <li><b>nocache:system:properties</b>
+ * <li><b>nocache:file:~/my.properties</b>
  * </ul>
  *
- * <h3>Direct access to properties</h3>
- * It's possible to get loaded properties without define config-interface using {@link net.cactusthorn.config.core.loader.ConfigHolder}:
- * <pre> {@code
- * ConfigHolder holder =
- *      ConfigFactory.builder()
- *          .setLoadStrategy(LoadStrategy.FIRST)
- *          .addSource("file:./myconfig.properties")
- *          .addSource("classpath:config/myconfig.properties", "system:properties")
- *          .build()
- *          .configHolder();
+ * <h3>Direct access to properties</h3> It's possible to get loaded properties
+ * without define config-interface using
+ * {@link net.cactusthorn.config.core.loader.ConfigHolder}:
  *
- *  String val = holder.getString("app.val", "unknown");
- *  int intVal = holder.getInt("app.number");
- *  Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
- *  Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
- * } </pre>
+ * <pre>
+ * {
+ *     &#64;code ConfigHolder holder = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST).addSource("file:./myconfig.properties")
+ *             .addSource("classpath:config/myconfig.properties", "system:properties").build().configHolder();
  *
- * <h3>Manually added properties</h3>
- * The {@link ConfigFactory.Builder} contains a method for adding properties manually: {@link ConfigFactory.Builder#setSource}.<br>
- * Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties,<br>
- * independent of loading strategy. In other words:
- * the manually added properties will always override (sure, when the property keys are same) properties loaded by URI(s).
+ *     String val = holder.getString("app.val", "unknown");
+ *     int intVal = holder.getInt("app.number");
+ *     Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+ *     Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
+ * }
+ * </pre>
+ *
+ * <h3>Manually added properties</h3> The {@link ConfigFactory.Builder} contains
+ * a method for adding properties manually:
+ * {@link ConfigFactory.Builder#setSource}.<br>
+ * Manually added properties are highest priority always: loaded by URIs
+ * properties merged with manually added properties,<br>
+ * independent of loading strategy. In other words: the manually added
+ * properties will always override (sure, when the property keys are same)
+ * properties loaded by URI(s).
  *
  * @author Alexei Khatskevich
  */
-public final class ConfigFactory {
+public final class ConfigFactory extends ConfigFactoryAncestor {
 
     private static final MethodType CONFIG_CONSTRUCTOR = MethodType.methodType(void.class, Loaders.class);
     private static final ConcurrentHashMap<Class<?>, MethodHandle> BUILDERS = new ConcurrentHashMap<>();
 
-    private final Loaders loaders;
-
     private ConfigFactory(Loaders loaders) {
-        this.loaders = loaders;
+        super(loaders);
     }
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static final class Builder {
-
-        private static final MethodType DEFAULT_CONSTRUCTOR = MethodType.methodType(void.class);
-
-        private final ArrayDeque<Loader> loaders = new ArrayDeque<>();
-        private final LinkedHashSet<UriTemplate> templates = new LinkedHashSet<>();
-
-        private Map<String, String> props = Collections.emptyMap();
-        private LoadStrategy loadStrategy = LoadStrategy.MERGE;
-        private long autoReloadPeriodInSeconds = 0L;
+    public static final class Builder extends ConfigFactoryBuilder {
 
         private Builder() {
-            ServiceLoader<Loader> serviceLoader = ServiceLoader.load(Loader.class);
-            for (Iterator<Loader> it = serviceLoader.iterator(); it.hasNext();) {
-                loaders.add(it.next());
-            }
+            super();
         }
 
-        public Builder addLoader(Loader loader) {
-            if (loader == null) {
-                throw new IllegalArgumentException(isNull("loader"));
-            }
-            loaders.addFirst(loader);
-            return this;
+        @Override public Builder addLoader(Loader loader) {
+            return (Builder) super.addLoader(loader);
         }
 
-        public Builder addLoader(Class<? extends Loader> loaderClass) {
-            if (loaderClass == null) {
-                throw new IllegalArgumentException(isNull("loaderClass"));
-            }
-            try {
-                MethodHandle methodHandle = MethodHandles.publicLookup().findConstructor(loaderClass, DEFAULT_CONSTRUCTOR);
-                return addLoader((Loader) methodHandle.invoke());
-            } catch (Throwable e) {
-                throw new IllegalArgumentException(e);
-            }
+        @Override public Builder addLoader(Class<? extends Loader> loaderClass) {
+            return (Builder) super.addLoader(loaderClass);
         }
 
-        public Builder setLoadStrategy(LoadStrategy strategy) {
-            if (strategy == null) {
-                throw new IllegalArgumentException(isNull("strategy"));
-            }
-            loadStrategy = strategy;
-            return this;
+        @Override public Builder setLoadStrategy(LoadStrategy strategy) {
+            return (Builder) super.setLoadStrategy(strategy);
         }
 
-        public Builder setSource(Map<String, String> properties) {
-            if (properties == null) {
-                throw new IllegalArgumentException(isNull("properties"));
-            }
-            props = properties;
-            return this;
+        @Override public Builder setSource(Map<String, String> properties) {
+            return (Builder) super.setSource(properties);
         }
 
-        public Builder addSource(URI... uri) {
-            return addSources(u -> new UriTemplate(u), uri);
+        @Override public Builder addSource(URI... uri) {
+            return (Builder) super.addSource(uri);
         }
 
-        public Builder addSource(String... uri) {
-            return addSources(u -> new UriTemplate(u), uri);
+        @Override public Builder addSource(String... uri) {
+            return (Builder) super.addSource(uri);
         }
 
-        public Builder autoReload(long periodInSeconds) {
-            this.autoReloadPeriodInSeconds = periodInSeconds;
-            return this;
+        @Override public Builder autoReload(long periodInSeconds) {
+            return (Builder) super.autoReload(periodInSeconds);
         }
 
-        @SuppressWarnings({"unchecked"}) private <T> Builder addSources(Function<T, UriTemplate> mapper, T... uri) {
-            if (uri == null) {
-                throw new IllegalArgumentException(isNull("uri"));
-            }
-            if (uri.length == 0) {
-                throw new IllegalArgumentException(isEmpty("uri"));
-            }
-            templates.addAll(Stream.of(uri).filter(u -> u != null).map(u -> mapper.apply(u)).collect(Collectors.toList()));
-            return this;
-        }
-
-        public ConfigFactory build() {
-            Loaders allLoaders = new Loaders(loadStrategy, templates, loaders, props, autoReloadPeriodInSeconds);
-            return new ConfigFactory(allLoaders);
+        @Override public ConfigFactory build() {
+            return new ConfigFactory(createLoaders());
         }
     }
 
     public <T> T create(Class<T> sourceInterface) {
         try {
             MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findConfigConstructor);
-            T configImpl = (T) methodHandler.invoke(loaders);
+            T configImpl = (T) methodHandler.invoke(loaders());
             if (configImpl instanceof Reloadable) {
-                loaders.register((Reloadable) configImpl);
+                loaders().register((Reloadable) configImpl);
             }
             return configImpl;
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }
-    }
-
-    public ConfigHolder configHolder(ClassLoader classLoader) {
-        return loaders.load(classLoader);
-    }
-
-    public ConfigHolder configHolder() {
-        return configHolder(ConfigFactory.class.getClassLoader());
     }
 
     private <T> MethodHandle findConfigConstructor(Class<T> sourceInterface) {
