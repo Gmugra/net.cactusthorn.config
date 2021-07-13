@@ -17,7 +17,7 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.core.factory;
 
 import static net.cactusthorn.config.core.util.ApiMessages.*;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
@@ -29,6 +29,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.cactusthorn.config.core.Reloadable;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;

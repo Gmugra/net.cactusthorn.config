@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * {@link net.cactusthorn.config.core.ConfigFactory} saves the sequence in which
+ * {@link net.cactusthorn.config.core.factory.ConfigFactory} saves the sequence in which
  * the sources URIs were added.<br>
  * <br>
  * Default strategy is {@link LoadStrategy#MERGE}

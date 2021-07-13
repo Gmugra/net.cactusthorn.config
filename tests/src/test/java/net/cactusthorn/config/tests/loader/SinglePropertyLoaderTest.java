@@ -26,7 +26,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.ConfigFactory;
+import net.cactusthorn.config.core.factory.ConfigFactory;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.Loader;
 

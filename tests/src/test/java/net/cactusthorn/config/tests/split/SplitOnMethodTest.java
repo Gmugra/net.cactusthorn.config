@@ -27,7 +27,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.ConfigFactory;
+import net.cactusthorn.config.core.factory.ConfigFactory;
 
 public class SplitOnMethodTest {
 
