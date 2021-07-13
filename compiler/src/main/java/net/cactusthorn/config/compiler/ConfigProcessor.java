@@ -38,9 +38,10 @@ import javax.tools.Diagnostic;
 public final class ConfigProcessor extends AbstractProcessor {
 
     private static final ConfigClassesGenerator CONFIG_CLASSES_GENERATOR = new ConfigClassesGenerator();
+    private static final FactoryClassGenerator FACTORY_CLASS_GENERATOR = new FactoryClassGenerator();
 
-    private static final Set<String> SUPPORTED_ANNOTATIONS = Collections
-            .unmodifiableSet(new HashSet<>(Arrays.asList("net.cactusthorn.config.core.Config")));
+    private static final Set<String> SUPPORTED_ANNOTATIONS = Collections.unmodifiableSet(
+            new HashSet<>(Arrays.asList("net.cactusthorn.config.core.Config", "net.cactusthorn.config.core.factory.Factory")));
 
     @Override public Set<String> getSupportedAnnotationTypes() {
         return SUPPORTED_ANNOTATIONS;
@@ -53,11 +54,13 @@ public final class ConfigProcessor extends AbstractProcessor {
     @Override public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         CONFIG_CLASSES_GENERATOR.init(processingEnv);
+        FACTORY_CLASS_GENERATOR.init(processingEnv);
     }
 
     @Override public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         try {
             CONFIG_CLASSES_GENERATOR.generate(roundEnv, processingEnv);
+            FACTORY_CLASS_GENERATOR.generate(roundEnv, processingEnv);
         } catch (ProcessorException e) {
             if (e.getAnnotationMirror() != null) {
                 error(e.getMessage(), e.getElement(), e.getAnnotationMirror());

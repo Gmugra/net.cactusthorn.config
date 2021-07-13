@@ -17,17 +17,12 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler;
+package net.cactusthorn.config.tests;
 
-import java.io.IOException;
+import net.cactusthorn.config.core.factory.Factory;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
+@Factory
+public interface MyFactory {
 
-public interface ClassesGenerator {
-
-    default void init(ProcessingEnvironment processingEnv) {
-    }
-
-    void generate(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) throws ProcessorException, IOException;
+    AllCorrect createAllCorrect();
 }

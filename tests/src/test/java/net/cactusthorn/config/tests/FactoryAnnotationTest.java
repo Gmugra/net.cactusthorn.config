@@ -17,25 +17,37 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler;
+package net.cactusthorn.config.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Locale;
-
-import static net.cactusthorn.config.compiler.CompilerMessages.*;
-import static net.cactusthorn.config.compiler.CompilerMessages.Key.*;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class CompilerMessagesTest {
+public class FactoryAnnotationTest {
 
-    @BeforeAll static void setup() {
-        Locale.setDefault(Locale.ENGLISH);
+    private static AllCorrect config;
+
+    @BeforeAll static void setUp() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("ddd", "125");
+        properties.put("fromStringEnum", "xyz");
+        properties.put("intValue", "124");
+        // properties.put("list", "?"); is optional
+        properties.put("set", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
+        properties.put("simpleEnum", "AAA");
+        properties.put("sorted", "126,300");
+        properties.put("superInterface", "SI");
+        properties.put("uuid", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
+        properties.put("value", "simpleString");
+        properties.put("myChar", "YXZ");
+        config = Factory_MyFactory.builder().setSource(properties).build().createAllCorrect();
     }
 
-    @Test public void testIt() {
-        assertEquals("Only interface can be annotated with @Config or @Factory", msg(ONLY_INTERFACE));
+    @Test public void accessibleGet() {
+        assertEquals("simpleString", config.get("value"));
     }
 }
