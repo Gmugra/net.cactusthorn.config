@@ -60,4 +60,16 @@ public class ConfigProcessorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/DisableAutoReload.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
+
+    @Test public void factory() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
+                JavaFileObjects.forResource("factory/MyFactory.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
+
+    @Test public void factoryAbstractClass() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
+                JavaFileObjects.forResource("factory/MyAbstractFactory.java"));
+        assertThat(compilation).hadErrorContaining(msg(ONLY_INTERFACE));
+    }
 }

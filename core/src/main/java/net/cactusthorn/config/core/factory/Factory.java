@@ -17,25 +17,13 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.compiler;
+package net.cactusthorn.config.core.factory;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.Locale;
-
-import static net.cactusthorn.config.compiler.CompilerMessages.*;
-import static net.cactusthorn.config.compiler.CompilerMessages.Key.*;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-public class CompilerMessagesTest {
-
-    @BeforeAll static void setup() {
-        Locale.setDefault(Locale.ENGLISH);
-    }
-
-    @Test public void testIt() {
-        assertEquals("Only interface can be annotated with @Config or @Factory", msg(ONLY_INTERFACE));
-    }
+@Documented @Target(ElementType.TYPE) @Retention(RetentionPolicy.SOURCE) public @interface Factory {
 }
