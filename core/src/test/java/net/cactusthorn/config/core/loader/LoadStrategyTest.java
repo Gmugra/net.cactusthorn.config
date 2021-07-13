@@ -32,8 +32,8 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.ConfigFactory;
 import net.cactusthorn.config.core.TestConfig;
+import net.cactusthorn.config.core.factory.ConfigFactory;
 
 public class LoadStrategyTest {
 
