@@ -27,6 +27,7 @@ import javax.annotation.processing.RoundEnvironment;
 public interface ClassesGenerator {
 
     default void init(ProcessingEnvironment processingEnv) {
+        //do nothing by default
     }
 
     void generate(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) throws ProcessorException, IOException;
