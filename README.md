@@ -227,7 +227,7 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
     -   `@Target(METHOD)`
     -   apply a parameterized by formats converter to the relevant java.time.* type
 
-10.  `@PBEDecryptor`
+10. `@PBEDecryptor`
     -   `@Target(METHOD)`
     -   decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption. FYI: [jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)
 
