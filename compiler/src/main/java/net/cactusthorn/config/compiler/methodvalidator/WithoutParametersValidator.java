@@ -34,7 +34,7 @@ public class WithoutParametersValidator extends MethodValidatorAncestor {
         super(processingEnv);
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) {
         if (!methodElement.getParameters().isEmpty()) {
             throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), methodElement);
         }
