@@ -71,7 +71,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
             TypeElement interfaceTypeElement = (TypeElement) element;
 
             // @formatter:off
-            List<ExecutableElement> intefaceMethods =
+            List<ExecutableElement> interfaceMethods =
                 interfaceTypeElement.getEnclosedElements()
                     .stream()
                     .filter(e -> e.getKind() == ElementKind.METHOD)
@@ -79,9 +79,9 @@ public class FactoryClassGenerator implements ClassesGenerator {
                     .collect(Collectors.toList());
             // @formatter:on
 
-            validateMethodsExist(element, intefaceMethods);
-            validateMethodsParameters(intefaceMethods);
-            validateMethodsReturns(processingEnv, intefaceMethods);
+            validateMethodsExist(element, interfaceMethods);
+            validateMethodsParameters(interfaceMethods);
+            validateMethodsReturns(processingEnv, interfaceMethods);
 
             String factoryClassName = FACTORY_CLASSNAME_PREFIX + interfaceTypeElement.getSimpleName();
 
@@ -89,7 +89,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
             addConstructor(classBuilder);
             addBuilder(classBuilder, factoryClassName);
             addBuilderMethod(classBuilder);
-            addInterfaceMethods(processingEnv, classBuilder, intefaceMethods);
+            addInterfaceMethods(processingEnv, classBuilder, interfaceMethods);
 
             String packageName = ClassName.get(interfaceTypeElement).packageName();
             JavaFile configFactoryFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).build();
@@ -104,23 +104,23 @@ public class FactoryClassGenerator implements ClassesGenerator {
         }
     }
 
-    private void validateMethodsExist(Element element, List<ExecutableElement> intefaceMethods) {
-        if (intefaceMethods.isEmpty()) {
+    private void validateMethodsExist(Element element, List<ExecutableElement> interfaceMethods) {
+        if (interfaceMethods.isEmpty()) {
             throw new ProcessorException(msg(METHOD_MUST_EXIST), element);
         }
     }
 
-    public void validateMethodsParameters(List<ExecutableElement> intefaceMethods) {
-        for (ExecutableElement intefaceMethod : intefaceMethods) {
-            if (!intefaceMethod.getParameters().isEmpty()) {
-                throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), intefaceMethod);
+    public void validateMethodsParameters(List<ExecutableElement> interfaceMethods) {
+        for (ExecutableElement interfaceMethod : interfaceMethods) {
+            if (!interfaceMethod.getParameters().isEmpty()) {
+                throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), interfaceMethod);
             }
         }
     }
 
-    public void validateMethodsReturns(ProcessingEnvironment processingEnv, List<ExecutableElement> intefaceMethods) {
-        for (ExecutableElement intefaceMethod : intefaceMethods) {
-            Element returnTypeElement = processingEnv.getTypeUtils().asElement(intefaceMethod.getReturnType());
+    public void validateMethodsReturns(ProcessingEnvironment processingEnv, List<ExecutableElement> interfaceMethods) {
+        for (ExecutableElement interfaceMethod : interfaceMethods) {
+            Element returnTypeElement = processingEnv.getTypeUtils().asElement(interfaceMethod.getReturnType());
             Config annotation = returnTypeElement.getAnnotation(Config.class);
             if (annotation == null) {
                 throw new ProcessorException(msg(RETURN_FACTORY_METHOD_CONFIG), returnTypeElement);
@@ -144,9 +144,9 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addInterfaceMethods(ProcessingEnvironment processingEnv, TypeSpec.Builder classBuilder,
-            List<ExecutableElement> intefaceMethods) {
+        List<ExecutableElement> interfaceMethods) {
         // @formatter:off
-        intefaceMethods.stream()
+        interfaceMethods.stream()
             .map(method -> {
                 ClassName returnClassName = ClassName.get((TypeElement) processingEnv.getTypeUtils().asElement(method.getReturnType()));
                 return MethodSpec.methodBuilder(method.getSimpleName().toString())
