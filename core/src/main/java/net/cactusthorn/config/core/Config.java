@@ -49,7 +49,8 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
 
     /**
      * If returns not empty string,
-     * all sources added in the {@link ConfigFactory} (using {@link ConfigFactory.Builder#addSource} methods) will be ignored.
+     * all sources added in the {@link net.cactusthorn.config.core.factory.ConfigFactory}
+     * (using {@link net.cactusthorn.config.core.factory.ConfigFactory.Builder#addSource} methods) will be ignored.
      *
      * @return an array of source URIs
      */
@@ -57,7 +58,7 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
 
     /**
      * If returns not {@link LoadStrategy#UNKNOWN},
-     * it will be used instead of loadStrategy from {@link ConfigFactory}.
+     * it will be used instead of loadStrategy from {@link net.cactusthorn.config.core.factory.ConfigFactory}.
      *
      * @return loading strategy
      */

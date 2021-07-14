@@ -81,8 +81,8 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
  *
  *     String val = holder.getString("app.val", "unknown");
  *     int intVal = holder.getInt("app.number");
- *     Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
- *     Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
+ *     Optional&lt;List&lt;UUID&gt;&gt; ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+ *     Set&lt;TimeUnit&gt; units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
  * }
  * </pre>
  *
