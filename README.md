@@ -193,37 +193,41 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
     -   `@Target(TYPE)`
     -   The "source" interface must be annotated with this annotation.
 
-2.  `@Prefix`
+2.  `@Factory`
+    -   `@Target(TYPE)`
+    -   The "factory" interface must be annotated with this annotation.
+
+3.  `@Prefix`
     -   `@Target(TYPE)`
     -   Set global prefix for all property names
 
-3.  `@Key`
+4.  `@Key`
     -   `@Target(METHOD)`
     -   Set property name for the method. If this annotation is not present method-name will be used as property name
 
-4.  `@Default`
+5.  `@Default`
     -   `@Target(METHOD)`
     -   Set default value (if property will not found in sources, the default value will be used).
     -   Can't be used for methods with `Optional` return type.
 
-5.  `@Disable`
+6.  `@Disable`
     -   `@Target({TYPE, METHOD})`
     -   Disable "global"-level features for this method.
 
-6.  `@Split`
+7.  `@Split`
     -   `@Target({TYPE, METHOD})`
     -   Set splitter regular expression for splitting value for collections, or key+value "entries" for maps.
     -   If this annotation is not present, default "splitter" is comma : `,`
 
-7.  `@ConverterClass`
+8.  `@ConverterClass`
     -   `@Target({METHOD, ANNOTATION_TYPE})`
     -   apply custom converter implementation
 
-8.  `@LocalDateParser`, `@LocalDateTimeParser`, `@LocalTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`, `@OffsetTimeParser`, `@YearParser`, `@YearMonthParser`
+9.  `@LocalDateParser`, `@LocalDateTimeParser`, `@LocalTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`, `@OffsetTimeParser`, `@YearParser`, `@YearMonthParser`
     -   `@Target(METHOD)`
     -   apply a parameterized by formats converter to the relevant java.time.* type
 
-9.  `@PBEDecryptor`
+10.  `@PBEDecryptor`
     -   `@Target(METHOD)`
     -   decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption. FYI: [jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)
 
@@ -325,6 +329,31 @@ int intVal = holder.getInt("app.number");
 Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
 Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
 ```
+
+## The `@Factory` annotation
+There is one place where Java-reflection is used: `ConfigFactory.create` method.
+`@Factory` annotation provides the ability to generate  "Factory"-class(es) which helps to avoid reflection completely.
+```java
+@Config
+public interface MyConfig {
+    String val();
+}
+```
+```java
+@Factory
+public interface MyFactory {
+    MyConfig createMyConfig();
+}
+```
+```java
+MyConfig myConfig = Factory_MyFactory.builder().addSource("file:./myconfig.properties").build().createMyConfig();
+```
+As you can see, based on the `MyFactory`-interface annotated by `@Factory`, the class `Factory_MyFactory` will be generated, which has same API with `ConfigFactory` but instead of `create`-method it provides "create"-methods for the interface annotated by `@Factory`.
+Restrictions:
+-   an interface annotated by `@Factory` must contains at least one method
+-   an interface annotated by `@Factory` must contains only methods without parameters
+-   all methods of an interface annotated by `@Factory` must return only types annotated by `@Config`
+
 
 ### Manually added properties
 The `ConfigFactory.Builder` contains a method for adding properties manually: `setSource(Map<String, String> properties)`.
