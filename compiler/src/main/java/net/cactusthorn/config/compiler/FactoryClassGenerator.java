@@ -20,13 +20,18 @@
 package net.cactusthorn.config.compiler;
 
 import static net.cactusthorn.config.compiler.CompilerMessages.msg;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_MUST_EXIST;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_WITHOUT_PARAMETERS;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFACE;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_FACTORY_METHOD_CONFIG;
 import static net.cactusthorn.config.core.util.ConfigInitializer.CONFIG_CLASSNAME_PREFIX;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -44,6 +49,7 @@ import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import com.squareup.javapoet.WildcardTypeName;
 
+import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.factory.ConfigFactoryAncestor;
 import net.cactusthorn.config.core.factory.ConfigFactoryBuilder;
 import net.cactusthorn.config.core.factory.Factory;
@@ -63,17 +69,31 @@ public class FactoryClassGenerator implements ClassesGenerator {
             validateInterface(element);
 
             TypeElement interfaceTypeElement = (TypeElement) element;
+
+            // @formatter:off
+            List<ExecutableElement> intefaceMethods =
+                interfaceTypeElement.getEnclosedElements()
+                    .stream()
+                    .filter(e -> e.getKind() == ElementKind.METHOD)
+                    .map(ExecutableElement.class::cast)
+                    .collect(Collectors.toList());
+            // @formatter:on
+
+            validateMethodsExist(element, intefaceMethods);
+            validateMethodsParameters(intefaceMethods);
+            validateMethodsReturns(processingEnv, intefaceMethods);
+
             String factoryClassName = FACTORY_CLASSNAME_PREFIX + interfaceTypeElement.getSimpleName();
 
             TypeSpec.Builder classBuilder = createClassBuilder(interfaceTypeElement, factoryClassName);
             addConstructor(classBuilder);
             addBuilder(classBuilder, factoryClassName);
             addBuilderMethod(classBuilder);
-            addInterfaceMethods(processingEnv, classBuilder, interfaceTypeElement);
+            addInterfaceMethods(processingEnv, classBuilder, intefaceMethods);
 
             String packageName = ClassName.get(interfaceTypeElement).packageName();
             JavaFile configFactoryFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).build();
-            //System.out.println(configFactoryFile.toString());
+            // System.out.println(configFactoryFile.toString());
             configFactoryFile.writeTo(processingEnv.getFiler());
         }
     }
@@ -81,6 +101,30 @@ public class FactoryClassGenerator implements ClassesGenerator {
     private void validateInterface(Element element) {
         if (element.getKind() != ElementKind.INTERFACE) {
             throw new ProcessorException(msg(ONLY_INTERFACE), element);
+        }
+    }
+
+    private void validateMethodsExist(Element element, List<ExecutableElement> intefaceMethods) {
+        if (intefaceMethods.isEmpty()) {
+            throw new ProcessorException(msg(METHOD_MUST_EXIST), element);
+        }
+    }
+
+    public void validateMethodsParameters(List<ExecutableElement> intefaceMethods) {
+        for (ExecutableElement intefaceMethod : intefaceMethods) {
+            if (!intefaceMethod.getParameters().isEmpty()) {
+                throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), intefaceMethod);
+            }
+        }
+    }
+
+    public void validateMethodsReturns(ProcessingEnvironment processingEnv, List<ExecutableElement> intefaceMethods) {
+        for (ExecutableElement intefaceMethod : intefaceMethods) {
+            Element returnTypeElement = processingEnv.getTypeUtils().asElement(intefaceMethod.getReturnType());
+            Config annotation = returnTypeElement.getAnnotation(Config.class);
+            if (annotation == null) {
+                throw new ProcessorException(msg(RETURN_FACTORY_METHOD_CONFIG), returnTypeElement);
+            }
         }
     }
 
@@ -95,16 +139,14 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addBuilderMethod(TypeSpec.Builder classBuilder) {
-        classBuilder.addMethod(MethodSpec.methodBuilder("builder").addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .returns(BUILDER_TYPE_NAME).addStatement("return new $T()", BUILDER_TYPE_NAME).build());
+        classBuilder.addMethod(MethodSpec.methodBuilder("builder").addModifiers(Modifier.PUBLIC, Modifier.STATIC).returns(BUILDER_TYPE_NAME)
+                .addStatement("return new $T()", BUILDER_TYPE_NAME).build());
     }
 
-    private void addInterfaceMethods(ProcessingEnvironment processingEnv, TypeSpec.Builder classBuilder, TypeElement interfaceTypeElement) {
+    private void addInterfaceMethods(ProcessingEnvironment processingEnv, TypeSpec.Builder classBuilder,
+            List<ExecutableElement> intefaceMethods) {
         // @formatter:off
-        interfaceTypeElement.getEnclosedElements()
-            .stream()
-            .filter(e -> e.getKind() == ElementKind.METHOD)
-            .map(ExecutableElement.class::cast)
+        intefaceMethods.stream()
             .map(method -> {
                 ClassName returnClassName = ClassName.get((TypeElement) processingEnv.getTypeUtils().asElement(method.getReturnType()));
                 return MethodSpec.methodBuilder(method.getSimpleName().toString())

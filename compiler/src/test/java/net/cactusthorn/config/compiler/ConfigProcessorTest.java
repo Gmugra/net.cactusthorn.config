@@ -28,6 +28,8 @@ import static com.google.testing.compile.CompilationSubject.assertThat;
 import static net.cactusthorn.config.compiler.CompilerMessages.msg;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_MUST_EXIST;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFACE;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_WITHOUT_PARAMETERS;
+import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_FACTORY_METHOD_CONFIG;
 
 public class ConfigProcessorTest {
 
@@ -71,5 +73,20 @@ public class ConfigProcessorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
                 JavaFileObjects.forResource("factory/MyAbstractFactory.java"));
         assertThat(compilation).hadErrorContaining(msg(ONLY_INTERFACE));
+    }
+
+    @Test public void factoryWithoutMethods() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/WithoutMethods.java"));
+        assertThat(compilation).hadErrorContaining(msg(METHOD_MUST_EXIST));
+    }
+
+    @Test public void factoryMethodWithParameter() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/MethodWithParameter.java"));
+        assertThat(compilation).hadErrorContaining(msg(METHOD_WITHOUT_PARAMETERS));
+    }
+
+    @Test public void factoryWrongReturn() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/WrongReturn.java"));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_FACTORY_METHOD_CONFIG));
     }
 }

@@ -41,7 +41,8 @@ public final class CompilerMessages {
         RETURN_STRING_CLASS,
         RETURN_OPTIONAL_ARG_EMPTY,
         RETURN_OPTIONAL_ARG_WILDCARD,
-        RETURN_OPTIONAL_DEFAULT
+        RETURN_OPTIONAL_DEFAULT,
+        RETURN_FACTORY_METHOD_CONFIG
     }
 
     private CompilerMessages() {
