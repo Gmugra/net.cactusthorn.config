@@ -17,7 +17,7 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.extras.json;
+package net.cactusthorn.config.extras.yaml;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -41,10 +41,10 @@ import org.junit.jupiter.api.io.TempDir;
 
 import net.cactusthorn.config.core.loader.Loader;
 
-public class UrlJSONLoaderTest {
+public class UrlYAMLLoaderTest {
 
-    private static final Loader LOADER = new UrlJSONLoader();
-    private static final ClassLoader CL = UrlJSONLoaderTest.class.getClassLoader();
+    private static final Loader LOADER = new UrlYAMLLoader();
+    private static final ClassLoader CL = UrlYAMLLoaderTest.class.getClassLoader();
 
     @BeforeAll static void setUpLogger() {
         Logger rootLogger = LogManager.getLogManager().getLogger("");
@@ -56,7 +56,7 @@ public class UrlJSONLoaderTest {
     }
 
     @Test public void acceptSimple() {
-        assertTrue(LOADER.accept(URI.create("file:./a.json")));
+        assertTrue(LOADER.accept(URI.create("file:./a.yaml")));
     }
 
     @Test public void notAcceptExtension() {
@@ -64,7 +64,7 @@ public class UrlJSONLoaderTest {
     }
 
     @Test public void notAcceptException() {
-        assertFalse(LOADER.accept(URI.create("github.com/a.json")));
+        assertFalse(LOADER.accept(URI.create("github.com/a.yaml")));
     }
 
     @Test public void notAcceptException2() {
@@ -72,8 +72,8 @@ public class UrlJSONLoaderTest {
     }
 
     @Test public void load(@TempDir Path path) throws IOException {
-        Path file = path.resolve("correct.json");
-        try (InputStream stream = CL.getResourceAsStream("correct.json")) {
+        Path file = path.resolve("correct.yaml");
+        try (InputStream stream = CL.getResourceAsStream("correct.yaml")) {
             Files.copy(stream, file);
         }
         URI uri = file.toUri();
@@ -82,8 +82,8 @@ public class UrlJSONLoaderTest {
     }
 
     @Test public void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
-        Path file = path.resolve("correct.json");
-        try (InputStream stream = CL.getResourceAsStream("correct.json")) {
+        Path file = path.resolve("correct.yaml");
+        try (InputStream stream = CL.getResourceAsStream("correct.yaml")) {
             Files.copy(stream, file);
         }
         URI uri = file.toUri();
@@ -93,7 +93,7 @@ public class UrlJSONLoaderTest {
     }
 
     @Test public void notLoad() throws IOException {
-        Map<String, String> properties = LOADER.load(URI.create("file:./a.json"), CL);
+        Map<String, String> properties = LOADER.load(URI.create("file:./a.yaml"), CL);
         assertTrue(properties.isEmpty());
     }
 }

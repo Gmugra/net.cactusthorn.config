@@ -1,36 +1,36 @@
-# net.cactusthorn.config.json
-The module provides loaders for files in [JSON](https://www.json.org/json-en.html) format
+# net.cactusthorn.config.yaml
+The module provides loaders for files in [YAML](https://yaml.org) format
 
-1.  JSON file from class-path : `classpath:relative-path-to-name.json[#charset]`
+1.  YAML file from class-path : `classpath:relative-path-to-name.yaml[#charset]`
     -   Default charset (if URI fragment not present) is **UTF-8**
-    -   e.g. `classpath:config/my.json#ISO-5589-1`
+    -   e.g. `classpath:config/my.yaml#ISO-5589-1`
 
-2.  JSON file from any URI convertable to URL: `whatever-what-supported.json[#charset]`
+2.  YAML file from any URI convertable to URL: `whatever-what-supported.yaml[#charset]`
     -   Default charset (if URI fragment not present) is **UTF-8**
-    -   e.g. the file from the working directory: `file:./my.json`
-    -   e.g. Windows file: `file:///C:/my.json`
+    -   e.g. the file from the working directory: `file:./my.yaml`
+    -   e.g. Windows file: `file:///C:/my.yaml`
 
 ## Restrictions
-1.  root must be object (not array)
-2.  arrays in array (e.g. `"data" : [ ["delta", "phi"], [3.14] ]`) are **not supported**.
-3.  object in array (e.g. `"points" : [{"x" = 1, "y" = 2}, { "x" = 7, "y" = 8}, {"x" = 2, "y" = 4}]`) are **not supported**.
-4.  arrays are converter in comma `,` separated string.
+1.  arrays in array are **not supported**.
+2.  map in array are **not supported**.
+3.  arrays are converter in comma `,` separated string.
 
 ## Example
 e.g. 
-my.json:
-```json
-{
-    "id" : ["f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454", "123e4567-e89b-12d3-a456-556642440000"],
-    "database" : {
-        "enabled" : true,
-        "ports" : [8000, 8001, 8002],
-        "temp_targets" : {
-            "cpu" : 79.5,
-            "case" : 72.0
-        }
-    }
-}
+my.yaml:
+```yaml
+id:
+  - f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454
+  - 123e4567-e89b-12d3-a456-556642440000
+database:
+  enabled: true
+  ports:
+    - 8000
+    - 8001
+    - 8002
+  temp_targets:
+    cpu: 79.5
+    case: 72
 ```
 the file, internally, factually "converted" in the next "properties" file:
 ```properties
@@ -40,11 +40,11 @@ database.ports=8000,8001,8002
 database.temp_targets.cpu=79.5
 database.temp_targets.case=72.0
 ```
-the source interface for my.json:
+the source interface for my.yaml:
 ```java
-@Config(sources={"classpath:my.json"})
+@Config(sources={"classpath:my.yaml"})
 @Prefix("database")
-public interface ConfigJson {
+public interface ConfigYaml {
 
     @Disable(Feature.PREFIX) List<UUID> id();
 
@@ -66,13 +66,13 @@ In order to use the library in a project, it's need to add the dependency to the
 ```xml
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
-    <artifactId>config-json</artifactId>
-    <version>0.50</version>
+    <artifactId>config-yaml</artifactId>
+    <version>0.60</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-json:0.50'
+api 'net.cactusthorn.config:config-yaml:0.60'
 ```
 
 ## LICENSE
