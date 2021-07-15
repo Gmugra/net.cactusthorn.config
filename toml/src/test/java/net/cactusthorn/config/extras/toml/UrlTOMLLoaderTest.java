@@ -59,7 +59,7 @@ public class UrlTOMLLoaderTest {
         assertTrue(LOADER.accept(URI.create("file:./a.toml")));
     }
 
-    @Test public void notAcceptExtention() {
+    @Test public void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.properties")));
     }
 

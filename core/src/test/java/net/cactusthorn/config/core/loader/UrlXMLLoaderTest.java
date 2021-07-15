@@ -59,7 +59,7 @@ public class UrlXMLLoaderTest {
         assertTrue(LOADER.accept(URI.create("file:./a.xml")));
     }
 
-    @Test public void notAcceptExtention() {
+    @Test public void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.properties")));
     }
 

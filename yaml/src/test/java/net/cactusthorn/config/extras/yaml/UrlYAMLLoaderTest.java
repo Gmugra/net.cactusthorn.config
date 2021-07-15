@@ -59,7 +59,7 @@ public class UrlYAMLLoaderTest {
         assertTrue(LOADER.accept(URI.create("file:./a.yaml")));
     }
 
-    @Test public void notAcceptExtention() {
+    @Test public void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.properties")));
     }
 

@@ -59,7 +59,7 @@ public class UrlJSONLoaderTest {
         assertTrue(LOADER.accept(URI.create("file:./a.json")));
     }
 
-    @Test public void notAcceptExtention() {
+    @Test public void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.properties")));
     }
 
