@@ -57,6 +57,7 @@
         <dependency.jasypt>1.9.3</dependency.jasypt>
         <dependency.tomlj>1.0.0</dependency.tomlj>
         <dependency.gson>2.8.7</dependency.gson>
+        <dependency.snakeyaml>1.29</dependency.snakeyaml>
 
         <plugin.compiler>3.8.1</plugin.compiler>
         <plugin.jar>3.2.0</plugin.jar>
@@ -94,6 +95,7 @@
         <module>jasypt</module>
         <module>toml</module>
         <module>json</module>
+        <module>yaml</module>
         <module>tests</module>
     </modules>
 
@@ -143,6 +145,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${dependency.gson}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${dependency.snakeyaml}</version>
             </dependency>
 
             <dependency>

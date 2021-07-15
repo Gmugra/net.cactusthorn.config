@@ -26,6 +26,7 @@ So, this project is providing library with similar with *OWNER* API, but
     -   [OWNER user’s specified XML format](http://owner.aeonbits.org/docs/xml-support/)
     -   [TOML](https://toml.io/en/)
     -   [JSON](https://www.json.org/json-en.html)
+    -   [YAML](https://yaml.org)
 
 -   Supports multiple loading strategies (configuration sources fallback/merging)
 
@@ -126,6 +127,7 @@ MyConfig myConfig =
         .addSource("jar:file:path/to/some.jar!/path/to/myconfig.properties")
         .addSource("https://somewhere.com/myconfig.toml")
         .addSource("file:./myconfig.json")
+        .addSource("file:./myconfig.yaml")
         .build()
         .create(MyConfig.class);
 ```
@@ -185,6 +187,21 @@ e.g. "myconfig.json" ([JSON](https://www.json.org/json-en.html) format):
         "date" : "2005-11-12"
     }
 }
+```
+e.g. "myconfig.yaml" ([YAML](https://yaml.org) format):
+```yaml
+ids:
+  - f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454
+  - 123e4567-e89b-12d3-a456-556642440000
+app:
+  val: ABC
+  number: 10
+  uri: http://java.sun.com/j2se/1.3/
+  units:
+    - DAYS
+    - HOURS
+    - MICROSECONDS
+  date: '2005-11-12'
 ```
 
 ### Annotations
@@ -774,6 +791,7 @@ FYI: The method always reload *not cached* sources, even if they not changed (se
 -   **[jasypt](https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt)** : provide `@PBEDecryptor` annotation which decrypt properties that were encrypted with [Jasypt](http://www.jasypt.org) Password-Based Encryption.
 -   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
 -   **[json](https://github.com/Gmugra/net.cactusthorn.config/tree/main/json)** : provide loaders for files in [JSON](https://www.json.org/json-en.html) format
+-   **[yaml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml)** : provide loaders for files in [YAML](https://yaml.org) format
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
