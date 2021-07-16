@@ -254,7 +254,7 @@ There are three ways for dealing with properties that are not found in sources:
 
 2.  If method return type is `Optional` ->  method will return `Optional.empty()`
 
-3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type deafult value.
+3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type default value.
 FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
 ### `@Config` annotation parameters

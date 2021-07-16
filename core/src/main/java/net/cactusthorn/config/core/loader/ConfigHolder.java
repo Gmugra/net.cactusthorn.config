@@ -40,6 +40,28 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * The class provides the ability to retrieve loaded properties without defining {@link net.cactusthorn.config.core.Config}-interface.
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * ConfigHolder holder =
+ *     ConfigFactory.builder()
+ *         .setLoadStrategy(LoadStrategy.FIRST)
+ *         .addSource("file:./myconfig.properties")
+ *         .addSource("classpath:config/myconfig.properties", "system:properties")
+ *         .build()
+ *         .configHolder();
+ *
+ * String val = holder.getString("app.val", "unknown");
+ * int intVal = holder.getInt("app.number");
+ * Optional&lt;List&lt;UUID&gt;&gt; ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+ * Set&lt;TimeUnit&gt; units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
+ * </pre>
+ *
+ * @author Alexei Khatskevich
+ */
 public final class ConfigHolder {
 
     private final Map<String, String> properties;

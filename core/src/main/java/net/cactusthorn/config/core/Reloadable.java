@@ -20,15 +20,26 @@
 package net.cactusthorn.config.core;
 
 /**
- * "config"-interface can extends this interface (directly or over super-interface)<br>
+ * {@link Config}-interface can extends this interface (directly or over super-interface)<br>
  * In this case generated class will also get methods for this interface<br>
  *
  * @author Alexei Khatskevich
  */
 public interface Reloadable {
 
+    /**
+     * This method call reload sources associated with the child {@link Config}-interface<br>
+     *
+     * FYI: The method always reload not cached sources, even if they not changed.
+     */
     void reload();
 
+    /**
+     * Indicate if generated class auto-reloadable or not. By default returns {@code true}.<br>
+     * If the child {@link Config}-interface annotated with {@link Disable.Feature#AUTO_RELOAD} returns {@code false}.
+     *
+     * @return true if the generated class is auto-reloadable.
+     */
     default boolean autoReloadable() {
         return true;
     }

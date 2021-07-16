@@ -37,7 +37,7 @@ import java.lang.annotation.Target;
  * &#064;Prefix("app")
  * public interface MyConfiguration {
  *
- *     &#064;Disable(PREFIX)
+ *     &#064;Disable(Disable.Feature.PREFIX)
  *     String value();
  * }
  * </pre>

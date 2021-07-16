@@ -45,18 +45,21 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
  * <h3>Example</h3>
  *
  * <pre>
- * &#064;Config public interface MyConfiguration {
+ * &#064;Config
+ * public interface MyConfiguration {
  *
  *     String myValue();
  * }
  * </pre>
  *
  * <pre>
- * {
- *     &#64;code MyConfiguration myConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+ * MyConfiguration myConfig =
+ *      ConfigFactory.builder()
+ *          .setLoadStrategy(LoadStrategy.FIRST)
  *          .addSource("file:./myconfig.properties")
- *          .addSource("classpath:config/myconfig.properties", "system:properties").build().create(MyConfiguration.class);
- * }
+ *          .addSource("classpath:config/myconfig.properties", "system:properties")
+ *          .build()
+ *          .create(MyConfiguration.class);
  * </pre>
  *
  * <h3>Caching</h3> By default, ConfigFactory caches loaded properties using
@@ -71,29 +74,48 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
  * </ul>
  *
  * <h3>Direct access to properties</h3> It's possible to get loaded properties
- * without define config-interface using
- * {@link net.cactusthorn.config.core.loader.ConfigHolder}:
- *
+ * without define {@link net.cactusthorn.config.core.Config}-interface using {@link net.cactusthorn.config.core.loader.ConfigHolder}:<br>
+ * <br>
  * <pre>
- * {
- *     &#64;code ConfigHolder holder = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST).addSource("file:./myconfig.properties")
- *             .addSource("classpath:config/myconfig.properties", "system:properties").build().configHolder();
+ * ConfigHolder holder =
+ *      ConfigFactory.builder()
+ *          .setLoadStrategy(LoadStrategy.FIRST)
+ *          .addSource("file:./myconfig.properties")
+ *          .addSource("classpath:config/myconfig.properties", "system:properties")
+ *          .build()
+ *          .configHolder();
  *
- *     String val = holder.getString("app.val", "unknown");
- *     int intVal = holder.getInt("app.number");
- *     Optional&lt;List&lt;UUID&gt;&gt; ids = holder.getOptionalList(UUID::fromString, "ids", ",");
- *     Set&lt;TimeUnit&gt; units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
- * }
+ * String val = holder.getString("app.val", "unknown");
+ * int intVal = holder.getInt("app.number");
+ * Optional&lt;List&lt;UUID&gt;&gt; ids = holder.getOptionalList(UUID::fromString, "ids", ",");
+ * Set&lt;TimeUnit&gt; units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
  * </pre>
  *
- * <h3>Manually added properties</h3> The {@link ConfigFactory.Builder} contains
- * a method for adding properties manually:
+ * <h3>Manually added properties</h3>
+ *
+ * The {@link ConfigFactory.Builder} contains a method for adding properties manually:<br>
  * {@link ConfigFactory.Builder#setSource}.<br>
- * Manually added properties are highest priority always: loaded by URIs
- * properties merged with manually added properties,<br>
- * independent of loading strategy. In other words: the manually added
- * properties will always override (sure, when the property keys are same)
- * properties loaded by URI(s).
+ * <br>
+ * Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties,
+ * independent of loading strategy.<br>
+ * In other words: the manually added properties will always override (sure, when the property keys are same) properties loaded by URI(s).
+ *
+ * <h3>System properties and/or environment variables in sources URIs</h3>
+ *
+ * <pre>
+ * //"myapp.profile" is system-property or environment variable name
+ * ConfigFactory.builder()
+ *      .addSource("file:~/myconfig-{myapp.profile}.properties")
+ *      .addSource("file:./myconfig-{myapp.profile}.properties")
+ *      .addSource("classpath:myconfig.properties")
+ *      .build();
+ * </pre>
+ * As example how to provide system property value to your application:<br>
+ * <br>
+ * <pre>
+ * java -Dmyapp.profile=DEV -jar myapp.jar
+ * </pre>
+ * Warning: If the system property or environment variable does not exist, an empty string will be used as the value.
  *
  * @author Alexei Khatskevich
  */
