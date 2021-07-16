@@ -43,6 +43,53 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
  * }
  * </pre>
  *
+ * <h3>Interfaces inheritance</h3>
+ *
+ * <pre>
+ * interface MyRoot {
+ *
+ *      &#064;Key(rootVal) String value();
+ * }
+ *
+ * &#064;Config
+ * interface MyConfig extends MyRoot {
+ *
+ *      int intValue();
+ * }
+ * </pre>
+ *
+ * There is no limit to the number and "depth" of super-interfaces.<br>
+ * Interface level annotations (e.g. {@link Prefix}) on super-interfaces will be ignored.
+ *
+ * <h3>Accessible</h3>
+ *
+ * {@link Config}-interface can extends (directly or over super-interface) the interface {@link Accessible}.<br>
+ * In this case generated class will also get methods for this interface.
+ *
+ * <h3>Serializable</h3>
+ * {@link Config}-interface can extends (directly or over super-interface) {@link java.io.Serializable}.<br>
+ * In this case generated class will also get {@code private static final long serialVersionUID = 0L} attribute.<br>
+ * <br>
+ * However, the interface (as in the example later) can, optionally, contains {@code long serialVersionUID} constant.<br>
+ * If the constant is present, the value will be used for the {@code private static final long serialVersionUID} attribute
+ * in the generated class.<br>
+ * <br>
+ * <pre>
+ * &#064;Config
+ * public interface MyConfig extends java.io.Serializable {
+ *
+ *      long serialVersionUID = 100L;
+ *
+ *      String val();
+ * }
+ * </pre>
+ *
+ * <h3>Reloadable</h3>
+ *
+ * {@link Config}-interface can extends (directly or over super-interface) {@link Reloadable}.<br>
+ * In this case generated class will also get methods for this interface.<br>
+ * This is necessary to do to switch on "Periodical auto reloading" for the generated class.
+ *
  * @author Alexei Khatskevich
  */
 @Documented @Target(ElementType.TYPE) @Retention(RetentionPolicy.SOURCE) public @interface Config {

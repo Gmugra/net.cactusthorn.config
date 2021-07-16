@@ -27,7 +27,29 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Set global prefix for all property names
+ * Set global prefix for all property names.<br>
+ * The prefix will be added to the final property name with dot-character as separator.
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * &#064;Config
+ * &#064;Prefix("app")
+ * public interface MyConfiguration {
+ *
+ *     &#064;Disable(Disable.Feature.PREFIX)
+ *     String value(); //related property name is "value"
+ *
+ *     &#064;Key("string")
+ *     String str(); //related property name is "app.string"
+ *
+ *     String mega(); //related property name is "app.mega"
+ * }
+ * </pre>
+ *
+ * <br>
+ *
+ * FYI: This annotation support system properties and/or environment variables in the same way as {@link Key}
  *
  * @author Alexei Khatskevich
  */

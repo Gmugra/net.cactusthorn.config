@@ -27,8 +27,33 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Set default value (if property will not found in sources, the default value will be used).<br>
- * Can't be used for methods with {@link java.util.Optional} return type.<br>
+ * Set default value (if property will not found in sources, the default value will be used).
+ * <p>
+ * There are three ways for dealing with properties that are not found in sources
+ * <ul>
+ * <li>If the method return type is not {@link java.util.Optional} and the method do not annotated with @Default,
+ * the {@link net.cactusthorn.config.core.factory.ConfigFactory#create(Class)} method will throw runtime exception "property ... not found"
+ * <li>If the method return type is {@link java.util.Optional}:  method will return {@link java.util.Optional#empty()}
+ * <li>If the method return type is not {@link java.util.Optional}, but the method do annotated with @Default:
+ * method will return converted to return type default value.
+ * </ul>
+ *
+ * <h3>Warning</h3>
+ *
+ * The @Default annotation can't be used with a method that returns {@link java.util.Optional}.
+ *
+ * <h3>Example</h3>
+ *
+ * <pre>
+ * &#064;Config
+ * public interface MyConfiguration {
+ *
+ *     &#064;Default("my default value")
+ *     String value();
+ *
+ *     Optional&lt;Integer&gt; number(); //can't be annotated with &#064;Default
+ * }
+ * </pre>
  *
  * @author Alexei Khatskevich
  */

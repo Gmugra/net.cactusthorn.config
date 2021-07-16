@@ -23,15 +23,30 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * "config"-interface can extends this interface (directly or over super-interface)<br>
+ * {@link Config}-interface can extends this interface (directly or over super-interface)<br>
  * In this case generated class will also get methods for this interface<br>
  *
  * @author Alexei Khatskevich
  */
 public interface Accessible {
+
+    /**
+     *
+     * @return Unmodifiable {@link java.util.Set} of processed (after expanding and with prefix) keys
+     */
     Set<String> keys();
 
+    /**
+     * @param  key full key (with prefix etc.)
+     *
+     * @return already converted value by key
+     */
     Object get(String key);
 
+    /**
+     *
+     * @return Unmodifiable {@link java.util.Map} with all properties represented by child
+     * {@link net.cactusthorn.config.core.Config}-interface.
+     */
     Map<String, Object> asMap();
 }
