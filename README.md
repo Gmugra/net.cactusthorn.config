@@ -46,7 +46,7 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Thread-safe
 
--   Periodical auto reloading
+-   Reloading/Periodical auto reloading/Reload event listeners
 
 ## Basics
 
