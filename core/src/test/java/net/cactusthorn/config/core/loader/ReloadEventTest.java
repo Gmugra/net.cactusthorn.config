@@ -32,7 +32,7 @@ public class ReloadEventTest {
 
     private static final String PROPERTY_NAME = "value";
 
-    static ReloadEvent event;
+    private static ReloadEvent event;
 
     @BeforeAll static void setUp() {
         Map<String, Object> oldValues = new HashMap<>();
