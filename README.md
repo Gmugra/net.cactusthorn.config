@@ -46,7 +46,7 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Thread-safe
 
--   Periodical auto reloading
+-   Reloading, Periodical auto reloading, Reload event listeners
 
 ## Basics
 
@@ -728,6 +728,12 @@ public interface MyConfig extends Reloadable {
 > For FAT32 the date resolution for the last modified time is 2 seconds.   
 > For Ext4 the date resolution is in nanoseconds.
 
+### Reload event listeners
+It would be nice to know which properties has changed as result of reloading, so that you can e.g. re-configure only the affected services.
+It's possible to achieve using "Reload event listeners" feature.
+Example how to do it:
+https://github.com/Gmugra/net.cactusthorn.config/tree/main/tests/src/test/java/net/cactusthorn/config/tests/listener/ListenerTest.java
+
 ## Interfaces
 
 ### Interfaces inheritance
@@ -781,6 +787,10 @@ In this case generated class will also get methods for this interface:
 In this case generated class will also get methods for this interface:
 ```java
     void reload();
+
+    boolean autoReloadable();
+
+    void addReloadListener(ReloadListener listener);
 ```
 FYI: The method always reload *not cached* sources, even if they not changed (see *Caching*)
 

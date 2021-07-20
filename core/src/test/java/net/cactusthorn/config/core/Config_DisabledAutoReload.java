@@ -1,12 +1,19 @@
 package net.cactusthorn.config.core;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import net.cactusthorn.config.core.loader.Loaders;
+import net.cactusthorn.config.core.loader.ReloadEvent;
+import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class Config_DisabledAutoReload implements DisabledAutoReload {
+  private static final List<ReloadListener> LISTENERS = new ArrayList<>();
+
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
   private final ConfigInitializer INITIALIZER;
@@ -44,10 +51,18 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
   }
 
   @Override
+  public void addReloadListener(ReloadListener listener) {
+    LISTENERS.add(listener);
+  }
+
+  @Override
   public void reload() {
+    Map<String, Object> old = new HashMap<>(VALUES);
     Map<String, Object> reloaded = INITIALIZER.initialize();
     VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
     VALUES.putAll(reloaded);
+    ReloadEvent event = new ReloadEvent(this, old, VALUES);
+    LISTENERS.forEach(l -> l.reloadPerformed(event));
   }
 
   @Override

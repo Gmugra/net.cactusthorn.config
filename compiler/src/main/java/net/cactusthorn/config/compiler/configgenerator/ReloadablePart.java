@@ -19,29 +19,61 @@
 */
 package net.cactusthorn.config.compiler.configgenerator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.lang.model.element.Modifier;
 
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.core.loader.ReloadEvent;
+import net.cactusthorn.config.core.loader.ReloadListener;
 
 public final class ReloadablePart implements GeneratorPart {
+
+    private static final String LISTENERS_ATTR = "LISTENERS";
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         if (!generator.interfaceInfo().reloadable()) {
             return;
         }
+        addListeners(classBuilder);
         addReload(classBuilder);
         autoReloadable(classBuilder, generator);
     }
 
+    private void addListeners(TypeSpec.Builder classBuilder) {
+
+        ClassName reloadListener = ClassName.get(ReloadListener.class);
+        TypeName listReloadListener = ParameterizedTypeName.get(LIST, reloadListener);
+
+        FieldSpec fieldSpec = FieldSpec.builder(listReloadListener, LISTENERS_ATTR, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+                .initializer("new $T<>()", ArrayList.class).build();
+        classBuilder.addField(fieldSpec);
+
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("addReloadListener").addModifiers(Modifier.PUBLIC)
+                .addAnnotation(Override.class)
+                .addParameter(ReloadListener.class, "listener")
+                .addStatement("$L.add(listener)", LISTENERS_ATTR);
+        classBuilder.addMethod(builder.build());
+    }
+
     private void addReload(TypeSpec.Builder classBuilder) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("reload").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class);
+        builder.addStatement("$T old = new $T<>($L)", MAP_STRING_OBJECT, HashMap.class, VALUES_ATTR);
         builder.addStatement("$T reloaded = $L.initialize()", MAP_STRING_OBJECT, INITIALIZER_ATTR);
         builder.addStatement("$L.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()))", VALUES_ATTR);
         builder.addStatement("$L.putAll(reloaded)", VALUES_ATTR);
+        builder.addStatement("$T event = new $T(this, old, $L)", ReloadEvent.class, ReloadEvent.class, VALUES_ATTR);
+        builder.addStatement("$L.forEach(l -> l.reloadPerformed(event))", LISTENERS_ATTR);
+
         classBuilder.addMethod(builder.build());
     }
 

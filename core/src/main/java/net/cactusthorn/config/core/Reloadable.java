@@ -19,6 +19,8 @@
  */
 package net.cactusthorn.config.core;
 
+import net.cactusthorn.config.core.loader.ReloadListener;
+
 /**
  * {@link Config}-interface can extends this interface (directly or over super-interface)<br>
  * In this case generated class will also get methods for this interface<br>
@@ -43,4 +45,11 @@ public interface Reloadable {
     default boolean autoReloadable() {
         return true;
     }
+
+    /**
+     * Add a ReloadListener.
+     *
+     * @param listener the listener to be added
+     */
+    void addReloadListener(ReloadListener listener);
 }

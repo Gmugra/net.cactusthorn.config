@@ -19,6 +19,7 @@
 */
 package net.cactusthorn.config.compiler;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,6 +31,7 @@ import com.squareup.javapoet.TypeSpec;
 
 public interface GeneratorPart {
 
+    ClassName LIST = ClassName.get(List.class);
     ClassName SET = ClassName.get(Set.class);
     ClassName MAP = ClassName.get(Map.class);
     ClassName CONCURRENTHASHMAP = ClassName.get(ConcurrentHashMap.class);

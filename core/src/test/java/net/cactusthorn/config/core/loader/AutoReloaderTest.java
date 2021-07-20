@@ -34,6 +34,10 @@ public class AutoReloaderTest {
         @Override public void reload() {
             counter++;
         }
+
+        @Override public void addReloadListener(ReloadListener listener) {
+            // do nothing
+        }
     }
 
     public static class DisableIt implements Reloadable {
@@ -43,6 +47,10 @@ public class AutoReloaderTest {
 
         @Override public boolean autoReloadable() {
             return false;
+        }
+
+        @Override public void addReloadListener(ReloadListener listener) {
+            // do nothing
         }
     }
 
