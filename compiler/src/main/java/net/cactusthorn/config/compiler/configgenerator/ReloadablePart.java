@@ -51,10 +51,10 @@ public final class ReloadablePart implements GeneratorPart {
 
     private void addListeners(TypeSpec.Builder classBuilder) {
 
-        ClassName reloadListner = ClassName.get(ReloadListener.class);
-        TypeName listReloadListner = ParameterizedTypeName.get(LIST, reloadListner);
+        ClassName reloadListener = ClassName.get(ReloadListener.class);
+        TypeName listReloadListener = ParameterizedTypeName.get(LIST, reloadListener);
 
-        FieldSpec fieldSpec = FieldSpec.builder(listReloadListner, LISTENERS_ATTR, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+        FieldSpec fieldSpec = FieldSpec.builder(listReloadListener, LISTENERS_ATTR, Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                 .initializer("new $T<>()", ArrayList.class).build();
         classBuilder.addField(fieldSpec);
 
