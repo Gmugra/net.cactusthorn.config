@@ -1,0 +1,15 @@
+Bundle-DocURL: https://github.com/Gmugra/net.cactusthorn.config/tree/main/json
+Bundle-License: https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
+Bundle-ManifestVersion: 2
+Bundle-Name: Config :: JSON
+Bundle-Description: Config :: JSON
+Bundle-SymbolicName: net.cactusthorn.config.json
+Bundle-Version: ${project.version}
+
+Import-Package:\
+    !net.cactusthorn.config.extras.json.*,\
+    com.google.gson,\
+    net.cactusthorn.config.core.loader
+
+Export-Package:\
+    net.cactusthorn.config.extras.json
