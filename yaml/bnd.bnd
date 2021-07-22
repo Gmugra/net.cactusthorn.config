@@ -1,0 +1,15 @@
+Bundle-DocURL: https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml
+Bundle-License: https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
+Bundle-ManifestVersion: 2
+Bundle-Name: Config :: YAML
+Bundle-Description: Config :: YAML
+Bundle-SymbolicName: net.cactusthorn.config.yaml
+Bundle-Version: ${project.version}
+
+Import-Package:\
+    !net.cactusthorn.config.extras.yaml.*,\
+    org.yaml.snakeyaml,\
+    net.cactusthorn.config.core.loader
+
+Export-Package:\
+    net.cactusthorn.config.extras.yaml
