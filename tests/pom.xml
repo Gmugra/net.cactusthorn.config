@@ -37,10 +37,11 @@
     </scm>
 
     <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+
         <pmd.skip>false</pmd.skip>
         <checkstyle.skip>false</checkstyle.skip>
-        <maven.deploy.skip>true</maven.deploy.skip>
-        <copy.license.skip>false</copy.license.skip>
+        <copy-build-resources.skip>false</copy-build-resources.skip>
     </properties>
 
     <dependencies>

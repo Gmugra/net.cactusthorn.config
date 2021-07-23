@@ -49,7 +49,7 @@
 
         <pmd.skip>true</pmd.skip>
         <checkstyle.skip>true</checkstyle.skip>
-        <copy.license.skip>true</copy.license.skip>
+        <copy-build-resources.skip>true</copy-build-resources.skip>
 
         <dependency.junit>5.7.2</dependency.junit>
         <dependency.compile-testing>0.19</dependency.compile-testing>
@@ -275,7 +275,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-license</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -290,7 +290,28 @@
                                     </includes>
                                 </resource>
                             </resources>
-                            <skip>${copy.license.skip}</skip>
+                            <skip>${copy-build-resources.skip}</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-pom-properties</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/../</directory>
+                                    <includes>
+                                        <include>pom.properties</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <skip>${copy-build-resources.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -387,6 +408,7 @@
                             <manifestEntries>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
                             </manifestEntries>
+                            <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
                         </archive>
                     </configuration>
                 </plugin>
@@ -402,6 +424,7 @@
                             <manifestEntries>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
                             </manifestEntries>
+                            <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
                         </archive>
                     </configuration>
                 </plugin>
@@ -577,6 +600,17 @@
                 <plugins>
                     <plugin>
                         <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <Build-Time>${maven.build.timestamp}</Build-Time>
+                                </manifestEntries>
+                                <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
+                            </archive>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
