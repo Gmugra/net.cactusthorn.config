@@ -7,7 +7,6 @@ Bundle-SymbolicName: net.cactusthorn.config.json
 Bundle-Version: ${project.version}
 
 Import-Package:\
-    !net.cactusthorn.config.extras.json.*,\
     com.google.gson,\
     net.cactusthorn.config.core.loader
 

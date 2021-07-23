@@ -1,0 +1,16 @@
+Bundle-DocURL: https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt
+Bundle-License: https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
+Bundle-ManifestVersion: 2
+Bundle-Name: Config :: Jasypt
+Bundle-Description: Config :: Jasypt
+Bundle-SymbolicName: net.cactusthorn.config.jasypt
+Bundle-Version: ${project.version}
+
+Import-Package:\
+    net.cactusthorn.config.core.converter
+
+Export-Package:\
+    net.cactusthorn.config.extras.jasypt
+
+-includeresource: \
+    META-INF/libs/=${project.build.directory}/libs/;lib:=true
