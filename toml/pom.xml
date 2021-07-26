@@ -85,6 +85,39 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-tomlj</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <excludeArtifactIds>config-core</excludeArtifactIds>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-DocURL>https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml</Bundle-DocURL>
+                        <Bundle-Description>${project.description}</Bundle-Description>
+                        <Bundle-SymbolicName>net.cactusthorn.config.toml</Bundle-SymbolicName>
+                        <Export-Package>net.cactusthorn.config.extras.toml</Export-Package>
+                        <Import-Package>net.cactusthorn.config.core.loader</Import-Package>
+                        <Include-Resource>META-INF/libs/=${project.build.directory}/libs/;lib:=true</Include-Resource>
+                    </instructions>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

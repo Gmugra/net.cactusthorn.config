@@ -116,7 +116,6 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <classifier>bundle</classifier>
                     <instructions>
                         <Bundle-DocURL>https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt</Bundle-DocURL>
                         <Bundle-Description>${project.description}</Bundle-Description>
