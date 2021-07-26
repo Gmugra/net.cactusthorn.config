@@ -76,6 +76,8 @@
         <plugin.gpg>3.0.1</plugin.gpg>
         <plugin.nexus-staging>1.6.8</plugin.nexus-staging>
         <plugin.bnd>5.3.0</plugin.bnd>
+        <plugin.bundle>5.1.2</plugin.bundle>
+            <dependency.bndlib>5.3.0</dependency.bndlib>
 
         <plugin.checkstyle>3.1.2</plugin.checkstyle>
             <dependency.checkstyle>8.44</dependency.checkstyle>
@@ -406,6 +408,8 @@
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             </manifest>
                             <manifestEntries>
+                                <Implementation-Group-Id>${project.groupId}</Implementation-Group-Id>
+                                <Implementation-Artifact-Id>${project.artifactId}</Implementation-Artifact-Id>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
                             </manifestEntries>
                             <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
@@ -519,6 +523,28 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${plugin.bundle}</version>
+                    <executions>
+                        <execution>
+                            <id>osgi-bundle</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>bundle</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <dependencies>
+                        <dependency>
+                            <groupId>biz.aQute.bnd</groupId>
+                            <artifactId>biz.aQute.bndlib</artifactId>
+                            <version>${dependency.bndlib}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
                 <plugin>
