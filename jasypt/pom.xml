@@ -86,6 +86,48 @@
                 </configuration>
             </plugin>
 
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-jasypt-lite</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.jasypt</groupId>
+                                    <artifactId>jasypt</artifactId>
+                                    <classifier>lite</classifier>
+                                    <version>${dependency.jasypt}</version>
+                                    <type>jar</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <classifier>bundle</classifier>
+                    <instructions>
+                        <Bundle-DocURL>https://github.com/Gmugra/net.cactusthorn.config/tree/main/jasypt</Bundle-DocURL>
+                        <Bundle-Description>${project.description}</Bundle-Description>
+                        <Bundle-SymbolicName>net.cactusthorn.config.jasypt</Bundle-SymbolicName>
+                        <Export-Package>net.cactusthorn.config.extras.jasypt</Export-Package>
+                        <Import-Package>net.cactusthorn.config.core.converter</Import-Package>
+                        <Include-Resource>META-INF/libs/=${project.build.directory}/libs/;lib:=true</Include-Resource>
+                    </instructions>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

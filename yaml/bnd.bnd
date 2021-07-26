@@ -7,7 +7,6 @@ Bundle-SymbolicName: net.cactusthorn.config.yaml
 Bundle-Version: ${project.version}
 
 Import-Package:\
-    !net.cactusthorn.config.extras.yaml.*,\
     org.yaml.snakeyaml,\
     net.cactusthorn.config.core.loader
 
