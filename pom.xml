@@ -545,6 +545,9 @@
                             <version>${dependency.bndlib}</version>
                         </dependency>
                     </dependencies>
+                    <configuration>
+                        <classifier>bundle</classifier>
+                    </configuration>
                 </plugin>
 
                 <plugin>
