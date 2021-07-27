@@ -75,5 +75,9 @@ or with Gradle:
 api 'net.cactusthorn.config:config-json:0.60'
 ```
 
+## OSGi
+This module-JAR is ready to use OSGi-bundle.
+But, you must also install the *config-core* and [gson](https://github.com/google/gson) in the OSGi container, which are the OSGi-bundles themselves.
+
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.

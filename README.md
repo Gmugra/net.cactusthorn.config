@@ -18,6 +18,8 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Small (< 100KB) & lightweight core runtime part
 
+-   Ready to use with [OSGi](https://www.osgi.org)
+
 -   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
 
 -   Supports files in Multiple formats:

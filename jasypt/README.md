@@ -41,5 +41,18 @@ or with Gradle:
 api 'net.cactusthorn.config:config-jasypt:0.60'
 ```
 
+## OSGi
+The module is using *jasypt-lite* JAR which is not OSGi bundle.
+This is why there is a special bundle-JAR which includes *jasypt-lite* and can be used in the OSGi container:
+```xml
+<dependency>
+    <groupId>net.cactusthorn.config</groupId>
+    <artifactId>config-jasypt</artifactId>
+    <version>0.60</version>
+    <classifier>bundle</classifier>
+</dependency>
+```
+You must also install the *config-core* into the OSGi container, which is the OSGi-bundle itself.
+
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
