@@ -49,7 +49,17 @@ public abstract class ConfigInitializer {
         return loaders;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" }) protected String expandKey(String key) {
+    protected String globalPrefix(String key) {
+        if (loaders.globalPrefix() != null) {
+            return loaders.globalPrefix() + '.' + key;
+        }
+        return key;
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"}) protected String expandKey(String key) {
+        if (key.indexOf('{') == -1) {
+            return key;
+        }
         Map<String, String> values = new HashMap<>(System.getenv());
         values.putAll((Map) System.getProperties());
         String result = new VariablesParser(key).replace(values);

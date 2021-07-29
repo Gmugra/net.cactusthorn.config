@@ -48,6 +48,6 @@ import java.lang.annotation.Target;
     Feature[] value();
 
     enum Feature {
-        PREFIX, AUTO_RELOAD;
+        PREFIX, AUTO_RELOAD, GLOBAL_PREFIX;
     }
 }

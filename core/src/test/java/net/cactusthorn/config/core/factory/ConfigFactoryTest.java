@@ -164,7 +164,7 @@ public class ConfigFactoryTest {
 
     @Test public void customConverter() {
         TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
-            .create(TestConfig.class);
+                .create(TestConfig.class);
         assertEquals("test::default", testConfig.testconverter());
     }
 
@@ -189,7 +189,7 @@ public class ConfigFactoryTest {
     }
 
     @Test public void addSourceStrNullElement() {
-        ConfigFactory.builder().addSource(new String[] { null });
+        ConfigFactory.builder().addSource(new String[] {null});
     }
 
     @Test public void loaderNotFound() {
@@ -200,5 +200,25 @@ public class ConfigFactoryTest {
     @Test public void unknownBuilder() {
         ConfigFactory factory = ConfigFactory.builder().build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(String.class));
+    }
+
+    @Test public void globalPrefixNull() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setGlobalPrefix(null));
+    }
+
+    @Test public void globalPrefixEmpty() {
+        assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setGlobalPrefix(""));
+    }
+
+    @Test public void globalPrefix() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("gp.test.string", "TEST");
+        properties.put("gp.test.list", "A,B,C");
+        properties.put("gp.test.set", "A,B,C,C");
+        properties.put("gp.test.sort", "A,B,C,C");
+        properties.put("gp.test.url", "https://google.com");
+        ConfigFactory.builder().setGlobalPrefix("gp").build();
+        TestConfig testConfig = ConfigFactory.builder().setSource(properties).setGlobalPrefix("gp").build().create(TestConfig.class);
+        assertEquals("TEST", testConfig.str());
     }
 }

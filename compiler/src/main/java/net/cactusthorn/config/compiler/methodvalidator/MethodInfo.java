@@ -195,4 +195,8 @@ public final class MethodInfo {
     public Optional<String> defaultValue() {
         return defaultValue;
     }
+
+    public Set<Disable.Feature> disabledFeatures() {
+        return disabledFeatures;
+    }
 }

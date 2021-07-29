@@ -16,7 +16,6 @@ import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class Config_TestConfig implements TestConfig {
-
   private static final List<ReloadListener> LISTENERS = new ArrayList<>();
 
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();

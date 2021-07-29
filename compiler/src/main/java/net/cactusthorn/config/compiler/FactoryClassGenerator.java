@@ -171,6 +171,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
         addAddSourceURIMethod(builder);
         addAddSourceStringMethod(builder);
         addAutoReloadMethod(builder);
+        addSetGlobalPrefixMethod(builder);
         addBuildMethod(builder, factoryClassName);
         classBuilder.addType(builder.build());
     }
@@ -219,6 +220,12 @@ public class FactoryClassGenerator implements ClassesGenerator {
         builder.addMethod(MethodSpec.methodBuilder("autoReload").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(BUILDER_TYPE_NAME).addParameter(long.class, "periodInSeconds")
                 .addStatement("return (Builder) super.autoReload(periodInSeconds)").build());
+    }
+
+    private void addSetGlobalPrefixMethod(TypeSpec.Builder builder) {
+        builder.addMethod(MethodSpec.methodBuilder("setGlobalPrefix").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+                .returns(BUILDER_TYPE_NAME).addParameter(String.class, "prefix")
+                .addStatement("return (Builder) super.setGlobalPrefix(prefix)").build());
     }
 
     private void addBuildMethod(TypeSpec.Builder builder, String factoryClassName) {
