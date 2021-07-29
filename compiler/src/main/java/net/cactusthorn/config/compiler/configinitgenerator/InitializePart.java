@@ -40,9 +40,11 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.compiler.InterfaceInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.ConverterInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
+import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
@@ -60,7 +62,8 @@ public class InitializePart implements GeneratorPart {
         addConverters(buildBuilder, generator.methodsInfo());
 
         buildBuilder.addStatement("$T<$T,$T> values = new $T<>()", Map.class, String.class, Object.class, HashMap.class);
-        generator.methodsInfo().forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi)));
+        generator.methodsInfo()
+            .forEach(mi -> buildBuilder.addStatement("values.put($S, $L)", mi.key(), convert(mi, generator.interfaceInfo())));
 
         classBuilder.addMethod(buildBuilder.addStatement("return values").build());
     }
@@ -97,16 +100,16 @@ public class InitializePart implements GeneratorPart {
         });
     }
 
-    private CodeBlock convert(MethodInfo mi) {
+    private CodeBlock convert(MethodInfo mi, InterfaceInfo ii) {
         CodeBlock.Builder builder = findGetMethod(mi).add("(");
         CodeBlock defaultValue = defaultValue(mi);
         return mi.returnMapKeyInfo().map(keyInfo -> {
             builder.add("$L, ", function(keyInfo.returnConverter(), keyInfo.returnStringMethod(), keyInfo.returnTypeName()));
             builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-            return builder.add("$L", getKey(mi.key())).add(split(mi)).add(defaultValue).add(")").build();
+            return builder.add("$L", getKey(mi, ii)).add(split(mi)).add(defaultValue).add(")").build();
         }).orElseGet(() -> {
             builder.add("$L, ", function(mi.returnConverter(), mi.returnStringMethod(), mi.returnTypeName()));
-            return builder.add("$L", getKey(mi.key())).add(split(mi)).add(defaultValue).add(")").build();
+            return builder.add("$L", getKey(mi, ii)).add(split(mi)).add(defaultValue).add(")").build();
         });
     }
 
@@ -190,10 +193,11 @@ public class InitializePart implements GeneratorPart {
         return builder.add("}").build();
     }
 
-    private CodeBlock getKey(String key) {
-        if (key.indexOf('{') == -1) {
-            return CodeBlock.builder().add("$S", key).build();
+    private CodeBlock getKey(MethodInfo mi, InterfaceInfo ii) {
+        String expresion = "expandKey($S)";
+        if (ii.globalPrefix() && !mi.disabledFeatures().contains(Disable.Feature.GLOBAL_PREFIX)) {
+            expresion = "expandKey(globalPrefix($S))";
         }
-        return CodeBlock.builder().add("expandKey($S)", key).build();
+        return CodeBlock.builder().add(expresion, mi.key()).build();
     }
 }

@@ -102,19 +102,25 @@ public final class Loaders {
     private final LinkedHashSet<UriTemplate> templates;
     private final Deque<Loader> loaders;
     private final Map<String, String> properties;
+    private final String globalPrefix;
 
     public Loaders(LoadStrategy loadStrategy, LinkedHashSet<UriTemplate> templates, Deque<Loader> loaders, Map<String, String> properties,
-            long hotReloadPeriodInSeconds) {
+            long hotReloadPeriodInSeconds, String globalPrefix) {
         this.loadStrategy = loadStrategy;
         this.templates = templates;
         this.loaders = loaders;
         this.properties = properties;
         this.reloader = new AutoReloader(hotReloadPeriodInSeconds);
+        this.globalPrefix = globalPrefix;
     }
 
     public void register(Reloadable reloadable) {
         // TODO debug log
         reloader.register(reloadable);
+    }
+
+    public String globalPrefix() {
+        return globalPrefix;
     }
 
     public ConfigHolder load(ClassLoader classLoader) {

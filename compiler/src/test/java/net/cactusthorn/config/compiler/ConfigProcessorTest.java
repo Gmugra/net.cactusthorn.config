@@ -89,4 +89,14 @@ public class ConfigProcessorTest {
         Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/WrongReturn.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_FACTORY_METHOD_CONFIG));
     }
+
+    @Test public void disableGPMethod() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalPrefix/DisableGPMethod.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
+
+    @Test public void disableGPGlobal() {
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalPrefix/DisableGPGlobal.java"));
+        assertThat(compilation).succeededWithoutWarnings();
+    }
 }

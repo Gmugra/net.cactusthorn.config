@@ -51,6 +51,7 @@ public abstract class ConfigFactoryBuilder {
     private Map<String, String> props = Collections.emptyMap();
     private LoadStrategy loadStrategy = LoadStrategy.MERGE;
     private long autoReloadPeriodInSeconds = 0L;
+    private String globalPrefix = null;
 
     protected ConfigFactoryBuilder() {
         ServiceLoader<Loader> serviceLoader = ServiceLoader.load(Loader.class);
@@ -108,6 +109,17 @@ public abstract class ConfigFactoryBuilder {
         return this;
     }
 
+    public ConfigFactoryBuilder setGlobalPrefix(String prefix) {
+        if (prefix == null) {
+            throw new IllegalArgumentException(isNull("prefix"));
+        }
+        if (prefix.length() == 0) {
+            throw new IllegalArgumentException(isEmpty("prefix"));
+        }
+        this.globalPrefix = prefix;
+        return this;
+    }
+
     @SuppressWarnings({"unchecked"}) private <T> ConfigFactoryBuilder addSources(Function<T, UriTemplate> mapper, T... uri) {
         if (uri == null) {
             throw new IllegalArgumentException(isNull("uri"));
@@ -120,7 +132,7 @@ public abstract class ConfigFactoryBuilder {
     }
 
     protected Loaders createLoaders() {
-        return new Loaders(loadStrategy, templates, loaders, props, autoReloadPeriodInSeconds);
+        return new Loaders(loadStrategy, templates, loaders, props, autoReloadPeriodInSeconds, globalPrefix);
     }
 
     public abstract ConfigFactoryAncestor build();

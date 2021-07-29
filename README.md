@@ -12,7 +12,7 @@ So, this project is providing library with similar with *OWNER* API, but
 -   Required at least Java 8, as result it support "more fresh" language features.
 
 ## Features
--   Plain Java 8 without any external dependencies
+-   Core is plain Java 8 without any external dependencies
 
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
 
@@ -390,6 +390,24 @@ e.g.
 -   `nocache:system:properties`
 -   `nocache:file:~/my.properties`
 
+### Global Prefix
+The `ConfigFactory.Builder` provide the method to set global prefix `setGlobalPrefix(String prefix)`, which will be used for all "config"-interfaces that will be created using the factory:
+```properties
+app.val=ABC
+```
+```java
+@Config
+public interface MyConfig {
+    String val();
+}
+```
+```java
+MyConfig myConfig = ConfigFactory.builder().setGlobalPrefix("aaa").build().create(MyConfig.class);
+```
+This makes it possible to avoid `@Prefix` or/and `@Key` annotations, in case several "config"-interfaces are created based on the same source(s).
+FYI:
+-   Global-prefix is added before the prefix from the `@Prefix` annotation. They can be used together.
+-   Global-prefix also support system properties and/or environment variables (like `@Prefix` and `@Key`)
 
 
 ## Type conversion

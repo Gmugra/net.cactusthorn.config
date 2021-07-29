@@ -22,9 +22,11 @@ package net.cactusthorn.config.compiler;
 import static net.cactusthorn.config.core.Key.KEY_SEPARATOR;
 import static net.cactusthorn.config.core.Split.DEFAULT_SPLIT;
 import static net.cactusthorn.config.core.Disable.Feature.AUTO_RELOAD;
+import static net.cactusthorn.config.core.Disable.Feature.GLOBAL_PREFIX;
 
 import java.io.Serializable;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
@@ -34,6 +36,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.core.Accessible;
+import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Reloadable;
 
 public final class InterfaceInfo {
@@ -44,13 +47,16 @@ public final class InterfaceInfo {
     private final boolean accessible;
     private final boolean reloadable;
     private final boolean autoReloadable;
+    private final boolean globalPrefix;
     private final Annotations.ConfigInfo configInfo;
 
     InterfaceInfo(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
         Annotations a = new Annotations(interfaceTypeElement);
         prefix = a.prefix().map(s -> s + KEY_SEPARATOR).orElse("");
         split = a.split().orElse(DEFAULT_SPLIT);
-        autoReloadable = !a.disable().contains(AUTO_RELOAD);
+        Set<Disable.Feature> disable = a.disable();
+        autoReloadable = !disable.contains(AUTO_RELOAD);
+        globalPrefix = !disable.contains(GLOBAL_PREFIX);
         configInfo = a.config();
         serialVersionUID = findSerializable(processingEnv, interfaceTypeElement);
         accessible = findInterface(processingEnv, interfaceTypeElement, Accessible.class);
@@ -79,6 +85,10 @@ public final class InterfaceInfo {
 
     public boolean autoReloadable() {
         return autoReloadable;
+    }
+
+    public boolean globalPrefix() {
+        return globalPrefix;
     }
 
     public Annotations.ConfigInfo configInfo() {
