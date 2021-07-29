@@ -194,10 +194,10 @@ public class InitializePart implements GeneratorPart {
     }
 
     private CodeBlock getKey(MethodInfo mi, InterfaceInfo ii) {
-        String expresion = "expandKey($S)";
+        String expression = "expandKey($S)";
         if (ii.globalPrefix() && !mi.disabledFeatures().contains(Disable.Feature.GLOBAL_PREFIX)) {
-            expresion = "expandKey(globalPrefix($S))";
+            expression = "expandKey(globalPrefix($S))";
         }
-        return CodeBlock.builder().add(expresion, mi.key()).build();
+        return CodeBlock.builder().add(expression, mi.key()).build();
     }
 }

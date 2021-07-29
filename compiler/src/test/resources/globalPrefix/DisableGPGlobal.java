@@ -1,4 +1,4 @@
-package globalPrefix;
+package globalprefix;
 
 import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Config;

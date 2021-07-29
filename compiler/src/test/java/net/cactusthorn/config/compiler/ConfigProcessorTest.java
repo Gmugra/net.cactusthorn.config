@@ -91,12 +91,12 @@ public class ConfigProcessorTest {
     }
 
     @Test public void disableGPMethod() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalPrefix/DisableGPMethod.java"));
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPMethod.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
     @Test public void disableGPGlobal() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalPrefix/DisableGPGlobal.java"));
+        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPGlobal.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 }
