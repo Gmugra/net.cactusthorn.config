@@ -26,8 +26,8 @@ public class ZooKeeperTestAncestor {
             client.start();
             client.blockUntilConnected();
             String basePath = BASE_PATH;
-            setDataInZookeperServer(client, basePath, THANKS_KEY, THANKS_VALUE);
-            setDataInZookeperServer(client, basePath, GREETINGS_KEY, GREETINGS_VALUE);
+            setDataInZooKeeperServer(client, basePath, THANKS_KEY, THANKS_VALUE);
+            setDataInZooKeeperServer(client, basePath, GREETINGS_KEY, GREETINGS_VALUE);
         }
     }
 
@@ -35,7 +35,7 @@ public class ZooKeeperTestAncestor {
         server.stop();
     }
 
-    private static void setDataInZookeperServer(CuratorFramework client, String basePath, String property, String value) throws Exception {
+    private static void setDataInZooKeeperServer(CuratorFramework client, String basePath, String property, String value) throws Exception {
         String path = ZKPaths.makePath(basePath, property);
         client.create().creatingParentsIfNeeded().forPath(path, value.getBytes());
     }
