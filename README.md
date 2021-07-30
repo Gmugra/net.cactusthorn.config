@@ -349,7 +349,7 @@ Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
 Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
 ```
 
-## The `@Factory` annotation
+### The `@Factory` annotation
 There is one place where Java-reflection is used: `ConfigFactory.create` method.
 `@Factory` annotation provides the ability to generate  "Factory"-class(es) which helps to avoid reflection completely.
 ```java
@@ -408,6 +408,7 @@ This makes it possible to avoid `@Prefix` or/and `@Key` annotations, in case sev
 FYI:
 -   Global-prefix is added before the prefix from the `@Prefix` annotation. They can be used together.
 -   Global-prefix also support system properties and/or environment variables (like `@Prefix` and `@Key`)
+-   Global-prefix can be switched off for the method or "config"-interface using `@Disable(Disable.Feature.GLOBAL_PREFIX)`
 
 
 ## Type conversion
