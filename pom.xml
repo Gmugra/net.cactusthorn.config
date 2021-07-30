@@ -60,7 +60,7 @@
         <dependency.snakeyaml>1.29</dependency.snakeyaml>
         <dependency.curator>5.2.0</dependency.curator>
         <dependency.logback>1.2.5</dependency.logback>
-        <dependency.jul-to-slf4j>1.7.32</dependency.jul-to-slf4j>
+        <dependency.slf4j>1.7.32</dependency.slf4j>
 
         <plugin.compiler>3.8.1</plugin.compiler>
         <plugin.jar>3.2.0</plugin.jar>
@@ -163,6 +163,18 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-framework</artifactId>
                 <version>${dependency.curator}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${dependency.slf4j}</version>
             </dependency>
 
             <dependency>
@@ -194,6 +206,12 @@
                 <artifactId>curator-test</artifactId>
                 <version>${dependency.curator}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
@@ -204,7 +222,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
-                <version>${dependency.jul-to-slf4j}</version>
+                <version>${dependency.slf4j}</version>
                 <scope>test</scope>
             </dependency>
 

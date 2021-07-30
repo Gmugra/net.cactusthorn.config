@@ -2,6 +2,7 @@ package net.cactusthorn.config.extras.zookeeper.util;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ZNodeToMapParser {
             client.blockUntilConnected(blockUntilConnectedMaxWaitTimeMs, MILLISECONDS);
             Map<String, String> result = new HashMap<>();
             for (String key : client.getChildren().forPath(basePath)) {
-                result.put(key, new String(client.getData().forPath(ZKPaths.makePath(basePath, key))));
+                result.put(key, new String(client.getData().forPath(ZKPaths.makePath(basePath, key)), StandardCharsets.UTF_8));
             }
             return result;
         }
