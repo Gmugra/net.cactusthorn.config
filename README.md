@@ -20,7 +20,7 @@ So, this project is providing library with similar with *OWNER* API, but
 
 -   Ready to use with [OSGi](https://www.osgi.org)
 
--   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF
+-   Supports multiple configuration sources: files, classpath, URLs, environment variables, system properties, META-INF/MANIFEST.MF, Apache ZooKeeper
 
 -   Supports files in Multiple formats:
     -   [Java properties](https://en.wikipedia.org/wiki/.properties)
@@ -823,6 +823,7 @@ FYI: The method always reload *not cached* sources, even if they not changed (se
 -   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
 -   **[json](https://github.com/Gmugra/net.cactusthorn.config/tree/main/json)** : provide loaders for files in [JSON](https://www.json.org/json-en.html) format
 -   **[yaml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml)** : provide loaders for files in [YAML](https://yaml.org) format
+-   **[zookeeper](https://github.com/Gmugra/net.cactusthorn.config/tree/main/zookeeper)** : provide loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
 
 ### Logging
 The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).

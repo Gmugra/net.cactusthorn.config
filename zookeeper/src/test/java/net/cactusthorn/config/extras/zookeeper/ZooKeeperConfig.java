@@ -17,16 +17,15 @@
 * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package net.cactusthorn.config.tests.globalprefix;
+package net.cactusthorn.config.extras.zookeeper;
+
+import java.util.List;
 
 import net.cactusthorn.config.core.Config;
-import net.cactusthorn.config.core.Disable;
 
-@Disable(Disable.Feature.GLOBAL_PREFIX)
-@Config
-public interface GPDisableAll {
+@Config public interface ZooKeeperConfig {
 
-    String value();
+    String thanks();
 
-    String gpValue();
+    List<String> greetings();
 }
