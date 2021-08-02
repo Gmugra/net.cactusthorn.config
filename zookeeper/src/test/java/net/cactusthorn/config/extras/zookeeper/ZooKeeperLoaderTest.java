@@ -26,6 +26,8 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.apache.curator.test.TestingServer;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -41,11 +43,19 @@ public class ZooKeeperLoaderTest extends ZooKeeperTestAncestor {
 
     private static final Loader LOADER = new ZooKeeperLoader();
 
+    private static TestingServer server;
+
     @BeforeAll public static void setupLog() throws Exception {
+        server = init(8090);
+
         // java.util.logging -> SLF4j
         org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger();
         org.slf4j.bridge.SLF4JBridgeHandler.install();
         java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
+    }
+
+    @AfterAll public static void shutdown() throws Exception {
+        server.stop();
     }
 
     @Test public void load() {

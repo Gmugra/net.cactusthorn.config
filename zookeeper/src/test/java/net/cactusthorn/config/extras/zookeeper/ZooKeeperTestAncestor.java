@@ -25,8 +25,6 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.test.TestingServer;
 import org.apache.curator.utils.ZKPaths;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 
 public class ZooKeeperTestAncestor {
 
@@ -36,10 +34,8 @@ public class ZooKeeperTestAncestor {
     protected static final String GREETINGS_KEY = "greetings";
     protected static final String GREETINGS_VALUE = "hi,bonjour,hiya,hi!";
 
-    protected static TestingServer server;
-
-    @BeforeAll public static void setup() throws Exception {
-        server = new TestingServer(65403);
+    protected static TestingServer init(int port) throws Exception {
+        TestingServer server = new TestingServer(port);
         server.start();
         try (CuratorFramework client = CuratorFrameworkFactory.newClient(server.getConnectString(), 1000, 1000, NEVER_RETRY_POLICY)) {
             client.start();
@@ -48,10 +44,7 @@ public class ZooKeeperTestAncestor {
             setDataInZooKeeperServer(client, basePath, THANKS_KEY, THANKS_VALUE);
             setDataInZooKeeperServer(client, basePath, GREETINGS_KEY, GREETINGS_VALUE);
         }
-    }
-
-    @AfterAll public static void shutdown() throws Exception {
-        server.stop();
+        return server;
     }
 
     private static void setDataInZooKeeperServer(CuratorFramework client, String basePath, String property, String value) throws Exception {
