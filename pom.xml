@@ -207,9 +207,15 @@
                 <version>${dependency.curator}</version>
                 <scope>test</scope>
                 <exclusions>
+                    <!-- exclude it to avoid security warning -->
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-api</artifactId>
+                    </exclusion>
+                    <!-- exclude it to avoid FOSSA warning -->
+                    <exclusion>
+                        <groupId>com.google.guava</groupId>
+                        <artifactId>listenablefuture</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
