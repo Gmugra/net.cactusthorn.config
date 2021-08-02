@@ -639,7 +639,7 @@ Several of these annotations shipped with the library:
 
 ### Custom loaders
 It's possible to implement custom loaders using `Loader` interface.
-This makes it possible to load properties from specific sources (e.g. Database, ZooKeeper and so on) or to support alternative configuration file formats (e.g. JSON).
+This makes it possible to load properties from specific sources (e.g. Database) or to support alternative configuration file formats (e.g. JSON).
 e.g.
 ```java
 public final class SinglePropertyLoader implements Loader {
