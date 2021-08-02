@@ -113,7 +113,7 @@
                         <Bundle-SymbolicName>net.cactusthorn.config.toml</Bundle-SymbolicName>
                         <Export-Package>net.cactusthorn.config.extras.toml</Export-Package>
                         <Import-Package>net.cactusthorn.config.core.loader</Import-Package>
-                        <Include-Resource>META-INF/libs/=${project.build.directory}/libs/;lib:=true</Include-Resource>
+                        <Include-Resource>{maven-resources},META-INF/libs/=${project.build.directory}/libs/;lib:=true</Include-Resource>
                     </instructions>
                 </configuration>
             </plugin>
