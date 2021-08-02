@@ -874,5 +874,3 @@ It does not have annotation-processing enabled by default. To get it, you must i
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FGmugra%2Fnet.cactusthorn.config.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FGmugra%2Fnet.cactusthorn.config?ref=badge_large)
