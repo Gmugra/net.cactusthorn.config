@@ -1,0 +1,17 @@
+Bundle-DocURL: https://github.com/Gmugra/net.cactusthorn.config/tree/main/zookeeper
+Bundle-License: https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE
+Bundle-ManifestVersion: 2
+Bundle-Name: Config :: ZooKeeper
+Bundle-Description: Config :: ZooKeeper
+Bundle-SymbolicName: net.cactusthorn.config.zookeeper
+Bundle-Version: ${project.version}
+
+Import-Package:\
+    net.cactusthorn.config.core.loader,\
+    net.cactusthorn.config.core.util,\
+    org.apache.curator,\
+    org.apache.curator.framework,\
+    org.apache.curator.utils
+
+Export-Package:\
+    net.cactusthorn.config.extras.zookeeper

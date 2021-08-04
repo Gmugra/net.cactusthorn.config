@@ -1,10 +1,10 @@
 # net.cactusthorn.config.zookeeper
-The module provides loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
+The module provides simple loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
 
 Source URI format: `zookeeper://connectString/basePath[?optionalParameters]`
 e.g.
 -   `zookeeper://localhost:7777,localhost:8888/zk_test`
--   `zookeeper://localhost:7777/zk_test?sessionTimeoutMs=5000&connectionTimeoutMs=1000
+-   `zookeeper://localhost:7777/zk_test?sessionTimeoutMs=5000&connectionTimeoutMs=1000`
 
 Optional parameters:
 -   sessionTimeoutMs - default value(if it not present in the URI) is 5000
@@ -27,6 +27,21 @@ or with Gradle:
 ```groovy
 api 'net.cactusthorn.config:config-zookeeper:0.70'
 ```
+
+## OSGi
+This module-JAR is ready to use OSGi-bundle.
+You must also install the *config-core* and [org.apache.curator:curator-framework](https://curator.apache.org/index.html) in the OSGi container, which are the OSGi-bundles themselves.
+
+FYI: *curator-framework* required a lot of other OSGi-bundles:
+-   com.fasterxml.jackson.core:jackson-annotations
+-   com.fasterxml.jackson.core:jackson-core
+-   com.fasterxml.jackson.core:jackson-databind
+-   com.google.guava:failureaccess
+-   com.google.guava:guava
+-   org.slf4j:slf4j-api
+-   ch.qos.logback:logback-classic + ch.qos.logback:logback-core (it could be other implementation of slf4j)
+-   org.apache.zookeeper:zookeeper
+-   org.apache.curator:curator-client
 
 ## LICENSE
 net.cactusthorn.config is released under the BSD 3-Clause license. See [LICENSE](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) file included for the details.

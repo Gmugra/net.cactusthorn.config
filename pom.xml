@@ -164,6 +164,7 @@
                 <artifactId>curator-framework</artifactId>
                 <version>${dependency.curator}</version>
                 <exclusions>
+                    <!-- exclude it to avoid security warning -->
                     <exclusion>
                         <groupId>org.slf4j</groupId>
                         <artifactId>slf4j-api</artifactId>
