@@ -100,11 +100,19 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
+                        <!-- next line need for bnd-maven-plugin, otherwise it will not work:
+                             https://github.com/bndtools/bnd/tree/master/maven/bnd-maven-plugin -->
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                         <manifestEntries>
                             <Automatic-Module-Name>net.cactusthorn.config.zookeeper</Automatic-Module-Name>
                         </manifestEntries>
                     </archive>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>biz.aQute.bnd</groupId>
+                <artifactId>bnd-maven-plugin</artifactId>
             </plugin>
 
         </plugins>

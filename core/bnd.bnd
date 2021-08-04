@@ -11,5 +11,4 @@ Import-Package:\
     *
 
 Export-Package:\
-    !net.cactusthorn.config.core.util,\
-    *
+    net.cactusthorn.config.core.*
