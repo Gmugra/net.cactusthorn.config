@@ -631,6 +631,12 @@
                     <name>m2e.version</name>
                 </property>
             </activation>
+            <properties>
+                <!-- Set "Maven Integration for Eclipse JDT APT" plugin option automatically
+                    run annotation processors within the incremental compilation
+                    FYI: https://github.com/jbosstools/m2e-apt -->
+                <m2e.apt.activation>jdt_apt</m2e.apt.activation>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
