@@ -402,7 +402,7 @@ public interface MyConfig {
 }
 ```
 ```java
-MyConfig myConfig = ConfigFactory.builder().setGlobalPrefix("aaa").build().create(MyConfig.class);
+MyConfig myConfig = ConfigFactory.builder().setGlobalPrefix("app").build().create(MyConfig.class);
 ```
 This makes it possible to avoid `@Prefix` or/and `@Key` annotations, in case several "config"-interfaces are created based on the same source(s).
 FYI:
