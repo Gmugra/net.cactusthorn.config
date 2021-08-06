@@ -114,7 +114,7 @@ public final class MethodInfo {
     private Optional<ConverterInfo> returnConverter = Optional.empty();
     private Optional<MethodInfo> returnMapKeyInfo = Optional.empty();
 
-    MethodInfo(ExecutableElement methodElement) {
+    public MethodInfo(ExecutableElement methodElement) {
         annotations = new Annotations(methodElement);
         returnTypeName = ClassName.get(methodElement.getReturnType());
         name = methodElement.getSimpleName().toString();
