@@ -835,7 +835,7 @@ e.g., in case of [SLF4J](http://www.slf4j.org/), which is, looks like, the most 
 <dependency>
 	<groupId>org.slf4j</groupId>
 	<artifactId>jul-to-slf4j</artifactId>
-	<version>1.7.30</version>
+	<version>1.7.32</version>
 </dependency>
 ```
 and e.g. this code somewhere at start of the application:
