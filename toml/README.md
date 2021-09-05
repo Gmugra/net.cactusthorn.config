@@ -91,12 +91,12 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-toml</artifactId>
-    <version>0.60</version>
+    <version>0.70</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-toml:0.60'
+api 'net.cactusthorn.config:config-toml:0.70'
 ```
 
 ## OSGi
@@ -106,7 +106,7 @@ This is why there is a special bundle-JAR which includes *tomlj* (and it's runti
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-toml</artifactId>
-    <version>0.60</version>
+    <version>0.70</version>
     <classifier>bundle</classifier>
 </dependency>
 ```
