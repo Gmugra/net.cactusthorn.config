@@ -83,7 +83,7 @@
             <dependency.bndlib>5.3.0</dependency.bndlib>
 
         <plugin.checkstyle>3.1.2</plugin.checkstyle>
-            <dependency.checkstyle>8.45.1</dependency.checkstyle>
+            <dependency.checkstyle>9.0</dependency.checkstyle>
         <plugin.jacoco>0.8.7</plugin.jacoco>
         <plugin.pmd>3.14.0</plugin.pmd>
         <plugin.spotbugs>4.3.0</plugin.spotbugs>
