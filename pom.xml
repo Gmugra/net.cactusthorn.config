@@ -51,7 +51,7 @@
         <checkstyle.skip>true</checkstyle.skip>
         <copy-build-resources.skip>true</copy-build-resources.skip>
 
-        <dependency.junit>5.7.2</dependency.junit>
+        <dependency.junit>5.8.0</dependency.junit>
         <dependency.compile-testing>0.19</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
         <dependency.jasypt>1.9.3</dependency.jasypt>
