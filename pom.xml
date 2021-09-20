@@ -85,8 +85,9 @@
         <plugin.checkstyle>3.1.2</plugin.checkstyle>
             <dependency.checkstyle>9.0</dependency.checkstyle>
         <plugin.jacoco>0.8.7</plugin.jacoco>
-        <plugin.pmd>3.15.0</plugin.pmd>
-        <plugin.spotbugs>4.3.0</plugin.spotbugs>
+        <plugin.pmd>3.14.0</plugin.pmd>
+            <dependency.pmd>6.38.0</dependency.pmd>
+        <plugin.spotbugs>4.4.1</plugin.spotbugs>
             <dependency.spotbugs>4.3.0</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.5</dependency.jaxb-runtime>
@@ -537,6 +538,28 @@
                 <plugin>
                     <artifactId>maven-pmd-plugin</artifactId>
                     <version>${plugin.pmd}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-core</artifactId>
+                            <version>${dependency.pmd}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-java</artifactId>
+                            <version>${dependency.pmd}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-javascript</artifactId>
+                            <version>${dependency.pmd}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>net.sourceforge.pmd</groupId>
+                            <artifactId>pmd-jsp</artifactId>
+                            <version>${dependency.pmd}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
 
                 <plugin>
