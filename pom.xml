@@ -50,6 +50,7 @@
         <pmd.skip>true</pmd.skip>
         <checkstyle.skip>true</checkstyle.skip>
         <copy-build-resources.skip>true</copy-build-resources.skip>
+        <license.skip>true</license.skip>
 
         <dependency.junit>5.8.0</dependency.junit>
         <dependency.compile-testing>0.19</dependency.compile-testing>
@@ -92,6 +93,7 @@
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.5</dependency.jaxb-runtime>
         <plugin.duplicate-finder>1.5.0</plugin.duplicate-finder>
+        <plugin.mycila-license>4.1</plugin.mycila-license>
 
     </properties>
 
@@ -373,6 +375,20 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>check-license</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
 
         <pluginManagement>
@@ -630,6 +646,30 @@
                     <groupId>org.basepom.maven</groupId>
                     <artifactId>duplicate-finder-maven-plugin</artifactId>
                     <version>${plugin.duplicate-finder}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.mycila</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>${plugin.mycila-license}</version>
+                        <configuration>
+                            <properties>
+                                <owner>Alexei Khatskevich</owner>
+                                <year>2021</year>
+                            </properties>
+                            <licenseSets>
+                                <licenseSet>
+                                    <header>${project.basedir}/../BSD-3-license-template.txt</header>
+                                    <excludes>
+                                        <exclude>**/bnd.bnd</exclude>
+                                        <exclude>**/.*</exclude>
+                                        <exclude>**/*.xml</exclude>
+                                        <exclude>src/test/resources/**</exclude>
+                                        <exclude>src/main/resources/**</exclude>
+                                    </excludes>
+                                </licenseSet>
+                            </licenseSets>
+                      </configuration>
                 </plugin>
 
             </plugins>
