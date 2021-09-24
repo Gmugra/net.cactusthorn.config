@@ -50,7 +50,7 @@
         <pmd.skip>true</pmd.skip>
         <checkstyle.skip>true</checkstyle.skip>
         <copy-build-resources.skip>true</copy-build-resources.skip>
-        <license.skip>true</license.skip>
+        <license.skip>true</license.skip><!-- license-maven-plugin -->
 
         <dependency.junit>5.8.1</dependency.junit>
         <dependency.compile-testing>0.19</dependency.compile-testing>
