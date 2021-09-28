@@ -1,4 +1,4 @@
- /*
+/*
  * Copyright (C) 2021, Alexei Khatskevich
  *
  * Licensed under the BSD 3-Clause license.

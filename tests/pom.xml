@@ -42,6 +42,7 @@
         <pmd.skip>false</pmd.skip>
         <checkstyle.skip>false</checkstyle.skip>
         <copy-build-resources.skip>false</copy-build-resources.skip>
+        <license.skip>false</license.skip><!-- license-maven-plugin -->
     </properties>
 
     <dependencies>
