@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        java: [ '8', '11' ]
+        java: [ '8', '11', '17' ]
 
     steps:
 
@@ -23,7 +23,7 @@ jobs:
       uses: actions/setup-java@v2
       with:
         java-version: ${{ matrix.java }}
-        distribution: 'adopt'
+        distribution: 'temurin'
         architecture: x64
 
     - name: Cache Maven packages
