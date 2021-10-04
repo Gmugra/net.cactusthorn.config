@@ -81,7 +81,7 @@
         <plugin.nexus-staging>1.6.8</plugin.nexus-staging>
         <plugin.bnd>5.3.0</plugin.bnd>
         <plugin.bundle>5.1.2</plugin.bundle>
-            <dependency.bndlib>5.3.0</dependency.bndlib>
+            <dependency.bndlib>6.0.0</dependency.bndlib>
 
         <plugin.checkstyle>3.1.2</plugin.checkstyle>
             <dependency.checkstyle>9.0</dependency.checkstyle>
