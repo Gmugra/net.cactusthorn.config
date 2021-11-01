@@ -89,7 +89,7 @@
         <plugin.pmd>3.15.0</plugin.pmd>
             <dependency.pmd>6.39.0</dependency.pmd>
         <plugin.spotbugs>4.4.2.2</plugin.spotbugs>
-            <dependency.spotbugs>4.3.0</dependency.spotbugs>
+            <dependency.spotbugs>4.4.2</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.5</dependency.jaxb-runtime>
         <plugin.duplicate-finder>1.5.0</plugin.duplicate-finder>
