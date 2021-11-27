@@ -87,7 +87,7 @@
             <dependency.checkstyle>9.1</dependency.checkstyle>
         <plugin.jacoco>0.8.7</plugin.jacoco>
         <plugin.pmd>3.15.0</plugin.pmd>
-            <dependency.pmd>6.40.0</dependency.pmd>
+            <dependency.pmd>6.41.0</dependency.pmd>
         <plugin.spotbugs>4.4.2.2</plugin.spotbugs>
             <dependency.spotbugs>4.3.0</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
