@@ -60,7 +60,7 @@
         <dependency.gson>2.8.9</dependency.gson>
         <dependency.snakeyaml>1.30</dependency.snakeyaml>
         <dependency.curator>5.2.0</dependency.curator>
-        <dependency.logback>1.2.8</dependency.logback>
+        <dependency.logback>1.2.9</dependency.logback>
         <dependency.slf4j>1.7.32</dependency.slf4j>
 
         <plugin.compiler>3.8.1</plugin.compiler>
