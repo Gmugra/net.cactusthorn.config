@@ -88,8 +88,8 @@
         <plugin.jacoco>0.8.7</plugin.jacoco>
         <plugin.pmd>3.15.0</plugin.pmd>
             <dependency.pmd>6.41.0</dependency.pmd>
-        <plugin.spotbugs>4.4.2.2</plugin.spotbugs>
-            <dependency.spotbugs>4.3.0</dependency.spotbugs>
+        <plugin.spotbugs>4.5.0.0</plugin.spotbugs>
+            <dependency.spotbugs>4.5.2</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.5</dependency.jaxb-runtime>
         <plugin.duplicate-finder>1.5.0</plugin.duplicate-finder>

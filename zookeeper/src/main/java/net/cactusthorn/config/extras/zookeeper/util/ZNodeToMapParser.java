@@ -38,15 +38,14 @@ public class ZNodeToMapParser {
 
     public Map<String, String> parse(String connectString, int sessionTimeoutMs, int connectionTimeoutMs,
             int blockUntilConnectedMaxWaitTimeMs, String basePath) throws Exception {
-        try (CuratorFramework client = CuratorFrameworkFactory.newClient(connectString, sessionTimeoutMs, connectionTimeoutMs,
-                NEVER_RETRY_POLICY)) {
-            client.start();
-            client.blockUntilConnected(blockUntilConnectedMaxWaitTimeMs, MILLISECONDS);
-            Map<String, String> result = new HashMap<>();
-            for (String key : client.getChildren().forPath(basePath)) {
-                result.put(key, new String(client.getData().forPath(ZKPaths.makePath(basePath, key)), StandardCharsets.UTF_8));
-            }
-            return result;
+        CuratorFramework client = CuratorFrameworkFactory.builder().connectString(connectString)
+                .sessionTimeoutMs(sessionTimeoutMs).connectionTimeoutMs(connectionTimeoutMs).retryPolicy(NEVER_RETRY_POLICY).build();
+        client.start();
+        client.blockUntilConnected(blockUntilConnectedMaxWaitTimeMs, MILLISECONDS);
+        Map<String, String> result = new HashMap<>();
+        for (String key : client.getChildren().forPath(basePath)) {
+            result.put(key, new String(client.getData().forPath(ZKPaths.makePath(basePath, key)), StandardCharsets.UTF_8));
         }
+        return result;
     }
 }
