@@ -1,0 +1,2 @@
+net.cactusthorn.config.extras.hjson.ClasspathHjsonLoader
+net.cactusthorn.config.extras.hjson.UrlHjsonLoader

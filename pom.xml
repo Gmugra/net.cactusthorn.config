@@ -58,6 +58,7 @@
         <dependency.jasypt>1.9.3</dependency.jasypt>
         <dependency.tomlj>1.0.0</dependency.tomlj>
         <dependency.gson>2.8.9</dependency.gson>
+        <dependency.hjson>3.0.0</dependency.hjson>
         <dependency.snakeyaml>1.30</dependency.snakeyaml>
         <dependency.curator>5.2.0</dependency.curator>
         <dependency.logback>1.2.9</dependency.logback>
@@ -103,6 +104,7 @@
         <module>jasypt</module>
         <module>toml</module>
         <module>json</module>
+        <module>hjson</module>
         <module>yaml</module>
         <module>zookeeper</module>
         <module>tests</module>
@@ -154,6 +156,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${dependency.gson}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hjson</groupId>
+                <artifactId>hjson</artifactId>
+                <version>${dependency.hjson}</version>
             </dependency>
 
             <dependency>

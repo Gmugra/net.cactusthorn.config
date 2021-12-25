@@ -1,0 +1,25 @@
+{
+  // this is comment
+  id:
+  [
+    f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454
+    123e4567-e89b-12d3-a456-556642440000
+  ]
+  database:
+  {
+    skipit: null
+    enabled: true
+    ports:
+    [
+      8000
+      8001
+      null
+      8002
+    ]
+    temp_targets:
+    {
+      cpu: 79.5
+      case: 72
+    }
+  }
+}
