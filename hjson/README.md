@@ -13,7 +13,6 @@ The module provides loaders for files in [Hjson](https://hjson.github.io) format
 
 ## Restrictions
 1.  root must be object (not array)
-
 2.  arrays in array are **not supported**. e.g.:
 ```hjson
 {
