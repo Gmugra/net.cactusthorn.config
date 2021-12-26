@@ -29,6 +29,7 @@ So, this project is providing library with similar with *OWNER* API, but
     -   [TOML](https://toml.io/en/)
     -   [JSON](https://www.json.org/json-en.html)
     -   [YAML](https://yaml.org)
+    -   [Hjson](https://hjson.github.io)
 
 -   Supports multiple loading strategies (configuration sources fallback/merging)
 
@@ -823,6 +824,7 @@ FYI: The method always reload *not cached* sources, even if they not changed (se
 -   **[toml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/toml)** : provide loaders for files in [TOML](https://toml.io) format
 -   **[json](https://github.com/Gmugra/net.cactusthorn.config/tree/main/json)** : provide loaders for files in [JSON](https://www.json.org/json-en.html) format
 -   **[yaml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml)** : provide loaders for files in [YAML](https://yaml.org) format
+-   **[hjson](https://github.com/Gmugra/net.cactusthorn.config/tree/main/hjson)** : provide loaders for files in [Hjson](https://hjson.github.io) format
 -   **[zookeeper](https://github.com/Gmugra/net.cactusthorn.config/tree/main/zookeeper)** : provide loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
 
 ### Logging
