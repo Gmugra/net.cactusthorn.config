@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;
-import org.hjson.Stringify;
 import org.hjson.JsonArray;
 
 public class HjsonToMapParser {
@@ -64,8 +63,10 @@ public class HjsonToMapParser {
             }
         } else if (jsonValue.isArray()) {
             processArrayElement(key, result, jsonValue);
+        } else if (jsonValue.isString()) {
+            result.put(key.stream().collect(Collectors.joining(".")), jsonValue.asString().toString());
         } else if (!jsonValue.isNull()) {
-            result.put(key.stream().collect(Collectors.joining(".")), jsonValue.toString(Stringify.HJSON));
+            result.put(key.stream().collect(Collectors.joining(".")), jsonValue.toString());
         }
     }
 
@@ -83,7 +84,11 @@ public class HjsonToMapParser {
             if (arrayValue.isArray()) {
                 throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, keyAsString));
             }
-            joiner.add(arrayValue.toString(Stringify.HJSON));
+            if (arrayValue.isString()) {
+                joiner.add(arrayValue.asString().toString());
+            } else {
+                joiner.add(arrayValue.toString());
+            }
         }
         result.put(keyAsString, joiner.toString());
     }

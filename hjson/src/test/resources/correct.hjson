@@ -20,6 +20,12 @@
     {
       cpu: 79.5
       case: 72
+      multiline:
+        '''
+        First line.
+        Second line.
+          This line is indented by two spaces.
+        '''
     }
   }
 }

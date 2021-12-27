@@ -23,10 +23,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -38,6 +41,18 @@ public class HjsonToMapParserTest {
         try (Reader reader = reader("correct.hjson")) {
             Map<String, String> result = new HjsonToMapParser().parse(reader);
             assertEquals("true", result.get("database.enabled"));
+            assertEquals("f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000", result.get("id"));
+        }
+    }
+
+    @Test public void multilineValue() throws IOException {
+        try (Reader reader = reader("correct.hjson")) {
+            Map<String, String> result = new HjsonToMapParser().parse(reader);
+            String multiline = result.get("database.temp_targets.multiline");
+            LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(multiline));
+            lineNumberReader.skip(Long.MAX_VALUE);
+            assertEquals(2, lineNumberReader.getLineNumber());
+            assertEquals("First line.", new BufferedReader(new StringReader(multiline)).readLine());
         }
     }
 
