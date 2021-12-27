@@ -27,7 +27,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
@@ -49,9 +48,8 @@ public class HjsonToMapParserTest {
         try (Reader reader = reader("correct.hjson")) {
             Map<String, String> result = new HjsonToMapParser().parse(reader);
             String multiline = result.get("database.temp_targets.multiline");
-            LineNumberReader lineNumberReader = new LineNumberReader(new StringReader(multiline));
-            lineNumberReader.skip(Long.MAX_VALUE);
-            assertEquals(2, lineNumberReader.getLineNumber());
+            String[] lines = multiline.split("\r\n|\r|\n");
+            assertEquals(3, lines.length);
             assertEquals("First line.", new BufferedReader(new StringReader(multiline)).readLine());
         }
     }
