@@ -65,7 +65,7 @@
         <dependency.slf4j>1.7.32</dependency.slf4j>
 
         <plugin.compiler>3.8.1</plugin.compiler>
-        <plugin.jar>3.2.0</plugin.jar>
+        <plugin.jar>3.2.1</plugin.jar>
         <plugin.resources>3.2.0</plugin.resources>
         <plugin.test>3.0.0-M5</plugin.test>
         <plugin.clean>3.1.0</plugin.clean>
