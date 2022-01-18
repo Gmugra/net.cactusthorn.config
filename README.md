@@ -7,7 +7,9 @@ The Java library with the goal of minimizing the code required to handle applica
 **Table of Contents**
 
 -   [Motivation](#motivation)
+
 -   [Features](#features)
+
 -   [Basics](#basics)
     -   [Installing](#installing)
     -   [Basic usage](#basic-usage)
@@ -15,12 +17,14 @@ The Java library with the goal of minimizing the code required to handle applica
     -   [`@Default` or Optional](#property-not-found--default-or-optional)
     -   [`@Config` annotation parameters](#config-annotation-parameters)
     -   [System properties and/or environment variables in `@Key` and/or `@Prefix`](#system-properties-andor-environment-variables-in-key-andor-prefix)
+
 -   [The `ConfigFactory`](#the-configfactory)
     -   [Direct access to properties](#direct-access-to-properties)
     -   [`@Factory` annotation](#factory-annotation)
     -   [Manually added properties](#manually-added-properties)
     -   [Caching](#caching)
     -   [Global prefix](#global-prefix)
+
 -   [Type conversion](#type-conversion)
     -   [Supported method return types](#supported-method-return-types)
     -   [Maps](#maps)
@@ -30,6 +34,7 @@ The Java library with the goal of minimizing the code required to handle applica
     -   [`net.cactusthorn.config.core.converter.bytesize.ByteSize` format](#netcactusthornconfigcoreconverterbytesizebytesize-format)
     -   [Custom converters](#custom-converters)
     -   [Parameterized custom converters](#parameterized-custom-converters)
+
 -   [Loaders](#loaders)
     -   [Standard loaders](#standard-loaders)
     -   [Custom loaders](#custom-loaders)
@@ -38,17 +43,20 @@ The Java library with the goal of minimizing the code required to handle applica
     -   [Loading strategies](#loading-strategies)
     -   [Periodical auto reloading](#periodical-auto-reloading)
     -   [Reload event listeners](#reload-event-listeners)
+
 -   [Interfaces](#interfaces)
     -   [Interfaces inheritance](#interfaces-inheritance)
     -   [`java.io.Serializable`](#javaioserializable)
     -   [`net.cactusthorn.config.core.Accessible`](#netcactusthornconfigcoreaccessible)
     -   [`net.cactusthorn.config.core.Reloadable`](#netcactusthornconfigcorereloadable)
+
 -   [Miscellaneous](#miscellaneous)
     -   [Extras](#extras)
     -   [Logging](#logging)
     -   [Profiles](#profiles)
     -   [Integration with DI containers](#integration-with-di-containers)
     -   [Eclipse IDE](#eclipse-ide)
+
 -   [LICENSE](#license)
 
 
