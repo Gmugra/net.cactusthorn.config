@@ -4,6 +4,62 @@ The Java library with the goal of minimizing the code required to handle applica
 
 [![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e95b3233c26d4b8ab31e1956c16fcc0d)](https://www.codacy.com/gh/Gmugra/net.cactusthorn.config/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Gmugra/net.cactusthorn.config&amp;utm_campaign=Badge_Grade) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/config-core/0.70)](https://search.maven.org/search?q=g:%22net.cactusthorn.config%22) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
+**Table of Contents**
+
+-   [Motivation](#motivation)
+
+-   [Features](#features)
+
+-   [Basics](#basics)
+    -   [Installing](#installing)
+    -   [Basic usage](#basic-usage)
+    -   [Annotations](#annotations)
+    -   [`@Default` or Optional](#property-not-found--default-or-optional)
+    -   [`@Config` annotation parameters](#config-annotation-parameters)
+    -   [System properties and/or environment variables in `@Key` and/or `@Prefix`](#system-properties-andor-environment-variables-in-key-andor-prefix)
+
+-   [The `ConfigFactory`](#the-configfactory)
+    -   [Direct access to properties](#direct-access-to-properties)
+    -   [`@Factory` annotation](#factory-annotation)
+    -   [Manually added properties](#manually-added-properties)
+    -   [Caching](#caching)
+    -   [Global prefix](#global-prefix)
+
+-   [Type conversion](#type-conversion)
+    -   [Supported method return types](#supported-method-return-types)
+    -   [Maps](#maps)
+    -   [`java.time.Instant` format](#javatimeinstant-format)
+    -   [`java.time.Duration` formats](#javatimeduration-formats)
+    -   [`java.time.Period` formats](#javatimeperiod-formats)
+    -   [`net.cactusthorn.config.core.converter.bytesize.ByteSize` format](#netcactusthornconfigcoreconverterbytesizebytesize-format)
+    -   [Custom converters](#custom-converters)
+    -   [Parameterized custom converters](#parameterized-custom-converters)
+
+-   [Loaders](#loaders)
+    -   [Standard loaders](#standard-loaders)
+    -   [Custom loaders](#custom-loaders)
+    -   [Service-provider loading facility](#spi)
+    -   [System properties and/or environment variables in sources URIs](#system-properties-andor-environment-variables-in-sources-uris)
+    -   [Loading strategies](#loading-strategies)
+    -   [Periodical auto reloading](#periodical-auto-reloading)
+    -   [Reload event listeners](#reload-event-listeners)
+
+-   [Interfaces](#interfaces)
+    -   [Interfaces inheritance](#interfaces-inheritance)
+    -   [`java.io.Serializable`](#javaioserializable)
+    -   [`net.cactusthorn.config.core.Accessible`](#netcactusthornconfigcoreaccessible)
+    -   [`net.cactusthorn.config.core.Reloadable`](#netcactusthornconfigcorereloadable)
+
+-   [Miscellaneous](#miscellaneous)
+    -   [Extras](#extras)
+    -   [Logging](#logging)
+    -   [Profiles](#profiles)
+    -   [Integration with DI containers](#integration-with-di-containers)
+    -   [Eclipse IDE](#eclipse-ide)
+
+-   [LICENSE](#license)
+
+
 ## Motivation
 The inspiring idea for the project comes from [OWNER](https://github.com/lviggiano/owner). *OWNER* is a nice Java library for the same purpose, but it's not factually maintained anymore, and it's not really support "new" language features from Java 8+.
 
@@ -54,7 +110,8 @@ So, this project is providing library with similar with *OWNER* API, but
 ## Basics
 
 ### Installing
-Download: [Maven Central Repository](https://search.maven.org/search?q=g:net.cactusthorn.config).   
+Download: [Maven Central Repository](https://search.maven.org/search?q=g:%22net.cactusthorn.config%22).
+
 Download: [GitHub Packages](https://github.com/Gmugra?tab=packages&repo_name=net.cactusthorn.config).
 
 In order to use the library in a project, it's need to add the dependency to the pom.xml:
@@ -258,10 +315,11 @@ There are three ways for dealing with properties that are not found in sources:
 2.  If method return type is `Optional` ->  method will return `Optional.empty()`
 
 3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type default value.
+
 FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
 ### `@Config` annotation parameters
-There are two *optional* parameters `sources` and `loadStrategy` which can be used to override these settings from `ConfigFactory`.
+There are two *optional* parameters `sources` and `loadStrategy` which can be used to override these settings from [`ConfigFactory`](#the-configfactory).
 e.g.
 ```java
 @Config(sources = {"classpath:config/testconfig2.properties","nocache:system:properties"},
@@ -271,11 +329,13 @@ public interface ConfigOverride {
     String string();
 }
 ```
-1.  If `sources` parameter is present, all sources added in the `ConfigFactory` (using `ConfigFactory.Builder.addSource` methods) will be ignored.
-2.  If `loadStrategy` parameter is present, it will be used instead of loadStrategy from `ConfigFactory`.
+1.  If `sources` parameter is present, all sources added in the [`ConfigFactory`](#the-configfactory) (using `ConfigFactory.Builder.addSource` methods) will be ignored.
+2.  If `loadStrategy` parameter is present, it will be used instead of loadStrategy from [`ConfigFactory`](#the-configfactory).
 3.  Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority anyway. These properties will be merged in any case.
 
 ### System properties and/or environment variables in `@Key` and/or `@Prefix`
+The `@Key` and `@Prefix` annotations can refer to system properties or environment variables.
+
 This feature makes it possible to store, for example, settings for different environments in a single configuration file. e.g. (TOML):
 ```toml
 host = "https://www.google.com/"
@@ -329,8 +389,8 @@ FYI:
 | | host.{env} | host |
 
 ## The `ConfigFactory`
-The `ConfigFactory` is thread-safe, but not stateless.   
-It stores loaded properties in the internal cache (see *Caching*), and also control auto reloading.   
+The `ConfigFactory` class is thread-safe, but not stateless.
+It stores loaded properties in the internal cache (see [Caching](#caching)), and also control auto reloading.
 Therefore, it certainly makes sense to create and use one single instance of `ConfigFactory` for the whole application.
 
 ### Direct access to properties
@@ -350,7 +410,7 @@ Optional<List<UUID>> ids = holder.getOptionalList(UUID::fromString, "ids", ",");
 Set<TimeUnit> units = holder.getSet(TimeUnit::valueOf, "app.units", "[:;]", "DAYS:HOURS");
 ```
 
-### The `@Factory` annotation
+### `@Factory` annotation
 There is one place where Java-reflection is used: `ConfigFactory.create` method.
 `@Factory` annotation provides the ability to generate  "Factory"-class(es) which helps to avoid reflection completely.
 ```java
@@ -522,7 +582,7 @@ usage:
 public interface MyByteSize {
 
     @Default("10 megabytes") 
-    ByteSize size();
+    net.cactusthorn.config.core.converter.bytesize.ByteSize size();
 }
 ```
 The supported unit strings for `ByteSize` are case sensitive and must be lowercase. Exactly these strings are supported:
@@ -545,7 +605,7 @@ The supported unit strings for `ByteSize` are case sensitive and must be lowerca
 -   `yobibyte`, `yobibytes`, `yb`
 
 ### Custom converters
-If it's need to deal with class which is not supported "by default" (see *Supported method return types*), a custom converter can be implemented and used.
+If it's need to deal with class which is not supported "by default" (see [Supported method return types](#supported-method-return-types)), a custom converter can be implemented and used.
 ```java
 public class MyClassConverter implements Converter<MyClass> {
 
@@ -714,7 +774,7 @@ Loading strategies:
 Warning: Manually added properties (which added using `ConfigFactory.Builder.setSource(Map<String, String> properties)` method) are highest priority always. So, loaded by URIs properties merged with manually added properties, independent of loading strategy.
 
 ### Periodical auto reloading
-ConfigFactory can automatically reload configurations which extends `net.cactusthorn.config.core.Reloadable` interface.
+ConfigFactory can automatically reload configurations which extends [`net.cactusthorn.config.core.Reloadable`](#netcactusthornconfigcorereloadable) interface.
 To activate auto-reloading need to set "periodInSeconds" using `autoReload` method:
 ```java
 ConfigFactory factory =
@@ -753,8 +813,7 @@ public interface MyConfig extends Reloadable {
 ### Reload event listeners
 It would be nice to know which properties has changed as result of reloading, so that you can e.g. re-configure only the affected services.
 It's possible to achieve using "Reload event listeners" feature.
-Example how to do it:
-https://github.com/Gmugra/net.cactusthorn.config/tree/main/tests/src/test/java/net/cactusthorn/config/tests/listener/ListenerTest.java
+Example how to do it: [ListenerTest](https://github.com/Gmugra/net.cactusthorn.config/tree/main/tests/src/test/java/net/cactusthorn/config/tests/listener/ListenerTest.java)
 
 ## Interfaces
 
@@ -814,7 +873,7 @@ In this case generated class will also get methods for this interface:
 
     void addReloadListener(ReloadListener listener);
 ```
-FYI: The method always reload *not cached* sources, even if they not changed (see *Caching*)
+FYI: The method always reload *not cached* sources, even if they not changed (see [Caching](#caching))
 
 ## Miscellaneous
 
@@ -868,10 +927,10 @@ Example with [Dagger 2](https://dagger.dev):
 -   Config Interface: [AppInfo](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/configuration/AppInfo.java)
 -   Dagger 2 module: [CoreModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/dagger/CoreModule.java)
 -   Usage (DI over constructor): [Banner](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/core/src/main/java/net/cactusthorn/micro/core/banner/Banner.java)
--   One nore config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
--   One nore Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
+-   One more config Interface: [HikariConf](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/configuration/HikariConf.java)
+-   One more Dagger 2 module: [DatabaseModule](https://github.com/Gmugra/net.cactusthorn.micro/blob/master/db/src/main/java/net/cactusthorn/micro/db/dagger/DatabaseModule.java)
 
-## FYI : Eclipse
+### Eclipse IDE
 It does not have annotation-processing enabled by default. To get it, you must install *m2e-apt* from the eclipse marketplace: https://immutables.github.io/apt.html
 
 ## LICENSE
