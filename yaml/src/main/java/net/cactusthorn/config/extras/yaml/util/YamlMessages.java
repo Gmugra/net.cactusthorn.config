@@ -35,10 +35,6 @@ public final class YamlMessages {
         MAP_IN_ARRAY, ARRAYS_IN_ARRAY
     }
 
-    public static String msg(Key key) {
-        return MESSAGES.getString(key.name());
-    }
-
     public static String msg(Key key, Object argument) {
         return MessageFormat.format(MESSAGES.getString(key.name()), argument);
     }

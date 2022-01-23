@@ -17,28 +17,14 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.cactusthorn.config.compiler.configgenerator;
+package net.cactusthorn.config.tests.tostring;
 
-import javax.lang.model.element.Modifier;
+import net.cactusthorn.config.core.Config;
 
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+@Config public interface ConfigSimple {
 
-import net.cactusthorn.config.compiler.Generator;
-import net.cactusthorn.config.compiler.GeneratorPart;
+    String name();
 
-final class ToStringPart implements GeneratorPart {
-
-    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        // @formatter:off
-        MethodSpec.Builder toStringBuilder =
-            MethodSpec.methodBuilder("toString")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(String.class)
-                .addStatement("return $L", TO_STRING_ATTR);
-        // @formatter:off
-        classBuilder.addMethod(toStringBuilder.build());
-    }
+    int number();
 
 }

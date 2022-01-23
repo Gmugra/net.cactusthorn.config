@@ -26,19 +26,31 @@ import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
+import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 
-final class ToStringPart implements GeneratorPart {
+public class GenerateToStringPart implements GeneratorPart {
+
+    private static final String BUF_NAME = "buf";
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         // @formatter:off
         MethodSpec.Builder toStringBuilder =
-            MethodSpec.methodBuilder("toString")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(String.class)
-                .addStatement("return $L", TO_STRING_ATTR);
-        // @formatter:off
+            MethodSpec.methodBuilder(GENERATE_TO_STRING_METHOD)
+            .addModifiers(Modifier.PRIVATE)
+            .returns(String.class)
+            .addStatement("$T $L = new $T()", StringBuilder.class, BUF_NAME, StringBuilder.class)
+            .addStatement("$L.append('[')", BUF_NAME);
+        // @formatter:on
+        for (int i = 0; i < generator.methodsInfo().size(); i++) {
+            if (i != 0) {
+                toStringBuilder.addStatement("$L.append($S)", BUF_NAME, ", ");
+            }
+            MethodInfo mi = generator.methodsInfo().get(i);
+            toStringBuilder.addStatement("$L.append($S).append('=').append($T.valueOf($L.get($S)))", BUF_NAME, mi.name(), String.class,
+                    VALUES_ATTR, mi.key());
+        }
+        toStringBuilder.addStatement("$L.append(']')", BUF_NAME);
+        toStringBuilder.addStatement("return $L.toString()", BUF_NAME);
         classBuilder.addMethod(toStringBuilder.build());
     }
-
 }
