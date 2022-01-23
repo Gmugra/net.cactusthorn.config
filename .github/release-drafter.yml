@@ -1,3 +1,8 @@
+categories:
+  - title: '🗎 Documentation'
+    label: 'documentation'
+exclude-contributors:
+  - 'renovate'
 template: |
   ## What’s Changed
 
