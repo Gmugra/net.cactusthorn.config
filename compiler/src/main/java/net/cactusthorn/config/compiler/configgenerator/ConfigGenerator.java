@@ -35,8 +35,9 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class ConfigGenerator extends Generator {
 
-    private static final List<GeneratorPart> PARTS = Arrays.asList(new SerialVersionUIDPart(), new ValuesFieldPart(), new ConstructorPart(),
-            new GettersPart(), new HashCodePart(), new ToStringPart(), new EqualsPart(), new AccessiblePart(), new ReloadablePart());
+    private static final List<GeneratorPart> PARTS = Arrays.asList(new SerialVersionUIDPart(), new ValuesFieldPart(),
+            new CalculateHashCodePart(), new GenerateToStringPart(), new ConstructorPart(), new GettersPart(), new HashCodePart(),
+            new ToStringPart(), new EqualsPart(), new AccessiblePart(), new ReloadablePart());
 
     public ConfigGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
         super(interfaceElement, methodsInfo, ConfigInitializer.CONFIG_CLASSNAME_PREFIX, interfaceInfo);

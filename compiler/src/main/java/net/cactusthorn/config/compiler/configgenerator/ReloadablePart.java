@@ -71,6 +71,8 @@ public final class ReloadablePart implements GeneratorPart {
         builder.addStatement("$T reloaded = $L.initialize()", MAP_STRING_OBJECT, INITIALIZER_ATTR);
         builder.addStatement("$L.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()))", VALUES_ATTR);
         builder.addStatement("$L.putAll(reloaded)", VALUES_ATTR);
+        builder.addStatement("$L = $L()", HASH_CODE_ATTR, CALCULATE_HASH_CODE_METHOD);
+        builder.addStatement("$L = $L()", TO_STRING_ATTR, GENERATE_TO_STRING_METHOD);
         builder.addStatement("$T event = new $T(this, old, $L)", ReloadEvent.class, ReloadEvent.class, VALUES_ATTR);
         builder.addStatement("$L.forEach(l -> l.reloadPerformed(event))", LISTENERS_ATTR);
 

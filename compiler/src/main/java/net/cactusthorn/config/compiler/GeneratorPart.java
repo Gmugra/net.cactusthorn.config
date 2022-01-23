@@ -48,5 +48,11 @@ public interface GeneratorPart {
     String URIS_ATTR = "URIS";
     String INITIALIZER_ATTR = "INITIALIZER";
 
+    String HASH_CODE_ATTR = "hashCode";
+    String CALCULATE_HASH_CODE_METHOD = "calculate__Hash__Code";
+
+    String TO_STRING_ATTR = "toString";
+    String GENERATE_TO_STRING_METHOD = "generate__To__String";
+
     void addPart(TypeSpec.Builder classBuilder, Generator generator);
 }

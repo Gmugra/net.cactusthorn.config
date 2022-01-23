@@ -17,28 +17,24 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.cactusthorn.config.compiler.configgenerator;
+package net.cactusthorn.config.tests.tostring;
 
-import javax.lang.model.element.Modifier;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.TypeSpec;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.cactusthorn.config.compiler.Generator;
-import net.cactusthorn.config.compiler.GeneratorPart;
+import org.junit.jupiter.api.Test;
 
-final class ToStringPart implements GeneratorPart {
+import net.cactusthorn.config.core.factory.ConfigFactory;
 
-    @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        // @formatter:off
-        MethodSpec.Builder toStringBuilder =
-            MethodSpec.methodBuilder("toString")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(String.class)
-                .addStatement("return $L", TO_STRING_ATTR);
-        // @formatter:off
-        classBuilder.addMethod(toStringBuilder.build());
+public class ConfigSimpleTest {
+
+    @Test public void simpleToString() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("name", "ABC");
+        properties.put("number", "20");
+        ConfigSimple config = ConfigFactory.builder().setSource(properties).build().create(ConfigSimple.class);
+        assertEquals("[name=ABC, number=20]", config.toString());
     }
-
 }

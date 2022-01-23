@@ -33,6 +33,8 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
 final class ConstructorPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
+        classBuilder.addField(hashCodeField());
+        classBuilder.addField(toStringField());
         if (generator.interfaceInfo().reloadable()) {
             classBuilder.addField(initializer());
             classBuilder.addMethod(reloadableConstructor(generator));
@@ -53,12 +55,22 @@ final class ConstructorPart implements GeneratorPart {
                     generator.interfaceName().simpleName()
             )
             .addStatement("$L.putAll(initializer.initialize())", VALUES_ATTR)
+            .addStatement("$L = $L()", HASH_CODE_ATTR, CALCULATE_HASH_CODE_METHOD)
+            .addStatement("$L = $L()", TO_STRING_ATTR, GENERATE_TO_STRING_METHOD)
             .build();
         // @formatter:on
     }
 
     public FieldSpec initializer() {
         return FieldSpec.builder(ConfigInitializer.class, INITIALIZER_ATTR, Modifier.PRIVATE, Modifier.FINAL).build();
+    }
+
+    public FieldSpec hashCodeField() {
+        return FieldSpec.builder(int.class, HASH_CODE_ATTR, Modifier.PRIVATE).build();
+    }
+
+    public FieldSpec toStringField() {
+        return FieldSpec.builder(String.class, TO_STRING_ATTR, Modifier.PRIVATE).build();
     }
 
     private MethodSpec reloadableConstructor(Generator generator) {
@@ -72,6 +84,8 @@ final class ConstructorPart implements GeneratorPart {
                     generator.interfaceName().simpleName()
             )
             .addStatement("$L.putAll($L.initialize())", VALUES_ATTR, INITIALIZER_ATTR)
+            .addStatement("$L = $L()", HASH_CODE_ATTR, CALCULATE_HASH_CODE_METHOD)
+            .addStatement("$L = $L()", TO_STRING_ATTR, GENERATE_TO_STRING_METHOD)
             .build();
         // @formatter:on
     }

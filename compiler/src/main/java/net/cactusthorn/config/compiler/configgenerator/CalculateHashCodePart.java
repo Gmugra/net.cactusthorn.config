@@ -19,6 +19,9 @@
  */
 package net.cactusthorn.config.compiler.configgenerator;
 
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.MethodSpec;
@@ -27,18 +30,18 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 
-final class ToStringPart implements GeneratorPart {
+public class CalculateHashCodePart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
+        String parameters = generator.methodsInfo().stream().map(mi -> mi.name() + "()").collect(Collectors.joining(", "));
         // @formatter:off
-        MethodSpec.Builder toStringBuilder =
-            MethodSpec.methodBuilder("toString")
-                .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(Override.class)
-                .returns(String.class)
-                .addStatement("return $L", TO_STRING_ATTR);
-        // @formatter:off
-        classBuilder.addMethod(toStringBuilder.build());
+        MethodSpec hashCode =
+            MethodSpec.methodBuilder(CALCULATE_HASH_CODE_METHOD)
+                .addModifiers(Modifier.PRIVATE)
+                .returns(int.class)
+                .addStatement("return $T.hash($L)", Objects.class, parameters)
+                .build();
+        // @formatter:on
+        classBuilder.addMethod(hashCode);
     }
-
 }
