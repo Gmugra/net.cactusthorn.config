@@ -27,10 +27,17 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.Period;
+import java.time.Year;
+import java.time.YearMonth;
 import java.time.ZonedDateTime;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,14 +55,21 @@ import net.cactusthorn.config.core.converter.ConverterClass;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
 import net.cactusthorn.config.core.converter.standard.CharacterConverter;
+import net.cactusthorn.config.core.converter.standard.CurrencyConverter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.converter.standard.InstantConverter;
 import net.cactusthorn.config.core.converter.standard.LocalDateConverter;
 import net.cactusthorn.config.core.converter.standard.LocalDateTimeConverter;
+import net.cactusthorn.config.core.converter.standard.LocalTimeConverter;
+import net.cactusthorn.config.core.converter.standard.LocaleConverter;
+import net.cactusthorn.config.core.converter.standard.OffsetDateTimeConverter;
+import net.cactusthorn.config.core.converter.standard.OffsetTimeConverter;
 import net.cactusthorn.config.core.converter.standard.PathConverter;
 import net.cactusthorn.config.core.converter.standard.PeriodConverter;
 import net.cactusthorn.config.core.converter.standard.URIConverter;
 import net.cactusthorn.config.core.converter.standard.URLConverter;
+import net.cactusthorn.config.core.converter.standard.YearConverter;
+import net.cactusthorn.config.core.converter.standard.YearMonthConverter;
 import net.cactusthorn.config.core.converter.standard.ZonedDateTimeConverter;
 
 public class DefaultConvertorValidator extends MethodValidatorAncestor {
@@ -66,6 +80,8 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS.put(URL.class, URLConverter.class.getName());
         CONVERTERS.put(URI.class, URIConverter.class.getName());
         CONVERTERS.put(Path.class, PathConverter.class.getName());
+        CONVERTERS.put(Currency.class, CurrencyConverter.class.getName());
+        CONVERTERS.put(Locale.class, LocaleConverter.class.getName());
         CONVERTERS.put(ByteSize.class, ByteSizeConverter.class.getName());
         CONVERTERS.put(Character.class, CharacterConverter.class.getName());
         CONVERTERS.put(Instant.class, InstantConverter.class.getName());
@@ -73,7 +89,12 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         CONVERTERS.put(Period.class, PeriodConverter.class.getName());
         CONVERTERS.put(LocalDate.class, LocalDateConverter.class.getName());
         CONVERTERS.put(LocalDateTime.class, LocalDateTimeConverter.class.getName());
+        CONVERTERS.put(LocalTime.class, LocalTimeConverter.class.getName());
         CONVERTERS.put(ZonedDateTime.class, ZonedDateTimeConverter.class.getName());
+        CONVERTERS.put(OffsetDateTime.class, OffsetDateTimeConverter.class.getName());
+        CONVERTERS.put(OffsetTime.class, OffsetTimeConverter.class.getName());
+        CONVERTERS.put(Year.class, YearConverter.class.getName());
+        CONVERTERS.put(YearMonth.class, YearMonthConverter.class.getName());
     }
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();

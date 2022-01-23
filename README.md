@@ -28,6 +28,7 @@ The Java library with the goal of minimizing the code required to handle applica
 -   [Type conversion](#type-conversion)
     -   [Supported method return types](#supported-method-return-types)
     -   [Maps](#maps)
+    -   [`java.util.Locale` format](#javautillocale-format)
     -   [`java.time.Instant` format](#javatimeinstant-format)
     -   [`java.time.Duration` formats](#javatimeduration-formats)
     -   [`java.time.Period` formats](#javatimeperiod-formats)
@@ -151,7 +152,7 @@ annotationProcessor 'net.cactusthorn.config:config-compiler:0.70'
 To access properties it's need to define a convenient Java interface, e.g. :
 ```java
 @Config
-@Prefix("app") 
+@Prefix("app")
 public interface MyConfig {
 
     @Default("unknown")
@@ -162,7 +163,7 @@ public interface MyConfig {
 
     URI uri();
 
-    @Disable(PREFIX) 
+    @Disable(PREFIX)
     Optional<List<UUID>> ids();
 
     @Split("[,:;]")
@@ -439,14 +440,14 @@ Restrictions:
 The `ConfigFactory.Builder` contains a method for adding properties manually: `setSource(Map<String, String> properties)`.
 Manually added properties are highest priority always: loaded by URIs properties merged with manually added properties, independent of loading strategy.
 In other words: the manually added properties will always override (sure, when the property keys are same) properties loaded by URI(s).
-   
-There is two major use-cases for the feature: unit-tests & console applications.   
+
+There is two major use-cases for the feature: unit-tests & console applications.
 For console applications, it is convenient to provide command line arguments to the `ConfigFactory` using this feature.
 
 ### Caching
-By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key. 
+By default, `ConfigFactory` caches loaded properties using source-URI (after resolving system properties and/or environment variable in it) as a cache key.
 
-To not cache properties related to the URI(s), use URI-prefix `nocache:` this will switch off caching for the URI.   
+To not cache properties related to the URI(s), use URI-prefix `nocache:` this will switch off caching for the URI.
 e.g.
 -   `nocache:system:properties`
 -   `nocache:file:~/my.properties`
@@ -486,11 +487,12 @@ The return type of the interface methods must either:
     -   e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
     -   If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
 
-4.  Be 
+4.  Be
     -   `java.net.URL`
     -   `java.net.URI`
     -   `java.nio.file.Path`
     -   `java.util.Currency`
+    -   `java.util.Locale`
     -   `java.time.Instant`
     -   `java.time.Duration`
     -   `java.time.Period`
@@ -524,7 +526,7 @@ map=A|10,BBB|20
 map2=10000|10;20000|20
 ```
 ```java
-@Config(sources="classpath:/myconfig.properties") 
+@Config(sources="classpath:/myconfig.properties")
 public interface ConfigMap {
 
     Map<String, Integer> map();
@@ -538,14 +540,19 @@ FYI:
 1.  In case of Maps, `@Split` annotation set splitter for key+value "entries" (default "splitter" is comma : `,`).
 2.  In case of Maps, the annotations associated with converters( e.g. `@ConverterClass`, `@ZonedDateTimeParser` etc.) only affect the Map values.
 
+### `java.util.Locale` format
+The string must be well-formed BCP 47 language tag.
+https://docs.oracle.com/javase/8/docs/api/java/util/Locale.html#forLanguageTag-java.lang.String-
+e.g. `de-DE`
+
 ### `java.time.Instant` format
-The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)   
+The string must represent a valid instant in [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) and is parsed using [DateTimeFormatter.ISO_INSTANT](https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html#ISO_INSTANT)
 e.g. `2011-12-03T10:15:30Z`
 
 ### `java.time.Duration` formats
 1.  Standard *ISO 8601* format, as described in the [JavaDoc for java.time.Duration](https://docs.oracle.com/javase/8/docs/api/java/time/Duration.html#parse-java.lang.CharSequence-). e.g. `P2DT3H4M`
 
-2.  "unit strings" format: 
+2.  "unit strings" format:
     1.  Bare numbers are taken to be in milliseconds: `10`
 
     2.  Strings are parsed as a number plus an optional unit string: `10ms`, `10 days`
@@ -562,7 +569,7 @@ e.g. `2011-12-03T10:15:30Z`
 ### `java.time.Period` formats
 1.  Standard *ISO 8601* format, as described in the [JavaDoc for java.time.Period](https://docs.oracle.com/javase/8/docs/api/java/time/Period.html#parse-java.lang.CharSequence-). e.g. `P1Y2M3W4D`
 
-2.  "unit strings" format: 
+2.  "unit strings" format:
     1.  Bare numbers are taken to be in days: `10`
 
     2.  Strings are parsed as a number plus an optional unit string: `10y`, `10 days`
@@ -581,7 +588,7 @@ usage:
 @Config
 public interface MyByteSize {
 
-    @Default("10 megabytes") 
+    @Default("10 megabytes")
     net.cactusthorn.config.core.converter.bytesize.ByteSize size();
 }
 ```
@@ -633,20 +640,20 @@ For example, to provide format(s) with a converter for date-time types.
 This can be achieved with converter-annotation for the custom-converter:
 ```java
 @Retention(SOURCE)
-@Target(METHOD) 
+@Target(METHOD)
 @ConverterClass(MyClassConverter.class) //converter implementation
 public @interface MySuperParser {
 
     String[] value() default "";
 }
 ```
-FYI: 
+FYI:
 -   the annotation must contains `String[] value() default ""` parameter, otherwise parameters will be ignored by compiler
 -   the annotation can be made for any converter (even for converter which is, actually, not need parameters)
 
 usage:
 ```java
-@Config 
+@Config
 public interface MyConfig {
 
     @MySuperParser({"param1", "param1"})
@@ -669,7 +676,7 @@ Several of these annotations shipped with the library:
 
 ### Standard loaders
 1.  System properties: `system:properties`
- 
+
 2.  Environment variables: `system:env`
 
 3.  properties file from class-path : `classpath:relative-path-to-name.properties[#charset]`
@@ -706,12 +713,12 @@ e.g.
 public final class SinglePropertyLoader implements Loader {
 
     @Override public boolean accept(URI uri) {
-    
+
         return uri.toString().equals("single:property");
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
-    
+
         Map<String, String> result = new HashMap<>();
         result.put("key", "value");
         return result;
@@ -730,8 +737,8 @@ FYI:
 -   Custom loader implementation must be stateless and must have a default(no-argument) `public` constructor.
 
 ### SPI
-[Service-provider loading facility](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) (introduced in JDK 1.6) can be used to *automatically* add custom loader implementation to the `ConfigFactory`. Simple add file *META-INF\services\net.cactusthorn.config.core.loader.Loader* with full-class-name of custom-loader implementation(s) in the class path.   
-e.g.   
+[Service-provider loading facility](https://docs.oracle.com/javase/8/docs/api/java/util/ServiceLoader.html) (introduced in JDK 1.6) can be used to *automatically* add custom loader implementation to the `ConfigFactory`. Simple add file *META-INF\services\net.cactusthorn.config.core.loader.Loader* with full-class-name of custom-loader implementation(s) in the class path.
+e.g.
 -   [core module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/core/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 -   [tests module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/tests/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 -   [toml module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/toml/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
@@ -786,9 +793,9 @@ ConfigFactory factory =
 
 Warning: If you do not call `autoReload` method, auto reloading will not work.
 
-But, the source will be reloaded only if it *changed*.   
-`Loader`-implementation should implement `contentHashCode` method which return hash-code. (The method return value should be changed, when URI related content is changed).   
-If `Loader`-implementation do not support auto-reloading (which is default behavior) the method is returns always same value (e.g. `0`).   
+But, the source will be reloaded only if it *changed*.
+`Loader`-implementation should implement `contentHashCode` method which return hash-code. (The method return value should be changed, when URI related content is changed).
+If `Loader`-implementation do not support auto-reloading (which is default behavior) the method is returns always same value (e.g. `0`).
 As result, for the moment, auto reloading only supported for:
 -   `system:properties`
 -   URIs with **file:** scheme (only files related URIs). FYI: file last-modified-time is used as hash-code.
@@ -804,10 +811,10 @@ public interface MyConfig extends Reloadable {
 }
 ```
 
-> **Filesystems quirks**   
-> The date resolution vary from filesystem to filesystem.   
-> For instance, for Ext3, ReiserFS and HSF+ the date resolution is of 1 second.   
-> For FAT32 the date resolution for the last modified time is 2 seconds.   
+> **Filesystems quirks**
+> The date resolution vary from filesystem to filesystem.
+> For instance, for Ext3, ReiserFS and HSF+ the date resolution is of 1 second.
+> For FAT32 the date resolution for the last modified time is 2 seconds.
 > For Ext4 the date resolution is in nanoseconds.
 
 ### Reload event listeners
