@@ -83,4 +83,20 @@ public class VariablesParserTest {
         Exception e = assertThrows(IllegalArgumentException.class, () -> new VariablesParser(template).replace(Collections.emptyMap()));
         assertEquals(msg(WRONG_SOURCE_PARAM, 11, template), e.getMessage());
     }
+
+    @Test public void replaceVaraiblesWithDefault() {
+        Map<String, String> values = new HashMap<>();
+        values.put("AA", "B");
+        values.put("2c2", "C");
+
+        assertEquals("ByyDEFAULTcccCxx", new VariablesParser("{AA}yy{1bbb1:DEFAULT}ccc{2c2}xx").replace(values));
+    }
+
+    @Test public void replaceVaraiblesWithDefaultSeparator() {
+        Map<String, String> values = new HashMap<>();
+        values.put("AA", "B");
+        values.put("2c2", "C");
+
+        assertEquals("ByycccCxx", new VariablesParser("{AA}yy{1bbb1:}ccc{2c2}xx").replace(values));
+    }
 }

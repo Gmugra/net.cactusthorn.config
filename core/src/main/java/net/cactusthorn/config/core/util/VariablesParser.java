@@ -58,7 +58,7 @@ public final class VariablesParser {
             if (variable.indexOf('{') != -1) {
                 throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM, start + 1 + variable.indexOf('{'), source));
             }
-            String value = values.getOrDefault(variable, "");
+            String value = values.getOrDefault(variable, getDefault(variable));
             result.append(value);
             pos++;
             start = source.indexOf('{', pos);
@@ -68,5 +68,13 @@ public final class VariablesParser {
             throw new IllegalArgumentException(msg(WRONG_SOURCE_PARAM, source, source.indexOf("}", pos)));
         }
         return result.toString();
+    }
+
+    private String getDefault(String variable) {
+        int index = variable.indexOf(':');
+        if (index == -1) {
+            return "";
+        }
+        return variable.substring(index + 1);
     }
 }

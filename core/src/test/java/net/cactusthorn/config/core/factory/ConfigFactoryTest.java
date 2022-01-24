@@ -117,6 +117,13 @@ public class ConfigFactoryTest {
         assertEquals("RESOURCE", testConfig.str());
     }
 
+    @Test public void systemPropertyWithDefault() {
+        System.clearProperty("testit");
+        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit:config}/testconfig.properties").build()
+                .create(TestConfig.class);
+        assertEquals("RESOURCE", testConfig.str());
+    }
+
     @Test public void userHome() throws IOException {
         Path userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
         Path file = userHome.resolve("standard-properties.xml");
