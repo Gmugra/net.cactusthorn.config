@@ -351,7 +351,7 @@ host = "https://www.wikipedia.org/"
 port = 100
 ```
 
-Syntax: {*name*}
+Syntax: {*name*} or {*name*:*default-value*}
 
 e.g.
 ```java
@@ -376,9 +376,10 @@ java -Denv=dev -jar myapp.jar
 ```
 
 FYI:
-1.  If a system property or environment variable does not exist, an *empty string* will be used as the value.
-2.  After expanding, start & end points `.` will be dropped.
-3.  After expanding, multiple points (e.g `...`) inside the key name will be substituted to single `.`.
+1.  If a system property or environment variable does not exist, specified default-value will be used.
+2.  If a system property or environment variable does not exist, and default-value not specified, an empty string will be used as the value.
+3.  After expanding, start & end points `.` will be dropped.
+4.  After expanding, multiple points (e.g `...`) inside the key name will be substituted to single `.`.
 
 | system property value | key config | resulting key |
 | --- | --- | --- |
@@ -388,6 +389,15 @@ FYI:
 | | server.{env}.host | server.host |
 | dev | host.{env} | host.dev |
 | | host.{env} | host |
+
+| system property value | key config | resulting key |
+| --- | --- | --- |
+| dev | {env:test}.host | dev.host |
+| | {env:test}.host | test.host |
+| dev | server.{env:test}.host | server.dev.host |
+| | server.{env:test}.host | server.test.host |
+| dev | host.{env:test} | host.dev |
+| | host.{env:test} | host.test |
 
 ## The `ConfigFactory`
 The `ConfigFactory` class is thread-safe, but not stateless.
@@ -744,12 +754,13 @@ e.g.
 -   [toml module](https://github.com/Gmugra/net.cactusthorn.config/blob/main/toml/src/main/resources/META-INF/services/net.cactusthorn.config.core.loader.Loader)
 
 ### System properties and/or environment variables in sources URIs
-Syntax: {*name*}
+Syntax: {*name*} or {*name*:*default-value*}
 e.g.
 -   `file:/{config-path}/my.properties`
--   `classpath:{config-path}/my.properties#{charset}`
+-   `classpath:{config-path:home}/my.properties#{charset}`
 
-FYI: If a system property or environment variable does not exist, an *empty string* will be used as the value.
+FYI:
+-   If a system property or environment variable does not exist and *default-value* is not specified, an *empty string* will be used as the value.
 
 Special use-case *user home directory*: The URIs with `file:~/` (e.g. `file:~/my.xml` or `jar:file:~/some.jar!/your.properties`) always correctly resolved to user home directory independent from OS.
 -   e.g. in Windows, URI `file:~/my.xml` will be replaced to `file:///C:/Users/UserName/my.xml`.
