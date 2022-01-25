@@ -74,11 +74,11 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
             interfaceType = interfaces.entrySet().stream()
                 .filter(e -> processingEnv.getTypeUtils().isSameType(element.asType(), e.getKey()))
                 .map(e -> e.getValue()).findAny()
-                .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), element));
+                .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), methodElement));
             // @formatter:on
             arguments = declaredType.getTypeArguments();
             if (arguments.isEmpty()) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), element);
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), methodElement);
             }
         }
 
@@ -92,12 +92,12 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
         private MethodInfo validateArgument(int argumentIndex, MethodValidator validator) {
             if (arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), element);
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), methodElement);
             }
             DeclaredType argumentDeclaredType = (DeclaredType) arguments.get(argumentIndex);
             Element argumentElement = argumentDeclaredType.asElement();
             if (argumentElement.getKind() == ElementKind.INTERFACE) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), element);
+                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), methodElement);
             }
             return validator.validate(methodElement, arguments.get(argumentIndex)).withInterface(interfaceType);
         }
