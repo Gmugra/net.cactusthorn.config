@@ -79,7 +79,7 @@ public class StringTypeValidator extends MethodValidatorAncestor {
             return new MethodInfo(methodElement).withStringMethod(stringMethod, typeMirror);
         }
 
-        throw new ProcessorException(msg(RETURN_STRING_CLASS), typeElement);
+        throw new ProcessorException(msg(RETURN_STRING_CLASS), methodElement);
     }
 
     private StringMethod find(Element element) {

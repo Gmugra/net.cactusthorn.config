@@ -74,10 +74,10 @@ public class OptionalTypeValidator extends MethodValidatorAncestor {
 
         List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
         if (arguments.isEmpty()) {
-            throw new ProcessorException(msg(RETURN_OPTIONAL_ARG_EMPTY), element);
+            throw new ProcessorException(msg(RETURN_OPTIONAL_ARG_EMPTY), methodElement);
         }
         if (arguments.get(0).getKind() == TypeKind.WILDCARD) {
-            throw new ProcessorException(msg(RETURN_OPTIONAL_ARG_WILDCARD), element);
+            throw new ProcessorException(msg(RETURN_OPTIONAL_ARG_WILDCARD), methodElement);
         }
         return argumentValidator.validate(methodElement, arguments.get(0)).withOptional();
     }
