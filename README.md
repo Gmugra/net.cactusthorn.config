@@ -378,8 +378,8 @@ java -Denv=dev -jar myapp.jar
 FYI:
 1.  If a system property or environment variable does not exist, specified default-value will be used.
 2.  If a system property or environment variable does not exist, and default-value not specified, an empty string will be used as the value.
-4.  After expanding, start & end points `.` will be dropped.
-5.  After expanding, multiple points (e.g `...`) inside the key name will be substituted to single `.`.
+3.  After expanding, start & end points `.` will be dropped.
+4.  After expanding, multiple points (e.g `...`) inside the key name will be substituted to single `.`.
 
 | system property value | key config | resulting key |
 | --- | --- | --- |
