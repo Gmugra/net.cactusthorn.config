@@ -73,11 +73,11 @@
 	<module name="TreeWalker">
 
 		<!-- Simple console output is not allowed -->
-		<module name="Regexp">
+		<!--module name="Regexp">
 			<property name="format" value="System\.(out|err)"/>
 			<property name="illegalPattern" value="true"/>
 			<property name="ignoreComments" value="true"/>
-		</module>
+		</module-->
 
 		<!-- Make the @SuppressWarnings annotations available to Checkstyle -->
 		<module name="SuppressWarningsHolder" />

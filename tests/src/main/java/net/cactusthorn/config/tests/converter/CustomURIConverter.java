@@ -20,27 +20,12 @@
 package net.cactusthorn.config.tests.converter;
 
 import java.net.URI;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
 
-import net.cactusthorn.config.core.Config;
-import net.cactusthorn.config.core.Default;
-import net.cactusthorn.config.core.converter.ConverterClass;
+import net.cactusthorn.config.core.converter.Converter;
 
-@Config public interface ConfigConverter {
+public class CustomURIConverter implements Converter<URI> {
 
-    @ConverterClass(CustomURIConverter.class) @Default("https://github.com") URI url();
-
-    @ConverterClass(CustomURIConverter.class) Optional<URI> ourl();
-
-    @ConverterClass(CustomURIConverter.class) Optional<List<URI>> listURI();
-
-    Optional<List<Path>> listPath();
-
-    @Default("https://github.com") URI defaultConverter();
-
-    @ConverterClass(MyInterfaceConverter.class) Optional<MyInterface> myInterface();
-
-    @ConverterClass(MyInterfaceConverter.class) Optional<List<MyInterface>> myInterfaceList();
+    @Override public URI convert(String value, String[] parameters) {
+        return URI.create("cactusthorn.net");
+    }
 }

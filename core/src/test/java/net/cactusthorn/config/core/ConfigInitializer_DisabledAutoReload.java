@@ -37,7 +37,7 @@ public final class ConfigInitializer_DisabledAutoReload extends ConfigInitialize
   public Map<String, Object> initialize() {
     ConfigHolder ch = loaders().load(Config_DisabledAutoReload.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
     Map<String,Object> values = new HashMap<>();
-    values.put("aaa", ch.get(s -> s, "aaa"));
+    values.put("aaa", ch.get(s -> s, expandKey(globalPrefix("aaa"))));
     return values;
   }
 }

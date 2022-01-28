@@ -35,11 +35,29 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
 
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
+  private int hashCode;
+
+  private String toString;
+
   private final ConfigInitializer INITIALIZER;
 
   public Config_DisabledAutoReload(final Loaders loaders) {
     INITIALIZER = new ConfigInitializer_DisabledAutoReload(loaders);
     VALUES.putAll(INITIALIZER.initialize());
+    hashCode = calculate__Hash__Code();
+    toString = generate__To__String();
+  }
+
+  private int calculate__Hash__Code() {
+    return Objects.hash(aaa());
+  }
+
+  private String generate__To__String() {
+    StringBuilder buf = new StringBuilder();
+    buf.append('[');
+    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
+    buf.append(']');
+    return buf.toString();
   }
 
   @Override
@@ -49,16 +67,12 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
 
   @Override
   public int hashCode() {
-    return Objects.hash(aaa());
+    return hashCode;
   }
 
   @Override
   public String toString() {
-    StringBuilder buf = new StringBuilder();
-    buf.append('[');
-    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
-    buf.append(']');
-    return buf.toString();
+    return toString;
   }
 
   @Override
@@ -80,6 +94,8 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
     Map<String, Object> reloaded = INITIALIZER.initialize();
     VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
     VALUES.putAll(reloaded);
+    hashCode = calculate__Hash__Code();
+    toString = generate__To__String();
     ReloadEvent event = new ReloadEvent(this, old, VALUES);
     LISTENERS.forEach(l -> l.reloadPerformed(event));
   }

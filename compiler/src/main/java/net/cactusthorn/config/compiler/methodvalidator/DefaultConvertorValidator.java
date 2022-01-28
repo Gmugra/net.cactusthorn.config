@@ -36,13 +36,11 @@ import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
@@ -51,7 +49,6 @@ import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.core.converter.Converter;
-import net.cactusthorn.config.core.converter.ConverterClass;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
 import net.cactusthorn.config.core.converter.standard.CharacterConverter;
@@ -129,15 +126,10 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
     }
 
-    private boolean existConverterAnnotation(ExecutableElement methodElement) {
-        ConverterClass annotation = methodElement.getAnnotation(ConverterClass.class);
-        if (annotation != null) {
-            return true;
-        }
-        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
-        for (AnnotationMirror annotationMirror : annotationMirrors) {
-            ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
-            if (superAnnotation != null) {
+    static boolean isDefaultConvertor(ProcessingEnvironment pe, Element elem) {
+        for (Class<?> clazz : CONVERTERS.keySet()) {
+            TypeMirror tm = pe.getElementUtils().getTypeElement(clazz.getName()).asType();
+            if (pe.getTypeUtils().isSameType(elem.asType(), tm)) {
                 return true;
             }
         }

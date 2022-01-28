@@ -19,28 +19,17 @@
  */
 package net.cactusthorn.config.tests.converter;
 
-import java.net.URI;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.Optional;
+import net.cactusthorn.config.core.converter.Converter;
 
-import net.cactusthorn.config.core.Config;
-import net.cactusthorn.config.core.Default;
-import net.cactusthorn.config.core.converter.ConverterClass;
+public class MyInterfaceConverter implements Converter<MyInterface> {
 
-@Config public interface ConfigConverter {
+    private static class MyInterfaceImpl implements MyInterface {
+        @Override public String getValue() {
+            return "MY_VALUE";
+        }
+    }
 
-    @ConverterClass(CustomURIConverter.class) @Default("https://github.com") URI url();
-
-    @ConverterClass(CustomURIConverter.class) Optional<URI> ourl();
-
-    @ConverterClass(CustomURIConverter.class) Optional<List<URI>> listURI();
-
-    Optional<List<Path>> listPath();
-
-    @Default("https://github.com") URI defaultConverter();
-
-    @ConverterClass(MyInterfaceConverter.class) Optional<MyInterface> myInterface();
-
-    @ConverterClass(MyInterfaceConverter.class) Optional<List<MyInterface>> myInterfaceList();
+    @Override public MyInterface convert(String value, String[] parameters) {
+        return new MyInterfaceImpl();
+    }
 }

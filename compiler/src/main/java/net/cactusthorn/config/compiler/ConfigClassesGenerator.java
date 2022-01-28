@@ -88,11 +88,11 @@ public class ConfigClassesGenerator implements ClassesGenerator {
         typeValidator =
             MethodValidatorChain.builder(processingEnv, WithoutParametersValidator.class)
             .next(ReturnVoidValidator.class)
+            .next(InterfaceTypeValidator.class)
+            .next(AbstractTypeValidator.class)
             .next(OptionalTypeValidator.class)
             .next(DefaultConvertorValidator.class)
             .next(ConverterValidator.class)
-            .next(InterfaceTypeValidator.class)
-            .next(AbstractTypeValidator.class)
             .next(StringTypeValidator.class)
             .build();
         // @formatter:on

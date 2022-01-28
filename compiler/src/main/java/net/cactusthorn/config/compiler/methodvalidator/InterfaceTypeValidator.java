@@ -46,63 +46,20 @@ import net.cactusthorn.config.compiler.ProcessorException;
 
 public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
-    private static final class ElementInfo {
-
-        private final ProcessingEnvironment processingEnv;
-        private final ExecutableElement methodElement;
-        private final Map<TypeMirror, Type> interfaces;
-
-        private final DeclaredType declaredType;
-        private final Element element;
-
+    private static final class InterfaceType {
         private Type interfaceType;
         private List<? extends TypeMirror> arguments;
 
-        private ElementInfo(ProcessingEnvironment processingEnv, ExecutableElement methodElement, TypeMirror typeMirror,
-                Map<TypeMirror, Type> interfaces) {
-
-            this.processingEnv = processingEnv;
-            this.methodElement = methodElement;
-            this.interfaces = interfaces;
-
-            declaredType = (DeclaredType) typeMirror;
-            element = declaredType.asElement();
+        private InterfaceType(Type interfaceType, List<? extends TypeMirror> arguments) {
+            this.interfaceType = interfaceType;
+            this.arguments = arguments;
         }
 
-        private void initInterface() {
-         // @formatter:off
-            interfaceType = interfaces.entrySet().stream()
-                .filter(e -> processingEnv.getTypeUtils().isSameType(element.asType(), e.getKey()))
-                .map(e -> e.getValue()).findAny()
-                .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), methodElement));
-            // @formatter:on
-            arguments = declaredType.getTypeArguments();
-            if (arguments.isEmpty()) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), methodElement);
-            }
+        public Type interfaceType() {
+            return interfaceType;
         }
 
-        private boolean isInterface() {
-            return element.getKind() == ElementKind.INTERFACE;
-        }
-
-        private boolean isMap() {
-            return interfaceType == Map.class || interfaceType == SortedMap.class;
-        }
-
-        private MethodInfo validateArgument(int argumentIndex, MethodValidator validator) {
-            if (arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), methodElement);
-            }
-            DeclaredType argumentDeclaredType = (DeclaredType) arguments.get(argumentIndex);
-            Element argumentElement = argumentDeclaredType.asElement();
-            if (argumentElement.getKind() == ElementKind.INTERFACE) {
-                throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), methodElement);
-            }
-            return validator.validate(methodElement, arguments.get(argumentIndex)).withInterface(interfaceType);
-        }
-
-        private List<? extends TypeMirror> arguments() {
+        public List<? extends TypeMirror> arguments() {
             return arguments;
         }
     }
@@ -135,21 +92,77 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        ElementInfo elementInfo = new ElementInfo(processingEnv(), methodElement, typeMirror, interfaces);
-        if (!elementInfo.isInterface()) {
+        DeclaredType declaredType = (DeclaredType) typeMirror;
+        Element element = declaredType.asElement();
+        if (!isInterface(element)) {
             return next(methodElement, typeMirror);
         }
-        elementInfo.initInterface();
-        if (elementInfo.isMap()) {
-            return validateMap(elementInfo);
+        if (DefaultConvertorValidator.isDefaultConvertor(processingEnv(), ((DeclaredType) typeMirror).asElement())) {
+            return next(methodElement, typeMirror);
+        }
+        if (!isSupportedInterface(element) && existConverterAnnotation(methodElement)) {
+            return next(methodElement, typeMirror);
+        }
+        InterfaceType interfaceType = getSupportedInterfaceType(methodElement, declaredType, element);
+        if (isMap(interfaceType)) {
+            return validateMap(methodElement, interfaceType);
         } else {
-            return elementInfo.validateArgument(0, valueValidator);
+            return validateArgument(methodElement, interfaceType, 0, valueValidator, true);
         }
     }
 
-    private MethodInfo validateMap(ElementInfo elementInfo) {
-        MethodInfo key = elementInfo.validateArgument(0, keyValidator);
-        MethodInfo value = elementInfo.validateArgument(1, valueValidator).withMapKey(key);
+    private boolean isInterface(Element element) {
+        return element.getKind() == ElementKind.INTERFACE;
+    }
+
+    private boolean isSupportedInterface(Element element) {
+        return interfaces.entrySet().stream().filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey())).findAny()
+                .isPresent();
+    }
+
+    private InterfaceType getSupportedInterfaceType(ExecutableElement methodElement, DeclaredType declaredType, Element element) {
+        // @formatter:off
+       Type interfaceType = interfaces.entrySet().stream()
+           .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
+           .map(e -> e.getValue()).findAny()
+           .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), methodElement));
+       // @formatter:on
+        List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
+        if (arguments.isEmpty()) {
+            throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), methodElement);
+        }
+        return new InterfaceType(interfaceType, arguments);
+    }
+
+    private boolean isMap(InterfaceType interfaceType) {
+        return interfaceType.interfaceType() == Map.class || interfaceType.interfaceType() == SortedMap.class;
+    }
+
+    private MethodInfo validateMap(ExecutableElement methodElement, InterfaceType interfaceType) {
+        MethodInfo key = validateArgument(methodElement, interfaceType, 0, keyValidator, false);
+        MethodInfo value = validateArgument(methodElement, interfaceType, 1, valueValidator, true).withMapKey(key);
         return value;
+    }
+
+    private MethodInfo validateArgument(ExecutableElement methodElement, InterfaceType interfaceType, int argumentIndex,
+            MethodValidator validator, boolean checkCustomConverter) {
+        if (interfaceType.arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
+            throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), methodElement);
+        }
+        DeclaredType argumentDeclaredType = (DeclaredType) interfaceType.arguments().get(argumentIndex);
+        Element argumentElement = argumentDeclaredType.asElement();
+        if (argumentElement.getKind() != ElementKind.INTERFACE) {
+            return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
+                    .withInterface(interfaceType.interfaceType());
+        }
+        if (DefaultConvertorValidator.isDefaultConvertor(processingEnv(), argumentElement)) {
+            return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
+                    .withInterface(interfaceType.interfaceType());
+        }
+        if (checkCustomConverter && existConverterAnnotation(methodElement)) {
+            return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
+                    .withInterface(interfaceType.interfaceType());
+        }
+        throw new ProcessorException(msg(RETURN_INTERFACE_ARG_INTERFACE), methodElement);
     }
 }

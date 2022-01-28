@@ -22,7 +22,7 @@ package net.cactusthorn.config.tests.converter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +36,7 @@ public class ConfigConverterTest {
         Map<String, String> properties = new HashMap<>();
         properties.put("url", "https://www.google.com");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(new URL("https://www.google.com"), config.url());
+        assertEquals(URI.create("cactusthorn.net"), config.url());
     }
 
     @Test public void optionalUrl() throws MalformedURLException {
@@ -44,19 +44,46 @@ public class ConfigConverterTest {
         properties.put("url", "https://www.google.com");
         properties.put("ourl", "https://www.bing.com");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(new URL("https://www.bing.com"), config.ourl().get());
+        assertEquals(URI.create("cactusthorn.net"), config.ourl().get());
     }
 
     @Test public void list() throws MalformedURLException {
         Map<String, String> properties = new HashMap<>();
         properties.put("url", "https://www.google.com");
-        properties.put("list", "https://www.bing.com,https://github.com");
+        properties.put("listURI", "https://www.bing.com,https://www.google.com");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(2, config.list().get().size());
+        assertEquals(2, config.listURI().get().size());
+    }
+
+    @Test public void listPath() throws MalformedURLException {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("url", "https://www.google.com");
+        properties.put("listPath", "my/home,some/dir");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+        assertEquals(2, config.listPath().get().size());
     }
 
     @Test public void defaultUrl() throws MalformedURLException {
         ConfigConverter config = ConfigFactory.builder().build().create(ConfigConverter.class);
-        assertEquals(new URL("https://github.com"), config.url());
+        assertEquals(URI.create("cactusthorn.net"), config.url());
+    }
+
+    @Test public void defaultConverter() throws MalformedURLException {
+        ConfigConverter config = ConfigFactory.builder().build().create(ConfigConverter.class);
+        assertEquals(URI.create("https://github.com"), config.defaultConverter());
+    }
+
+    @Test public void myInterface() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myInterface", "?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+        assertEquals("MY_VALUE", config.myInterface().get().getValue());
+    }
+
+    @Test public void myInterfaceList() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myInterfaceList", "?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+        assertEquals("MY_VALUE", config.myInterfaceList().get().get(0).getValue());
     }
 }

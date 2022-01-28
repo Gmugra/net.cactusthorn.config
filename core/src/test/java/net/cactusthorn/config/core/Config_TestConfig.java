@@ -39,11 +39,73 @@ public final class Config_TestConfig implements TestConfig {
 
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
+  private int hashCode;
+
+  private String toString;
+
   private final ConfigInitializer INITIALIZER;
 
   public Config_TestConfig(final Loaders loaders) {
     INITIALIZER = new ConfigInitializer_TestConfig(loaders);
     VALUES.putAll(INITIALIZER.initialize());
+    hashCode = calculate__Hash__Code();
+    toString = generate__To__String();
+  }
+
+  private int calculate__Hash__Code() {
+    return Objects.hash(aaa(), dlist(), dlist2(), dset(), dset2(), dsort(), dsort2(), dstr(), dstr2(), duration(), list(), olist(), olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str(), testconverter());
+  }
+
+  private String generate__To__String() {
+    StringBuilder buf = new StringBuilder();
+    buf.append('[');
+    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
+    buf.append(", ");
+    buf.append("dlist").append('=').append(String.valueOf(VALUES.get("test.dlist")));
+    buf.append(", ");
+    buf.append("dlist2").append('=').append(String.valueOf(VALUES.get("test.dlist2")));
+    buf.append(", ");
+    buf.append("dset").append('=').append(String.valueOf(VALUES.get("test.dset")));
+    buf.append(", ");
+    buf.append("dset2").append('=').append(String.valueOf(VALUES.get("test.dset2")));
+    buf.append(", ");
+    buf.append("dsort").append('=').append(String.valueOf(VALUES.get("test.dsort")));
+    buf.append(", ");
+    buf.append("dsort2").append('=').append(String.valueOf(VALUES.get("test.dsort2")));
+    buf.append(", ");
+    buf.append("dstr").append('=').append(String.valueOf(VALUES.get("test.dstr")));
+    buf.append(", ");
+    buf.append("dstr2").append('=').append(String.valueOf(VALUES.get("test.dstr2")));
+    buf.append(", ");
+    buf.append("duration").append('=').append(String.valueOf(VALUES.get("test.duration")));
+    buf.append(", ");
+    buf.append("list").append('=').append(String.valueOf(VALUES.get("test.list")));
+    buf.append(", ");
+    buf.append("olist").append('=').append(String.valueOf(VALUES.get("test.olist")));
+    buf.append(", ");
+    buf.append("olist2").append('=').append(String.valueOf(VALUES.get("test.olist2")));
+    buf.append(", ");
+    buf.append("oset").append('=').append(String.valueOf(VALUES.get("test.oset")));
+    buf.append(", ");
+    buf.append("oset2").append('=').append(String.valueOf(VALUES.get("test.oset2")));
+    buf.append(", ");
+    buf.append("osort").append('=').append(String.valueOf(VALUES.get("test.osort")));
+    buf.append(", ");
+    buf.append("osort2").append('=').append(String.valueOf(VALUES.get("test.osort2")));
+    buf.append(", ");
+    buf.append("ostr").append('=').append(String.valueOf(VALUES.get("ostr")));
+    buf.append(", ");
+    buf.append("ostr1").append('=').append(String.valueOf(VALUES.get("test.ostr1")));
+    buf.append(", ");
+    buf.append("set").append('=').append(String.valueOf(VALUES.get("test.set")));
+    buf.append(", ");
+    buf.append("sort").append('=').append(String.valueOf(VALUES.get("test.sort")));
+    buf.append(", ");
+    buf.append("str").append('=').append(String.valueOf(VALUES.get("test.string")));
+    buf.append(", ");
+    buf.append("testconverter").append('=').append(String.valueOf(VALUES.get("test.testconverter")));
+    buf.append(']');
+    return buf.toString();
   }
 
   @Override
@@ -181,60 +243,12 @@ public final class Config_TestConfig implements TestConfig {
 
   @Override
   public int hashCode() {
-    return Objects.hash(aaa(), dlist(), dlist2(), dset(), dset2(), dsort(), dsort2(), dstr(), dstr2(), duration(), list(), olist(), olist2(), oset(), oset2(), osort(), osort2(), ostr(), ostr1(), set(), sort(), str(), testconverter());
+    return hashCode;
   }
 
   @Override
   public String toString() {
-    StringBuilder buf = new StringBuilder();
-    buf.append('[');
-    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
-    buf.append(", ");
-    buf.append("dlist").append('=').append(String.valueOf(VALUES.get("test.dlist")));
-    buf.append(", ");
-    buf.append("dlist2").append('=').append(String.valueOf(VALUES.get("test.dlist2")));
-    buf.append(", ");
-    buf.append("dset").append('=').append(String.valueOf(VALUES.get("test.dset")));
-    buf.append(", ");
-    buf.append("dset2").append('=').append(String.valueOf(VALUES.get("test.dset2")));
-    buf.append(", ");
-    buf.append("dsort").append('=').append(String.valueOf(VALUES.get("test.dsort")));
-    buf.append(", ");
-    buf.append("dsort2").append('=').append(String.valueOf(VALUES.get("test.dsort2")));
-    buf.append(", ");
-    buf.append("dstr").append('=').append(String.valueOf(VALUES.get("test.dstr")));
-    buf.append(", ");
-    buf.append("dstr2").append('=').append(String.valueOf(VALUES.get("test.dstr2")));
-    buf.append(", ");
-    buf.append("duration").append('=').append(String.valueOf(VALUES.get("test.duration")));
-    buf.append(", ");
-    buf.append("list").append('=').append(String.valueOf(VALUES.get("test.list")));
-    buf.append(", ");
-    buf.append("olist").append('=').append(String.valueOf(VALUES.get("test.olist")));
-    buf.append(", ");
-    buf.append("olist2").append('=').append(String.valueOf(VALUES.get("test.olist2")));
-    buf.append(", ");
-    buf.append("oset").append('=').append(String.valueOf(VALUES.get("test.oset")));
-    buf.append(", ");
-    buf.append("oset2").append('=').append(String.valueOf(VALUES.get("test.oset2")));
-    buf.append(", ");
-    buf.append("osort").append('=').append(String.valueOf(VALUES.get("test.osort")));
-    buf.append(", ");
-    buf.append("osort2").append('=').append(String.valueOf(VALUES.get("test.osort2")));
-    buf.append(", ");
-    buf.append("ostr").append('=').append(String.valueOf(VALUES.get("ostr")));
-    buf.append(", ");
-    buf.append("ostr1").append('=').append(String.valueOf(VALUES.get("test.ostr1")));
-    buf.append(", ");
-    buf.append("set").append('=').append(String.valueOf(VALUES.get("test.set")));
-    buf.append(", ");
-    buf.append("sort").append('=').append(String.valueOf(VALUES.get("test.sort")));
-    buf.append(", ");
-    buf.append("str").append('=').append(String.valueOf(VALUES.get("test.string")));
-    buf.append(", ");
-    buf.append("testconverter").append('=').append(String.valueOf(VALUES.get("test.testconverter")));
-    buf.append(']');
-    return buf.toString();
+    return toString;
   }
 
   @Override
@@ -278,6 +292,8 @@ public final class Config_TestConfig implements TestConfig {
     Map<String, Object> reloaded = INITIALIZER.initialize();
     VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
     VALUES.putAll(reloaded);
+    hashCode = calculate__Hash__Code();
+    toString = generate__To__String();
     ReloadEvent event = new ReloadEvent(this, old, VALUES);
     LISTENERS.forEach(l -> l.reloadPerformed(event));
   }
