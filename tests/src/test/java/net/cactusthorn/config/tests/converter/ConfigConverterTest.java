@@ -23,6 +23,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,5 +87,59 @@ public class ConfigConverterTest {
         properties.put("myInterfaceList", "?");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
         assertEquals("MY_VALUE", config.myInterfaceList().get().get(0).getValue());
+    }
+
+    @Test public void myAbstractClass() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myAbstractClass", "?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+        assertEquals("MY_A_VALUE", config.myAbstractClass().get().getValue());
+    }
+
+    @Test public void myAbstractClassList() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myAbstractClassList", "?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+        assertEquals("MY_A_VALUE", config.myAbstractClassList().get().get(0).getValue());
+    }
+
+    @Test public void myAbstractClassMap() throws MalformedURLException {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("defaulConvertersMap", "https://www.bing.com|https://www.google.com");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersMap().get().get(new URL("https://www.bing.com")));
+    }
+
+    @Test public void defaulConvertersPathMap() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("defaulConvertersPathMap", "my/home|https://www.google.com");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersPathMap().get().get(Paths.get("my/home")));
+    }
+
+    @Test public void defaulConvertersPathMap2() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("defaulConvertersPathMap2", "https://www.google.com|my/home");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals(Paths.get("my/home"), config.defaulConvertersPathMap2().get().get(URI.create("https://www.google.com")));
+    }
+
+    @Test public void myInterfaceMap() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myInterfaceMap", "A|?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals("MY_VALUE", config.myInterfaceMap().get().get("A").getValue());
+    }
+
+    @Test public void myInterfaceMap2() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myInterfaceMap2", "my/home|?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals("MY_VALUE", config.myInterfaceMap2().get().get(Paths.get("my/home")).getValue());
     }
 }

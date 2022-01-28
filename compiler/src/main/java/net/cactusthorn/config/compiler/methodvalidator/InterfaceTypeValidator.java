@@ -76,13 +76,13 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
         // @formatter:off
         valueValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
-                .next(DefaultConvertorValidator.class)
+                .next(DefaultConverterValidator.class)
                 .next(ConverterValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
 
         keyValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
-                .next(DefaultConvertorValidator.class)
+                .next(DefaultConverterValidatorForMapKey.class)
                 .next(StringTypeValidator.class)
                 .build();
         // @formatter:on
@@ -97,7 +97,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (!isInterface(element)) {
             return next(methodElement, typeMirror);
         }
-        if (DefaultConvertorValidator.isDefaultConvertor(processingEnv(), ((DeclaredType) typeMirror).asElement())) {
+        if (isDefaultConvertor(element)) {
             return next(methodElement, typeMirror);
         }
         if (!isSupportedInterface(element) && existConverterAnnotation(methodElement)) {
@@ -144,6 +144,10 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         return value;
     }
 
+    private boolean isDefaultConvertor(Element element) {
+        return isElementTypeInClasses(element, DefaultConverterValidator.CONVERTERS.keySet());
+    }
+
     private MethodInfo validateArgument(ExecutableElement methodElement, InterfaceType interfaceType, int argumentIndex,
             MethodValidator validator, boolean checkCustomConverter) {
         if (interfaceType.arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
@@ -155,11 +159,15 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
             return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
                     .withInterface(interfaceType.interfaceType());
         }
-        if (DefaultConvertorValidator.isDefaultConvertor(processingEnv(), argumentElement)) {
+        if (isDefaultConvertor(argumentElement)) {
             return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
                     .withInterface(interfaceType.interfaceType());
         }
         if (checkCustomConverter && existConverterAnnotation(methodElement)) {
+            System.out.println("*2*****************");
+            System.out.println(methodElement);
+            System.out.println(interfaceType.arguments().get(argumentIndex));
+            System.out.println("*2*****************");
             return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
                     .withInterface(interfaceType.interfaceType());
         }

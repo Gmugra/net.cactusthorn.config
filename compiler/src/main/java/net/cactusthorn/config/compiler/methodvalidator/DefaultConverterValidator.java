@@ -69,7 +69,7 @@ import net.cactusthorn.config.core.converter.standard.YearConverter;
 import net.cactusthorn.config.core.converter.standard.YearMonthConverter;
 import net.cactusthorn.config.core.converter.standard.ZonedDateTimeConverter;
 
-public class DefaultConvertorValidator extends MethodValidatorAncestor {
+public class DefaultConverterValidator extends MethodValidatorAncestor {
 
     public static final Map<Class<?>, String> CONVERTERS;
     static {
@@ -96,7 +96,7 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();
 
-    public DefaultConvertorValidator(ProcessingEnvironment processingEnv) {
+    public DefaultConverterValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
         for (Class<?> clazz : CONVERTERS.keySet()) {
             classTypes.put(processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType(), clazz);
@@ -126,13 +126,7 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
     }
 
-    static boolean isDefaultConvertor(ProcessingEnvironment pe, Element elem) {
-        for (Class<?> clazz : CONVERTERS.keySet()) {
-            TypeMirror tm = pe.getElementUtils().getTypeElement(clazz.getName()).asType();
-            if (pe.getTypeUtils().isSameType(elem.asType(), tm)) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean existsConvertorAnotation(ExecutableElement methodElement) {
+        return existConverterAnnotation(methodElement);
     }
 }

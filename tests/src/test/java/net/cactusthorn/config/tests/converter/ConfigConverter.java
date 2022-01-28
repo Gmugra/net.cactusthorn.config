@@ -20,8 +20,10 @@
 package net.cactusthorn.config.tests.converter;
 
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import net.cactusthorn.config.core.Config;
@@ -43,4 +45,18 @@ import net.cactusthorn.config.core.converter.ConverterClass;
     @ConverterClass(MyInterfaceConverter.class) Optional<MyInterface> myInterface();
 
     @ConverterClass(MyInterfaceConverter.class) Optional<List<MyInterface>> myInterfaceList();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<MyAbstractClass> myAbstractClass();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<List<MyAbstractClass>> myAbstractClassList();
+
+    Optional<Map<URL, URI>> defaulConvertersMap();
+
+    Optional<Map<Path, URI>> defaulConvertersPathMap();
+
+    Optional<Map<URI, Path>> defaulConvertersPathMap2();
+
+    @ConverterClass(MyInterfaceConverter.class) Optional<Map<String, MyInterface>> myInterfaceMap();
+    
+    @ConverterClass(MyInterfaceConverter.class) Optional<Map<Path, MyInterface>> myInterfaceMap2();
 }

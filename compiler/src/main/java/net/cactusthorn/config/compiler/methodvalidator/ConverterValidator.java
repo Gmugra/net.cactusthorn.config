@@ -47,11 +47,17 @@ public class ConverterValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-
+        System.out.println("*0*****************");
+        System.out.println(methodElement);
         Optional<TypeMirror> converterType = getConverterClass(methodElement);
         if (converterType.isPresent()) {
+            System.out.println("*1*****************");
+            System.out.println(methodElement);
+            System.out.println(converterType.get());
+            System.out.println("*1*****************");
             return new MethodInfo(methodElement).withConverter(converterType.get(), Converter.EMPTY);
         }
+        System.out.println("*0*****************");
 
         List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
         for (AnnotationMirror annotationMirror : annotationMirrors) {

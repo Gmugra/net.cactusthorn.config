@@ -45,9 +45,13 @@ public class AbstractTypeValidator extends MethodValidatorAncestor {
         }
         DeclaredType declaredType = (DeclaredType) typeMirror;
         Element element = declaredType.asElement();
-        if (element.getKind() != ElementKind.ENUM
-                && element.getKind() != ElementKind.INTERFACE
-                && element.getModifiers().contains(Modifier.ABSTRACT)) {
+        if (!element.getModifiers().contains(Modifier.ABSTRACT)) {
+            return next(methodElement, declaredType);
+        }
+        if (existConverterAnnotation(methodElement)) {
+            return next(methodElement, typeMirror);
+        }
+        if (element.getKind() != ElementKind.ENUM && element.getKind() != ElementKind.INTERFACE) {
             throw new ProcessorException(msg(RETURN_ABSTRACT, element), methodElement);
         }
         return next(methodElement, declaredType);

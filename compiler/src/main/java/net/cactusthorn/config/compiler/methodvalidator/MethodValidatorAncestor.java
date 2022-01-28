@@ -21,6 +21,7 @@ package net.cactusthorn.config.compiler.methodvalidator;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -75,6 +76,16 @@ public abstract class MethodValidatorAncestor implements MethodValidator {
         for (AnnotationMirror annotationMirror : annotationMirrors) {
             ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
             if (superAnnotation != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isElementTypeInClasses(Element element, Collection<Class<?>> classes) {
+        for (Class<?> clazz : classes) {
+            TypeMirror tm = processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType();
+            if (processingEnv().getTypeUtils().isSameType(element.asType(), tm)) {
                 return true;
             }
         }
