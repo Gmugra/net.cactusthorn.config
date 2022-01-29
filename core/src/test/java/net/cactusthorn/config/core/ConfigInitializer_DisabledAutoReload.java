@@ -21,6 +21,7 @@ package net.cactusthorn.config.core;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;

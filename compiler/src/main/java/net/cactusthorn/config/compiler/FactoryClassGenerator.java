@@ -129,7 +129,8 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private TypeSpec.Builder createClassBuilder(TypeElement interfaceTypeElement, String factoryClassName) {
-        return TypeSpec.classBuilder(factoryClassName).addModifiers(Modifier.PUBLIC, Modifier.FINAL).superclass(ConfigFactoryAncestor.class)
+        return TypeSpec.classBuilder(factoryClassName).addAnnotation(GeneratedAnnotation.annotationSpec())
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL).superclass(ConfigFactoryAncestor.class)
                 .addSuperinterface(interfaceTypeElement.asType());
     }
 
@@ -144,7 +145,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addInterfaceMethods(ProcessingEnvironment processingEnv, TypeSpec.Builder classBuilder,
-        List<ExecutableElement> interfaceMethods) {
+            List<ExecutableElement> interfaceMethods) {
         // @formatter:off
         interfaceMethods.stream()
             .map(method -> {

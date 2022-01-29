@@ -19,16 +19,28 @@
  */
 package net.cactusthorn.config.compiler;
 
-import java.io.IOException;
+import com.squareup.javapoet.AnnotationSpec;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
+public final class GeneratedAnnotation {
 
-public interface ClassesGenerator {
+    private static final AnnotationSpec GENERATED;
 
-    default void init(ProcessingEnvironment processingEnv) {
-        // do nothing by default
+    static {
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName("javax.annotation.processing.Generated"); //Java 9
+        } catch (ClassNotFoundException e) {
+            try {
+                clazz = Class.forName("javax.annotation.Generated"); //Java 8
+            } catch (ClassNotFoundException e1) {
+                throw new IllegalStateException(e);
+            }
+        }
+        GENERATED = AnnotationSpec.builder(clazz).addMember("value", "$S", "net.cactusthorn.config.compiler.ConfigProcessor")
+                .addMember("comments", "$S", "https://github.com/Gmugra/net.cactusthorn.config").build();
     }
 
-    void generate(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) throws ProcessorException, IOException;
+    public static AnnotationSpec annotationSpec() {
+        return GENERATED;
+    }
 }
