@@ -57,6 +57,10 @@ import net.cactusthorn.config.core.converter.ConverterClass;
     Optional<Map<URI, Path>> defaulConvertersPathMap2();
 
     @ConverterClass(MyInterfaceConverter.class) Optional<Map<String, MyInterface>> myInterfaceMap();
-    
+
     @ConverterClass(MyInterfaceConverter.class) Optional<Map<Path, MyInterface>> myInterfaceMap2();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<String, MyAbstractClass>> myAbstractClassMap();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<Path, MyAbstractClass>> myAbstractClassMap2();
 }

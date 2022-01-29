@@ -91,8 +91,8 @@ public class ConfigClassesGenerator implements ClassesGenerator {
             .next(InterfaceTypeValidator.class)
             .next(AbstractTypeValidator.class)
             .next(OptionalTypeValidator.class)
-            .next(DefaultConverterValidator.class)
             .next(ConverterValidator.class)
+            .next(DefaultConverterValidator.class)
             .next(StringTypeValidator.class)
             .build();
         // @formatter:on

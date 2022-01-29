@@ -76,13 +76,13 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
         // @formatter:off
         valueValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
-                .next(DefaultConverterValidator.class)
                 .next(ConverterValidator.class)
+                .next(DefaultConverterValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
 
         keyValidator = MethodValidatorChain.builder(processingEnv, AbstractTypeValidator.class)
-                .next(DefaultConverterValidatorForMapKey.class)
+                .next(DefaultConverterValidator.class)
                 .next(StringTypeValidator.class)
                 .build();
         // @formatter:on
@@ -164,10 +164,6 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
                     .withInterface(interfaceType.interfaceType());
         }
         if (checkCustomConverter && existConverterAnnotation(methodElement)) {
-            System.out.println("*2*****************");
-            System.out.println(methodElement);
-            System.out.println(interfaceType.arguments().get(argumentIndex));
-            System.out.println("*2*****************");
             return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
                     .withInterface(interfaceType.interfaceType());
         }

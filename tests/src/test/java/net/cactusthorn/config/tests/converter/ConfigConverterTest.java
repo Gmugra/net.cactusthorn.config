@@ -103,7 +103,7 @@ public class ConfigConverterTest {
         assertEquals("MY_A_VALUE", config.myAbstractClassList().get().get(0).getValue());
     }
 
-    @Test public void myAbstractClassMap() throws MalformedURLException {
+    @Test public void defaulConvertersMap() throws MalformedURLException {
         Map<String, String> properties = new HashMap<>();
         properties.put("defaulConvertersMap", "https://www.bing.com|https://www.google.com");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
@@ -141,5 +141,21 @@ public class ConfigConverterTest {
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
 
         assertEquals("MY_VALUE", config.myInterfaceMap2().get().get(Paths.get("my/home")).getValue());
+    }
+
+    @Test public void myAbstractClassMap() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myAbstractClassMap", "A|?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals("MY_A_VALUE", config.myAbstractClassMap().get().get("A").getValue());
+    }
+
+    @Test public void myAbstractClassMap2() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("myAbstractClassMap2", "my/home|?");
+        ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
+
+        assertEquals("MY_A_VALUE", config.myAbstractClassMap2().get().get(Paths.get("my/home")).getValue());
     }
 }

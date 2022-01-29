@@ -109,9 +109,6 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
         }
         DeclaredType declaredType = (DeclaredType) typeMirror;
         Element element = declaredType.asElement();
-        if (existConverterAnnotation(methodElement)) {
-            return next(methodElement, typeMirror);
-        }
         // @formatter:off
         Optional<Type> classType =
             classTypes.entrySet().stream()
@@ -124,9 +121,5 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
         }
         TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
         return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
-    }
-
-    protected boolean existsConvertorAnotation(ExecutableElement methodElement) {
-        return existConverterAnnotation(methodElement);
     }
 }

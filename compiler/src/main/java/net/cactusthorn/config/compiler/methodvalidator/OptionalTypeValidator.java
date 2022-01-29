@@ -52,8 +52,8 @@ public class OptionalTypeValidator extends MethodValidatorAncestor {
         // @formatter:off
         argumentValidator = MethodValidatorChain.builder(processingEnv, InterfaceTypeValidator.class)
             .next(AbstractTypeValidator.class)
-            .next(DefaultConverterValidator.class)
             .next(ConverterValidator.class)
+            .next(DefaultConverterValidator.class)
             .next(StringTypeValidator.class)
             .build();
         // @formatter:on
