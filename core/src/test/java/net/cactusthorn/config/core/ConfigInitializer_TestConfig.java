@@ -21,6 +21,9 @@ package net.cactusthorn.config.core;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Generated;
+
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
@@ -28,6 +31,10 @@ import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
+@Generated(
+    value = "net.cactusthorn.config.compiler.ConfigProcessor",
+    comments = "https://github.com/Gmugra/net.cactusthorn.config"
+)
 public final class ConfigInitializer_TestConfig extends ConfigInitializer {
   private static final String[] URIS = new String[] {""};
 
