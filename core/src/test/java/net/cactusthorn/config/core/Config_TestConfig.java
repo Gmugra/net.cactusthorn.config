@@ -30,17 +30,11 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Generated;
-
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.ReloadEvent;
 import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
-@Generated(
-    value = "net.cactusthorn.config.compiler.ConfigProcessor",
-    comments = "https://github.com/Gmugra/net.cactusthorn.config"
-)
 public final class Config_TestConfig implements TestConfig {
   private static final List<ReloadListener> LISTENERS = new ArrayList<>();
 

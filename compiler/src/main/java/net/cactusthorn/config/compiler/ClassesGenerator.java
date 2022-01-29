@@ -21,17 +21,10 @@ package net.cactusthorn.config.compiler;
 
 import java.io.IOException;
 
-import javax.annotation.Generated;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 
-import com.squareup.javapoet.AnnotationSpec;
-
 public interface ClassesGenerator {
-
-    AnnotationSpec GENERATED = AnnotationSpec.builder(Generated.class)
-            .addMember("value", "$S", "net.cactusthorn.config.compiler.ConfigProcessor")
-            .addMember("comments", "$S", "https://github.com/Gmugra/net.cactusthorn.config").build();
 
     default void init(ProcessingEnvironment processingEnv) {
         // do nothing by default

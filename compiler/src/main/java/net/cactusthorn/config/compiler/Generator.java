@@ -51,7 +51,8 @@ public abstract class Generator {
     public abstract JavaFile generate();
 
     public TypeSpec.Builder classBuilder() {
-        return TypeSpec.classBuilder(className).addAnnotation(ClassesGenerator.GENERATED).addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+        return TypeSpec.classBuilder(className).addAnnotation(GeneratedAnnotation.annotationSpec()).addModifiers(Modifier.PUBLIC,
+                Modifier.FINAL);
     }
 
     public ClassName interfaceName() {

@@ -26,17 +26,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javax.annotation.Generated;
-
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.ReloadEvent;
 import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
-@Generated(
-    value = "net.cactusthorn.config.compiler.ConfigProcessor",
-    comments = "https://github.com/Gmugra/net.cactusthorn.config"
-)
 public final class Config_DisabledAutoReload implements DisabledAutoReload {
   private static final List<ReloadListener> LISTENERS = new ArrayList<>();
 
