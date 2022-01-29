@@ -47,12 +47,10 @@ public class ConverterValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-
         Optional<TypeMirror> converterType = getConverterClass(methodElement);
         if (converterType.isPresent()) {
             return new MethodInfo(methodElement).withConverter(converterType.get(), Converter.EMPTY);
         }
-
         List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
         for (AnnotationMirror annotationMirror : annotationMirrors) {
             Optional<TypeMirror> superConverterType = getConverterClass(annotationMirror.getAnnotationType().asElement());

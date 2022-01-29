@@ -640,9 +640,16 @@ The `@ConverterClass` annotation allows to specify the `Converter`-implementatio
     @ConverterClass(MyClassConverter.class) Optional<MyClass> mayBeValue();
 
     @ConverterClass(MyClassConverter.class) Optional<List<MyClass>> values();
+
+    @ConverterClass(MyClassConverter.class) Optional<Map<Path, MyClass>> map();
 }
 ```
-FYI: `Converter`-implementation must be stateless and must have a default(no-argument) `public` constructor.
+FYI:
+1.  `Converter`-implementation must be stateless and must have a default(no-argument) `public` constructor.
+2.  `Converter`-implementation can be used instead "standard" converting, so it's possible to implement specific converting for supported by default types.
+3.  `Converter`-implementation can be used for interface or abstract class
+4.  In case of maps, `Converter`-implementation are using only for values(not for keys)
+
 
 ### Parameterized custom converters
 Sometimes it's convenient to set several constant parameters for the custom converter.

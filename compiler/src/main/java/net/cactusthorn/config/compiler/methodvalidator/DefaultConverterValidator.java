@@ -36,13 +36,11 @@ import java.time.YearMonth;
 import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
@@ -51,7 +49,6 @@ import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.core.converter.Converter;
-import net.cactusthorn.config.core.converter.ConverterClass;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
 import net.cactusthorn.config.core.converter.standard.CharacterConverter;
@@ -72,7 +69,7 @@ import net.cactusthorn.config.core.converter.standard.YearConverter;
 import net.cactusthorn.config.core.converter.standard.YearMonthConverter;
 import net.cactusthorn.config.core.converter.standard.ZonedDateTimeConverter;
 
-public class DefaultConvertorValidator extends MethodValidatorAncestor {
+public class DefaultConverterValidator extends MethodValidatorAncestor {
 
     public static final Map<Class<?>, String> CONVERTERS;
     static {
@@ -99,7 +96,7 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
 
     private final Map<TypeMirror, Type> classTypes = new HashMap<>();
 
-    public DefaultConvertorValidator(ProcessingEnvironment processingEnv) {
+    public DefaultConverterValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
         for (Class<?> clazz : CONVERTERS.keySet()) {
             classTypes.put(processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType(), clazz);
@@ -112,9 +109,6 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         }
         DeclaredType declaredType = (DeclaredType) typeMirror;
         Element element = declaredType.asElement();
-        if (existConverterAnnotation(methodElement)) {
-            return next(methodElement, typeMirror);
-        }
         // @formatter:off
         Optional<Type> classType =
             classTypes.entrySet().stream()
@@ -127,20 +121,5 @@ public class DefaultConvertorValidator extends MethodValidatorAncestor {
         }
         TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
         return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
-    }
-
-    private boolean existConverterAnnotation(ExecutableElement methodElement) {
-        ConverterClass annotation = methodElement.getAnnotation(ConverterClass.class);
-        if (annotation != null) {
-            return true;
-        }
-        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
-        for (AnnotationMirror annotationMirror : annotationMirrors) {
-            ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
-            if (superAnnotation != null) {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -19,20 +19,48 @@
  */
 package net.cactusthorn.config.tests.converter;
 
+import java.net.URI;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.Default;
 import net.cactusthorn.config.core.converter.ConverterClass;
-import net.cactusthorn.config.core.converter.standard.URLConverter;
 
 @Config public interface ConfigConverter {
 
-    @ConverterClass(URLConverter.class) @Default("https://github.com") URL url();
+    @ConverterClass(CustomURIConverter.class) @Default("https://github.com") URI url();
 
-    @ConverterClass(URLConverter.class) Optional<URL> ourl();
+    @ConverterClass(CustomURIConverter.class) Optional<URI> ourl();
 
-    @ConverterClass(URLConverter.class) Optional<List<URL>> list();
+    @ConverterClass(CustomURIConverter.class) Optional<List<URI>> listURI();
+
+    Optional<List<Path>> listPath();
+
+    @Default("https://github.com") URI defaultConverter();
+
+    @ConverterClass(MyInterfaceConverter.class) Optional<MyInterface> myInterface();
+
+    @ConverterClass(MyInterfaceConverter.class) Optional<List<MyInterface>> myInterfaceList();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<MyAbstractClass> myAbstractClass();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<List<MyAbstractClass>> myAbstractClassList();
+
+    Optional<Map<URL, URI>> defaulConvertersMap();
+
+    Optional<Map<Path, URI>> defaulConvertersPathMap();
+
+    Optional<Map<URI, Path>> defaulConvertersPathMap2();
+
+    @ConverterClass(MyInterfaceConverter.class) Optional<Map<String, MyInterface>> myInterfaceMap();
+
+    @ConverterClass(MyInterfaceConverter.class) Optional<Map<Path, MyInterface>> myInterfaceMap2();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<String, MyAbstractClass>> myAbstractClassMap();
+
+    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<Path, MyAbstractClass>> myAbstractClassMap2();
 }

@@ -17,27 +17,19 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.cactusthorn.config.core;
+package net.cactusthorn.config.tests.converter;
 
-import java.util.HashMap;
-import java.util.Map;
-import net.cactusthorn.config.core.loader.ConfigHolder;
-import net.cactusthorn.config.core.loader.LoadStrategy;
-import net.cactusthorn.config.core.loader.Loaders;
-import net.cactusthorn.config.core.util.ConfigInitializer;
+import net.cactusthorn.config.core.converter.Converter;
 
-public final class ConfigInitializer_DisabledAutoReload extends ConfigInitializer {
-  private static final String[] URIS = new String[] {""};
+public class MyAbstractClassConverter implements Converter<MyAbstractClass> {
 
-  ConfigInitializer_DisabledAutoReload(final Loaders loaders) {
-    super(loaders);
-  }
+    private static class MyAbstractClasImpl extends MyAbstractClass {
+        @Override public String getValue() {
+            return "MY_A_VALUE";
+        }
+    }
 
-  @Override
-  public Map<String, Object> initialize() {
-    ConfigHolder ch = loaders().load(Config_DisabledAutoReload.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
-    Map<String,Object> values = new HashMap<>();
-    values.put("aaa", ch.get(s -> s, expandKey(globalPrefix("aaa"))));
-    return values;
-  }
+    @Override public MyAbstractClass convert(String value, String[] parameters) {
+        return new MyAbstractClasImpl();
+    }
 }

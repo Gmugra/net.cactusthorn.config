@@ -21,10 +21,16 @@ package net.cactusthorn.config.compiler.methodvalidator;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Collection;
+import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
+
+import net.cactusthorn.config.core.converter.ConverterClass;
 
 public abstract class MethodValidatorAncestor implements MethodValidator {
 
@@ -59,5 +65,30 @@ public abstract class MethodValidatorAncestor implements MethodValidator {
             return next.validate(methodElement, typeMirror);
         }
         return new MethodInfo(methodElement);
+    }
+
+    protected boolean existConverterAnnotation(Element methodElement) {
+        ConverterClass annotation = methodElement.getAnnotation(ConverterClass.class);
+        if (annotation != null) {
+            return true;
+        }
+        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
+        for (AnnotationMirror annotationMirror : annotationMirrors) {
+            ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
+            if (superAnnotation != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean isElementTypeInClasses(Element element, Collection<Class<?>> classes) {
+        for (Class<?> clazz : classes) {
+            TypeMirror tm = processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType();
+            if (processingEnv().getTypeUtils().isSameType(element.asType(), tm)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
