@@ -489,6 +489,8 @@
                                 <Implementation-Group-Id>${project.groupId}</Implementation-Group-Id>
                                 <Implementation-Artifact-Id>${project.artifactId}</Implementation-Artifact-Id>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
+                                <X-Compile-Source-JDK>${jdk.version}</X-Compile-Source-JDK>
+                                <X-Compile-Target-JDK>${jdk.version}</X-Compile-Target-JDK>
                             </manifestEntries>
                             <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
                         </archive>
@@ -504,7 +506,11 @@
                                 <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                             </manifest>
                             <manifestEntries>
+                                <Implementation-Group-Id>${project.groupId}</Implementation-Group-Id>
+                                <Implementation-Artifact-Id>${project.artifactId}</Implementation-Artifact-Id>
                                 <Build-Time>${maven.build.timestamp}</Build-Time>
+                                <X-Compile-Source-JDK>${jdk.version}</X-Compile-Source-JDK>
+                                <X-Compile-Target-JDK>${jdk.version}</X-Compile-Target-JDK>
                             </manifestEntries>
                             <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
                         </archive>
@@ -765,7 +771,11 @@
                                     <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                                 </manifest>
                                 <manifestEntries>
+                                    <Implementation-Group-Id>${project.groupId}</Implementation-Group-Id>
+                                    <Implementation-Artifact-Id>${project.artifactId}</Implementation-Artifact-Id>
                                     <Build-Time>${maven.build.timestamp}</Build-Time>
+                                    <X-Compile-Source-JDK>${jdk.version}</X-Compile-Source-JDK>
+                                    <X-Compile-Target-JDK>${jdk.version}</X-Compile-Target-JDK>
                                 </manifestEntries>
                                 <pomPropertiesFile>${project.build.directory}/pom.properties</pomPropertiesFile>
                             </archive>
