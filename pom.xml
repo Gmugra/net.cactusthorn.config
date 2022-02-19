@@ -812,7 +812,7 @@
                                 <id>attach-test-sources</id>
                                 <phase>verify</phase>
                                 <goals>
-                                    <goal>test-jar</goal>
+                                    <goal>test-jar-no-fork</goal>
                                 </goals>
                             </execution>
                         </executions>
