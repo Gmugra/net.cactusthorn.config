@@ -11,3 +11,6 @@ database:
   temp_targets:
     cpu: 79.5
     case: 72
+str1: |
+  Several lines of text,
+  with some "quotes" of various 'types'.
