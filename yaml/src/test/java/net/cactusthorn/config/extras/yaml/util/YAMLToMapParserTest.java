@@ -66,6 +66,15 @@ public class YAMLToMapParserTest {
         }
     }
 
+    @Test public void multilineString() throws IOException {
+        try (Reader reader = reader("correct.yaml")) {
+            Map<String, String> result = new YAMLToMapParser().parse(reader);
+            String multiline = result.get("str1");
+            String[] lines = multiline.split("\r\n|\r|\n");
+            assertEquals(2, lines.length);
+        }
+    }
+
     private Reader reader(String resource) {
         InputStream is = YAMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);

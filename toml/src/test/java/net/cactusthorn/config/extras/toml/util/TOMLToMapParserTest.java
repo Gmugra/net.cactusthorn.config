@@ -73,6 +73,15 @@ public class TOMLToMapParserTest {
         }
     }
 
+    @Test public void multilineString() throws IOException {
+        try (Reader reader = reader("correct.toml")) {
+            Map<String, String> result = new TOMLToMapParser().parse(reader);
+            String multiline = result.get("str1");
+            String[] lines = multiline.split("\r\n|\r|\n");
+            assertEquals(2, lines.length);
+        }
+    }
+
     private Reader reader(String resource) {
         InputStream is = TOMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
