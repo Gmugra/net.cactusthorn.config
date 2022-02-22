@@ -51,9 +51,16 @@ public class AbstractTypeValidator extends MethodValidatorAncestor {
         if (existConverterAnnotation(methodElement)) {
             return next(methodElement, typeMirror);
         }
+        if (isDefaultConvertor(element)) {
+            return next(methodElement, typeMirror);
+        }
         if (element.getKind() != ElementKind.ENUM && element.getKind() != ElementKind.INTERFACE) {
             throw new ProcessorException(msg(RETURN_ABSTRACT, element), methodElement);
         }
         return next(methodElement, declaredType);
+    }
+
+    private boolean isDefaultConvertor(Element element) {
+        return isElementTypeInClasses(element, DefaultConverterValidator.CONVERTERS.keySet());
     }
 }

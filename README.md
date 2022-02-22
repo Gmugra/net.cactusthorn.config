@@ -301,7 +301,7 @@ app:
     -   `@Target({METHOD, ANNOTATION_TYPE})`
     -   apply custom converter implementation
 
-9.  `@LocalDateParser`, `@LocalDateTimeParser`, `@LocalTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`, `@OffsetTimeParser`, `@YearParser`, `@YearMonthParser`
+9.  `@LocalDateParser`, `@LocalDateTimeParser`, `@LocalTimeParser`, `@ZonedDateTimeParser`, `@OffsetDateTimeParser`, `@OffsetTimeParser`, `@YearParser`, `@YearMonthParser`, `@MonthDayParser`
     -   `@Target(METHOD)`
     -   apply a parameterized by formats converter to the relevant java.time.* type
 
@@ -503,6 +503,7 @@ The return type of the interface methods must either:
     -   `java.nio.file.Path`
     -   `java.util.Currency`
     -   `java.util.Locale`
+    -   `java.util.regex.Pattern`
     -   `java.time.Instant`
     -   `java.time.Duration`
     -   `java.time.Period`
@@ -514,6 +515,9 @@ The return type of the interface methods must either:
     -   `java.time.OffsetTime`
     -   `java.time.Year`
     -   `java.time.YearMonth`
+    -   `java.time.MonthDay`
+    -   `java.time.ZoneId`
+    -   `java.time.ZoneOffset`
     -   `net.cactusthorn.config.core.converter.bytesize.ByteSize`
 
 5.  Be `List<T>`, `Set<T>` or `SortedSet<T>`, where **T** satisfies 2, 3 or 4 above. The resulting collection is read-only.
@@ -687,6 +691,7 @@ Several of these annotations shipped with the library:
 -   `@OffsetTimeParser`
 -   `@YearParser`
 -   `@YearMonthParser`
+-   `@MonthDayParser`
 
 
 ## Loaders

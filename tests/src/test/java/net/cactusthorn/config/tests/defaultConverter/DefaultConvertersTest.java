@@ -30,11 +30,13 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.Currency;
@@ -73,6 +75,10 @@ public class DefaultConvertersTest {
         properties.put("year", "2016");
         properties.put("yearMonth", "2016-11");
         properties.put("locale", "de-DE");
+        properties.put("pattern", "[^\\w]");
+        properties.put("monthDay", "--01-15");
+        properties.put("zoneId", "GMT+02:00");
+        properties.put("zoneOffset", "+02:00");
         config = ConfigFactory.builder().setSource(properties).build().create(DefaultConverters.class);
     }
 
@@ -146,5 +152,21 @@ public class DefaultConvertersTest {
 
     @Test public void byteSize() {
         assertEquals(new ByteSize(10, ByteSizeUnit.BYTES), config.byteSize());
+    }
+
+    @Test public void pattern() {
+        assertEquals("[^\\w]", config.pattern().pattern());
+    }
+
+    @Test public void monthDay() {
+        assertEquals(MonthDay.of(1, 15), config.monthDay());
+    }
+
+    @Test public void zoneId() {
+        assertEquals(ZoneId.of("GMT+02:00"), config.zoneId());
+    }
+
+    @Test public void zoneOffset() {
+        assertEquals(ZoneOffset.of("+02:00"), config.zoneOffset());
     }
 }
