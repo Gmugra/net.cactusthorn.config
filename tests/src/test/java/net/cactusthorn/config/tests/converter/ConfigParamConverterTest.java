@@ -24,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Year;
@@ -107,5 +108,13 @@ public class ConfigParamConverterTest {
         properties.put("offsetTime", "01-30-00+02:00");
         ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
         assertEquals(OffsetTime.of(1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetTime().get());
+    }
+
+    @Test public void monthDay() {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("localDate", "12.11.2011");
+        properties.put("monthDay", "01-15");
+        ConfigParamConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigParamConverter.class);
+        assertEquals(MonthDay.of(1, 15), config.monthDay().get());
     }
 }

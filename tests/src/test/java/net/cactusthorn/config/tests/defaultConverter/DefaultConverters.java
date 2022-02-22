@@ -27,14 +27,18 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.MonthDay;
 import java.time.OffsetDateTime;
 import java.time.OffsetTime;
 import java.time.Period;
 import java.time.Year;
 import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import net.cactusthorn.config.core.Config;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
@@ -76,4 +80,12 @@ import net.cactusthorn.config.core.converter.bytesize.ByteSize;
     YearMonth yearMonth();
 
     ByteSize byteSize();
+
+    Pattern pattern();
+
+    MonthDay monthDay();
+
+    ZoneId zoneId();
+
+    ZoneOffset zoneOffset();
 }
