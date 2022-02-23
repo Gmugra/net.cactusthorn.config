@@ -79,7 +79,7 @@
         <plugin.flatten>1.2.7</plugin.flatten>
         <plugin.jxr>3.1.1</plugin.jxr>
         <plugin.gpg>3.0.1</plugin.gpg>
-        <plugin.nexus-staging>1.6.11</plugin.nexus-staging>
+        <plugin.nexus-staging>1.6.12</plugin.nexus-staging>
         <plugin.bnd>6.1.0</plugin.bnd>
         <plugin.bundle>5.1.4</plugin.bundle>
             <dependency.bndlib>6.1.0</dependency.bndlib>
