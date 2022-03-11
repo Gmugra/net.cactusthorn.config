@@ -64,7 +64,7 @@
         <dependency.logback>1.2.11</dependency.logback>
         <dependency.slf4j>1.7.36</dependency.slf4j>
 
-        <plugin.compiler>3.10.0</plugin.compiler>
+        <plugin.compiler>3.10.1</plugin.compiler>
         <plugin.jar>3.2.2</plugin.jar>
         <plugin.resources>3.2.0</plugin.resources>
         <plugin.test>3.0.0-M5</plugin.test>
