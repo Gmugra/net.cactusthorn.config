@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
-
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.ReloadEvent;
 import net.cactusthorn.config.core.loader.ReloadListener;
@@ -54,10 +54,8 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
   }
 
   private String generate__To__String() {
-    StringBuilder buf = new StringBuilder();
-    buf.append('[');
-    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
-    buf.append(']');
+    StringJoiner buf = new StringJoiner(", ", "[", "]");
+    buf.add("aaa" + '=' + VALUES.get("aaa"));
     return buf.toString();
   }
 
@@ -81,7 +79,7 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
     if (o == this) return true;
     if (!(o instanceof Config_DisabledAutoReload)) return false;
     Config_DisabledAutoReload other = (Config_DisabledAutoReload) o;
-    return this.aaa().equals(other.aaa());
+    return Objects.equals(aaa(), other.aaa());
   }
 
   @Override

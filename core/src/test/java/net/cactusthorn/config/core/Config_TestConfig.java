@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.cactusthorn.config.core.loader.Loaders;
@@ -58,54 +59,30 @@ public final class Config_TestConfig implements TestConfig {
   }
 
   private String generate__To__String() {
-    StringBuilder buf = new StringBuilder();
-    buf.append('[');
-    buf.append("aaa").append('=').append(String.valueOf(VALUES.get("aaa")));
-    buf.append(", ");
-    buf.append("dlist").append('=').append(String.valueOf(VALUES.get("test.dlist")));
-    buf.append(", ");
-    buf.append("dlist2").append('=').append(String.valueOf(VALUES.get("test.dlist2")));
-    buf.append(", ");
-    buf.append("dset").append('=').append(String.valueOf(VALUES.get("test.dset")));
-    buf.append(", ");
-    buf.append("dset2").append('=').append(String.valueOf(VALUES.get("test.dset2")));
-    buf.append(", ");
-    buf.append("dsort").append('=').append(String.valueOf(VALUES.get("test.dsort")));
-    buf.append(", ");
-    buf.append("dsort2").append('=').append(String.valueOf(VALUES.get("test.dsort2")));
-    buf.append(", ");
-    buf.append("dstr").append('=').append(String.valueOf(VALUES.get("test.dstr")));
-    buf.append(", ");
-    buf.append("dstr2").append('=').append(String.valueOf(VALUES.get("test.dstr2")));
-    buf.append(", ");
-    buf.append("duration").append('=').append(String.valueOf(VALUES.get("test.duration")));
-    buf.append(", ");
-    buf.append("list").append('=').append(String.valueOf(VALUES.get("test.list")));
-    buf.append(", ");
-    buf.append("olist").append('=').append(String.valueOf(VALUES.get("test.olist")));
-    buf.append(", ");
-    buf.append("olist2").append('=').append(String.valueOf(VALUES.get("test.olist2")));
-    buf.append(", ");
-    buf.append("oset").append('=').append(String.valueOf(VALUES.get("test.oset")));
-    buf.append(", ");
-    buf.append("oset2").append('=').append(String.valueOf(VALUES.get("test.oset2")));
-    buf.append(", ");
-    buf.append("osort").append('=').append(String.valueOf(VALUES.get("test.osort")));
-    buf.append(", ");
-    buf.append("osort2").append('=').append(String.valueOf(VALUES.get("test.osort2")));
-    buf.append(", ");
-    buf.append("ostr").append('=').append(String.valueOf(VALUES.get("ostr")));
-    buf.append(", ");
-    buf.append("ostr1").append('=').append(String.valueOf(VALUES.get("test.ostr1")));
-    buf.append(", ");
-    buf.append("set").append('=').append(String.valueOf(VALUES.get("test.set")));
-    buf.append(", ");
-    buf.append("sort").append('=').append(String.valueOf(VALUES.get("test.sort")));
-    buf.append(", ");
-    buf.append("str").append('=').append(String.valueOf(VALUES.get("test.string")));
-    buf.append(", ");
-    buf.append("testconverter").append('=').append(String.valueOf(VALUES.get("test.testconverter")));
-    buf.append(']');
+    StringJoiner buf = new StringJoiner(", ", "[", "]");
+    buf.add("aaa" + '=' + VALUES.get("aaa"));
+    buf.add("dlist" + '=' + VALUES.get("test.dlist"));
+    buf.add("dlist2" + '=' + VALUES.get("test.dlist2"));
+    buf.add("dset" + '=' + VALUES.get("test.dset"));
+    buf.add("dset2" + '=' + VALUES.get("test.dset2"));
+    buf.add("dsort" + '=' + VALUES.get("test.dsort"));
+    buf.add("dsort2" + '=' + VALUES.get("test.dsort2"));
+    buf.add("dstr" + '=' + VALUES.get("test.dstr"));
+    buf.add("dstr2" + '=' + VALUES.get("test.dstr2"));
+    buf.add("duration" + '=' + VALUES.get("test.duration"));
+    buf.add("list" + '=' + VALUES.get("test.list"));
+    buf.add("olist" + '=' + VALUES.get("test.olist"));
+    buf.add("olist2" + '=' + VALUES.get("test.olist2"));
+    buf.add("oset" + '=' + VALUES.get("test.oset"));
+    buf.add("oset2" + '=' + VALUES.get("test.oset2"));
+    buf.add("osort" + '=' + VALUES.get("test.osort"));
+    buf.add("osort2" + '=' + VALUES.get("test.osort2"));
+    buf.add("ostr" + '=' + VALUES.get("ostr"));
+    buf.add("ostr1" + '=' + VALUES.get("test.ostr1"));
+    buf.add("set" + '=' + VALUES.get("test.set"));
+    buf.add("sort" + '=' + VALUES.get("test.sort"));
+    buf.add("str" + '=' + VALUES.get("test.string"));
+    buf.add("testconverter" + '=' + VALUES.get("test.testconverter"));
     return buf.toString();
   }
 
@@ -257,29 +234,7 @@ public final class Config_TestConfig implements TestConfig {
     if (o == this) return true;
     if (!(o instanceof Config_TestConfig)) return false;
     Config_TestConfig other = (Config_TestConfig) o;
-    if (!this.aaa().equals(other.aaa())) return false;
-    if (!this.dlist().equals(other.dlist())) return false;
-    if (!this.dlist2().equals(other.dlist2())) return false;
-    if (!this.dset().equals(other.dset())) return false;
-    if (!this.dset2().equals(other.dset2())) return false;
-    if (!this.dsort().equals(other.dsort())) return false;
-    if (!this.dsort2().equals(other.dsort2())) return false;
-    if (!this.dstr().equals(other.dstr())) return false;
-    if (!this.dstr2().equals(other.dstr2())) return false;
-    if (!this.duration().equals(other.duration())) return false;
-    if (!this.list().equals(other.list())) return false;
-    if (!this.olist().equals(other.olist())) return false;
-    if (!this.olist2().equals(other.olist2())) return false;
-    if (!this.oset().equals(other.oset())) return false;
-    if (!this.oset2().equals(other.oset2())) return false;
-    if (!this.osort().equals(other.osort())) return false;
-    if (!this.osort2().equals(other.osort2())) return false;
-    if (!this.ostr().equals(other.ostr())) return false;
-    if (!this.ostr1().equals(other.ostr1())) return false;
-    if (!this.set().equals(other.set())) return false;
-    if (!this.sort().equals(other.sort())) return false;
-    if (!this.str().equals(other.str())) return false;
-    return this.testconverter().equals(other.testconverter());
+    return Objects.equals(aaa(), other.aaa()) && Objects.equals(dlist(), other.dlist()) && Objects.equals(dlist2(), other.dlist2()) && Objects.equals(dset(), other.dset()) && Objects.equals(dset2(), other.dset2()) && Objects.equals(dsort(), other.dsort()) && Objects.equals(dsort2(), other.dsort2()) && Objects.equals(dstr(), other.dstr()) && Objects.equals(dstr2(), other.dstr2()) && Objects.equals(duration(), other.duration()) && Objects.equals(list(), other.list()) && Objects.equals(olist(), other.olist()) && Objects.equals(olist2(), other.olist2()) && Objects.equals(oset(), other.oset()) && Objects.equals(oset2(), other.oset2()) && Objects.equals(osort(), other.osort()) && Objects.equals(osort2(), other.osort2()) && Objects.equals(ostr(), other.ostr()) && Objects.equals(ostr1(), other.ostr1()) && Objects.equals(set(), other.set()) && Objects.equals(sort(), other.sort()) && Objects.equals(str(), other.str()) && Objects.equals(testconverter(), other.testconverter());
   }
 
   @Override

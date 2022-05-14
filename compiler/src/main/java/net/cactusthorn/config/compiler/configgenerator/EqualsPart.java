@@ -20,6 +20,8 @@
 package net.cactusthorn.config.compiler.configgenerator;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.StringJoiner;
 
 import javax.lang.model.element.Modifier;
 
@@ -46,27 +48,24 @@ final class EqualsPart implements GeneratorPart {
             .addStatement("if (!(o instanceof $L)) return false", generator.className())
             .addStatement("$L other = ($L) o", generator.className(), generator.className());
         // @formatter:on
-        List<MethodInfo> methodsInfo = generator.methodsInfo();
-        for (int i = 0; i < methodsInfo.size() - 1; i++) {
-            equalsBuilder.addStatement(createIf(methodsInfo.get(i)));
-        }
-        equalsBuilder.addStatement(createFinalReturn(methodsInfo.get(methodsInfo.size() - 1)));
+        equalsBuilder.addCode(createReturn(generator.methodsInfo()));
         classBuilder.addMethod(equalsBuilder.build());
     }
 
-    private CodeBlock createIf(MethodInfo mi) {
-        CodeBlock.Builder builder = CodeBlock.builder();
-        if (mi.returnTypeName().isPrimitive()) {
-            return builder.add("if (this.$L() != other.$L()) return false", mi.name(), mi.name()).build();
-        }
-        return builder.add("if (!this.$L().equals(other.$L())) return false", mi.name(), mi.name()).build();
-    }
+    private static final byte THREE = (byte) 3;
 
-    private CodeBlock createFinalReturn(MethodInfo mi) {
-        CodeBlock.Builder builder = CodeBlock.builder();
-        if (mi.returnTypeName().isPrimitive()) {
-            return builder.add("return this.$L() == other.$L()", mi.name(), mi.name()).build();
+    private CodeBlock createReturn(List<MethodInfo> methodsInfo) {
+        StringJoiner template = new StringJoiner(" && ", "return ", "");
+        Object[] args = new Object[methodsInfo.size() * THREE];
+        for (int i = 0; i < methodsInfo.size(); i++) {
+            template.add("$T.equals($L(), other.$L())");
+            MethodInfo mi = methodsInfo.get(i);
+            args[i * THREE] = Objects.class;
+            args[i * THREE + 1] = mi.name();
+            args[i * THREE + 2] = mi.name();
         }
-        return builder.add("return this.$L().equals(other.$L())", mi.name(), mi.name()).build();
+        CodeBlock.Builder builder = CodeBlock.builder();
+        builder.addStatement(template.toString(), args);
+        return builder.build();
     }
 }

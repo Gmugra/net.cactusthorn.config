@@ -19,6 +19,8 @@
  */
 package net.cactusthorn.config.compiler.configgenerator;
 
+import java.util.StringJoiner;
+
 import javax.lang.model.element.Modifier;
 
 import com.squareup.javapoet.MethodSpec;
@@ -33,23 +35,12 @@ public class GenerateToStringPart implements GeneratorPart {
     private static final String BUF_NAME = "buf";
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        // @formatter:off
-        MethodSpec.Builder toStringBuilder =
-            MethodSpec.methodBuilder(GENERATE_TO_STRING_METHOD)
-            .addModifiers(Modifier.PRIVATE)
-            .returns(String.class)
-            .addStatement("$T $L = new $T()", StringBuilder.class, BUF_NAME, StringBuilder.class)
-            .addStatement("$L.append('[')", BUF_NAME);
-        // @formatter:on
-        for (int i = 0; i < generator.methodsInfo().size(); i++) {
-            if (i != 0) {
-                toStringBuilder.addStatement("$L.append($S)", BUF_NAME, ", ");
-            }
-            MethodInfo mi = generator.methodsInfo().get(i);
-            toStringBuilder.addStatement("$L.append($S).append('=').append($T.valueOf($L.get($S)))", BUF_NAME, mi.name(), String.class,
-                    VALUES_ATTR, mi.key());
+        MethodSpec.Builder toStringBuilder = MethodSpec.methodBuilder(GENERATE_TO_STRING_METHOD).addModifiers(Modifier.PRIVATE)
+                .returns(String.class);
+        toStringBuilder.addStatement("$T $L = new $T($S, $S, $S)", StringJoiner.class, BUF_NAME, StringJoiner.class, ", ", "[", "]");
+        for (MethodInfo mi : generator.methodsInfo()) {
+            toStringBuilder.addStatement("$L.add($S + '$L' + $L.get($S))", BUF_NAME, mi.name(), "=", VALUES_ATTR, mi.key());
         }
-        toStringBuilder.addStatement("$L.append(']')", BUF_NAME);
         toStringBuilder.addStatement("return $L.toString()", BUF_NAME);
         classBuilder.addMethod(toStringBuilder.build());
     }
