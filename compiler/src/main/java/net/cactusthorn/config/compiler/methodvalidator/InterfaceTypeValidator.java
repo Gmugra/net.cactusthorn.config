@@ -43,6 +43,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
@@ -88,7 +89,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         // @formatter:on
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
@@ -137,9 +138,9 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         return interfaceType.interfaceType() == Map.class || interfaceType.interfaceType() == SortedMap.class;
     }
 
-    private MethodInfo validateMap(ExecutableElement methodElement, InterfaceType interfaceType) {
-        MethodInfo key = validateArgument(methodElement, interfaceType, 0, keyValidator, false);
-        MethodInfo value = validateArgument(methodElement, interfaceType, 1, valueValidator, true).withMapKey(key);
+    private MethodInfo.Builder validateMap(ExecutableElement methodElement, InterfaceType interfaceType) {
+        MethodInfo.Builder key = validateArgument(methodElement, interfaceType, 0, keyValidator, false);
+        MethodInfo.Builder value = validateArgument(methodElement, interfaceType, 1, valueValidator, true).withMapKey(key.build());
         return value;
     }
 
@@ -147,7 +148,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         return isElementTypeInClasses(element, DefaultConverterValidator.CONVERTERS.keySet());
     }
 
-    private MethodInfo validateArgument(ExecutableElement methodElement, InterfaceType interfaceType, int argumentIndex,
+    private MethodInfo.Builder validateArgument(ExecutableElement methodElement, InterfaceType interfaceType, int argumentIndex,
             MethodValidator validator, boolean checkCustomConverter) {
         if (interfaceType.arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
             throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), methodElement);

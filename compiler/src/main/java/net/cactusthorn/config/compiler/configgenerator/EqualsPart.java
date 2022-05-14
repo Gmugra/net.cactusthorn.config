@@ -32,7 +32,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 final class EqualsPart implements GeneratorPart {
 

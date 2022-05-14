@@ -41,9 +41,11 @@ import net.cactusthorn.config.compiler.Annotations;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.InterfaceInfo;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.ConverterInfo;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.ConverterInfo;
+import net.cactusthorn.config.compiler.methodinfo.StringMethod;
+import net.cactusthorn.config.compiler.methodinfo.StringMethodInfo;
+
 import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.loader.ConfigHolder;
@@ -157,7 +159,7 @@ public class InitializePart implements GeneratorPart {
         return mi.defaultValue().map(s -> CodeBlock.of(", $S", s)).orElse(CodeBlock.of(""));
     }
 
-    private CodeBlock function(Optional<ConverterInfo> converterInfo, Optional<MethodInfo.StringMethodInfo> stringMethodInfo,
+    private CodeBlock function(Optional<ConverterInfo> converterInfo, Optional<StringMethodInfo> stringMethodInfo,
             TypeName returnTypeName) {
         return converterInfo.map(ci -> {
             return CodeBlock.builder().add("s -> convert($T.class, s, $L)", ci.type(), converterParameters(ci.parameters())).build();

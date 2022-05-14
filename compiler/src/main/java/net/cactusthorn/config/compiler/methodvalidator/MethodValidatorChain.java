@@ -24,6 +24,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public final class MethodValidatorChain implements MethodValidator {
 
@@ -33,7 +34,7 @@ public final class MethodValidatorChain implements MethodValidator {
         this.validator = validator;
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         return validator.validate(methodElement, typeMirror);
     }
 

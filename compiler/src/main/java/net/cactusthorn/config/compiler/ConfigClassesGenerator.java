@@ -41,11 +41,11 @@ import com.squareup.javapoet.JavaFile;
 
 import net.cactusthorn.config.compiler.configgenerator.ConfigGenerator;
 import net.cactusthorn.config.compiler.configinitgenerator.ConfigInitGenerator;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.AbstractTypeValidator;
 import net.cactusthorn.config.compiler.methodvalidator.ConverterValidator;
 import net.cactusthorn.config.compiler.methodvalidator.DefaultConverterValidator;
 import net.cactusthorn.config.compiler.methodvalidator.InterfaceTypeValidator;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.MethodValidator;
 import net.cactusthorn.config.compiler.methodvalidator.MethodValidatorChain;
 import net.cactusthorn.config.compiler.methodvalidator.OptionalTypeValidator;
@@ -115,7 +115,7 @@ public class ConfigClassesGenerator implements ClassesGenerator {
                      .filter(e -> !objectMethods.contains(e))
                      .filter(e -> !(interfaceInfo.accessible() && accessibleMethods.contains(e)))
                      .filter(e -> !(interfaceInfo.reloadable() && reloadableMethods.contains(e)))
-                     .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo))
+                     .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo).build())
                      .sorted(METHODINFO_COMPARATOR)
                      .collect(Collectors.toList());
                 // @formatter:on

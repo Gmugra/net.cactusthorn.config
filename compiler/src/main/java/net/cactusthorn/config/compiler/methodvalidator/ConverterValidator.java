@@ -34,6 +34,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.ConverterClass;
 
@@ -43,20 +44,20 @@ public class ConverterValidator extends MethodValidatorAncestor {
         super(processingEnv);
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
         Optional<TypeMirror> converterType = getConverterClass(methodElement);
         if (converterType.isPresent()) {
-            return new MethodInfo(methodElement).withConverter(converterType.get(), Converter.EMPTY);
+            return MethodInfo.builder(methodElement).withConverter(converterType.get(), Converter.EMPTY);
         }
         List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
         for (AnnotationMirror annotationMirror : annotationMirrors) {
             Optional<TypeMirror> superConverterType = getConverterClass(annotationMirror.getAnnotationType().asElement());
             if (superConverterType.isPresent()) {
                 String[] parameters = findParameters(annotationMirror);
-                return new MethodInfo(methodElement).withConverter(superConverterType.get(), parameters);
+                return MethodInfo.builder(methodElement).withConverter(superConverterType.get(), parameters);
             }
         }
 

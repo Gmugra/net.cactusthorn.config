@@ -43,7 +43,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
+
 import static net.cactusthorn.config.compiler.ConfigClassesGenerator.METHODINFO_COMPARATOR;
 
 public class MethodInfoComparatorTest {
@@ -183,23 +184,23 @@ public class MethodInfoComparatorTest {
     }
 
     @Test public void nullNotNull() {
-        MethodInfo methodInfo = new MethodInfo(new SimpleExecutableElement("TestOne"));
+        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(1, METHODINFO_COMPARATOR.compare(null, methodInfo));
     }
 
     @Test public void notNullNull() {
-        MethodInfo methodInfo = new MethodInfo(new SimpleExecutableElement("TestOne"));
+        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(-1, METHODINFO_COMPARATOR.compare(methodInfo, null));
     }
 
     @Test public void same() {
-        MethodInfo methodInfo = new MethodInfo(new SimpleExecutableElement("TestOne"));
+        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(0, METHODINFO_COMPARATOR.compare(methodInfo, methodInfo));
     }
 
     @Test public void notSame() {
-        MethodInfo methodInfo1 = new MethodInfo(new SimpleExecutableElement("TestOne"));
-        MethodInfo methodInfo2 = new MethodInfo(new SimpleExecutableElement("TestTwo"));
+        MethodInfo methodInfo1 = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
+        MethodInfo methodInfo2 = MethodInfo.builder(new SimpleExecutableElement("TestTwo")).build();
         assertNotEquals(0, METHODINFO_COMPARATOR.compare(methodInfo1, methodInfo2));
     }
 }

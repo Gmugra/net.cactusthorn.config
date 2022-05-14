@@ -32,6 +32,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public class AbstractTypeValidator extends MethodValidatorAncestor {
 
@@ -39,7 +40,7 @@ public class AbstractTypeValidator extends MethodValidatorAncestor {
         super(processingEnv);
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }

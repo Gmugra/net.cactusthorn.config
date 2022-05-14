@@ -30,7 +30,7 @@ import com.squareup.javapoet.TypeSpec;
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
 import net.cactusthorn.config.compiler.InterfaceInfo;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class ConfigInitGenerator extends Generator {

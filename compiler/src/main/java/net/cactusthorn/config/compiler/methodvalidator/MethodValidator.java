@@ -23,7 +23,8 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public interface MethodValidator {
-    MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException;
+    MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException;
 }

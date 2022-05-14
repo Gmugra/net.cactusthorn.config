@@ -28,7 +28,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public abstract class Generator {
 
