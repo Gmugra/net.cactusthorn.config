@@ -28,7 +28,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
-import net.cactusthorn.config.compiler.methodvalidator.MethodInfo;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public class GenerateToStringPart implements GeneratorPart {
 

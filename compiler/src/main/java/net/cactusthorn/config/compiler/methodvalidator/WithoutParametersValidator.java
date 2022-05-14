@@ -27,6 +27,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public class WithoutParametersValidator extends MethodValidatorAncestor {
 
@@ -34,7 +35,7 @@ public class WithoutParametersValidator extends MethodValidatorAncestor {
         super(processingEnv);
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) {
         if (!methodElement.getParameters().isEmpty()) {
             throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), methodElement);
         }

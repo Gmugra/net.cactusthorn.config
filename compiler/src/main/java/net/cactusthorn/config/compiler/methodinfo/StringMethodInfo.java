@@ -17,30 +17,26 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.cactusthorn.config.compiler.methodvalidator;
+package net.cactusthorn.config.compiler.methodinfo;
 
-import static net.cactusthorn.config.compiler.CompilerMessages.msg;
-import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_VOID;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import net.cactusthorn.config.compiler.ProcessorException;
-import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
+import com.squareup.javapoet.TypeName;
 
-public class ReturnVoidValidator extends MethodValidatorAncestor {
+public final class StringMethodInfo {
+    private final StringMethod stringMethod;
+    private final TypeName methodType;
 
-    public ReturnVoidValidator(ProcessingEnvironment processingEnv) {
-        super(processingEnv);
+    StringMethodInfo(StringMethod stringMethod, TypeMirror stringMethodTM) {
+        this.stringMethod = stringMethod;
+        this.methodType = TypeName.get(stringMethodTM);
     }
 
-    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
-        if (typeMirror.getKind() == TypeKind.VOID) {
-            throw new ProcessorException(msg(RETURN_VOID), methodElement);
-        }
-        return next(methodElement, typeMirror);
+    public StringMethod stringMethod() {
+        return stringMethod;
     }
 
+    public TypeName methodType() {
+        return methodType;
+    }
 }

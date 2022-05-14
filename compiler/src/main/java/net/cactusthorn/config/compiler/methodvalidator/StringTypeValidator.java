@@ -19,10 +19,11 @@
  */
 package net.cactusthorn.config.compiler.methodvalidator;
 
-import static net.cactusthorn.config.compiler.methodvalidator.MethodInfo.StringMethod;
 import static net.cactusthorn.config.compiler.CompilerMessages.msg;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_STRING_CLASS;
 import static javax.lang.model.element.ElementKind.*;
+
+import net.cactusthorn.config.compiler.methodinfo.StringMethod;
 
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 public class StringTypeValidator extends MethodValidatorAncestor {
 
@@ -51,12 +53,12 @@ public class StringTypeValidator extends MethodValidatorAncestor {
         runtimeExceptionTM = processingEnv.getElementUtils().getTypeElement(RuntimeException.class.getName()).asType();
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
         if (processingEnv().getTypeUtils().isSameType(stringTM, typeMirror)) {
-            return new MethodInfo(methodElement).withStringMethod(StringMethod.STRING, typeMirror);
+            return MethodInfo.builder(methodElement).withStringMethod(StringMethod.STRING, typeMirror);
         }
 
         TypeElement typeElement = (TypeElement) ((DeclaredType) typeMirror).asElement();
@@ -76,7 +78,7 @@ public class StringTypeValidator extends MethodValidatorAncestor {
         }
 
         if (stringMethod != null) {
-            return new MethodInfo(methodElement).withStringMethod(stringMethod, typeMirror);
+            return MethodInfo.builder(methodElement).withStringMethod(stringMethod, typeMirror);
         }
 
         throw new ProcessorException(msg(RETURN_STRING_CLASS), methodElement);

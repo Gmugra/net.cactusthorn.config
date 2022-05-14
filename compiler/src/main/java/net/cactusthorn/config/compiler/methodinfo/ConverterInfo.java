@@ -17,30 +17,25 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.cactusthorn.config.compiler.methodvalidator;
+package net.cactusthorn.config.compiler.methodinfo;
 
-import static net.cactusthorn.config.compiler.CompilerMessages.msg;
-import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_VOID;
-
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import net.cactusthorn.config.compiler.ProcessorException;
-import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
+public final class ConverterInfo {
+    private final TypeMirror type;
+    private final String[] parameters;
 
-public class ReturnVoidValidator extends MethodValidatorAncestor {
-
-    public ReturnVoidValidator(ProcessingEnvironment processingEnv) {
-        super(processingEnv);
+    ConverterInfo(TypeMirror type, String[] parameters) {
+        this.type = type;
+        this.parameters = parameters;
     }
 
-    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
-        if (typeMirror.getKind() == TypeKind.VOID) {
-            throw new ProcessorException(msg(RETURN_VOID), methodElement);
-        }
-        return next(methodElement, typeMirror);
+    public TypeMirror type() {
+        return type;
     }
 
+    public String[] parameters() {
+        return parameters;
+    }
 }
+

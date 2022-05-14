@@ -52,6 +52,7 @@ import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.compiler.ProcessorException;
+import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.standard.ByteSizeConverter;
@@ -115,7 +116,7 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
         }
     }
 
-    @Override public MethodInfo validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
+    @Override public MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
@@ -130,7 +131,7 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
         // @formatter:off
         if (classType.isPresent()) {
             TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
-            return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
+            return MethodInfo.builder(methodElement).withConverter(converter, Converter.EMPTY);
         }
         return next(methodElement, typeMirror);
     }
