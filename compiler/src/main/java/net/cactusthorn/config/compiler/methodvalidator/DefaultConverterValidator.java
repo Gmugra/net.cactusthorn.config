@@ -128,10 +128,10 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
             .map(e -> e.getValue())
             .findAny();
         // @formatter:off
-        if (!classType.isPresent()) {
-            return next(methodElement, typeMirror);
+        if (classType.isPresent()) {
+            TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
+            return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
         }
-        TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
-        return new MethodInfo(methodElement).withConverter(converter, Converter.EMPTY);
+        return next(methodElement, typeMirror);
     }
 }

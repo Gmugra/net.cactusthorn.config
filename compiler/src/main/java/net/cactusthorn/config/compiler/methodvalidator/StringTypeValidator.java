@@ -105,6 +105,6 @@ public class StringTypeValidator extends MethodValidatorAncestor {
     // Method can throws only RuntimeExceptions
     private boolean checkExceptions(Element methodElement) {
         List<? extends TypeMirror> throwns = ((ExecutableType) methodElement.asType()).getThrownTypes();
-        return !throwns.stream().filter(tm -> !processingEnv().getTypeUtils().isAssignable(tm, runtimeExceptionTM)).findAny().isPresent();
+        return throwns.stream().noneMatch(tm -> !processingEnv().getTypeUtils().isAssignable(tm, runtimeExceptionTM));
     }
 }

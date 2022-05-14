@@ -116,8 +116,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
     }
 
     private boolean isSupportedInterface(Element element) {
-        return interfaces.entrySet().stream().filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey())).findAny()
-                .isPresent();
+        return interfaces.entrySet().stream().anyMatch(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()));
     }
 
     private InterfaceType getSupportedInterfaceType(ExecutableElement methodElement, DeclaredType declaredType, Element element) {
