@@ -38,14 +38,6 @@ public class AutoReloader {
     private final List<Reloadable> configs = new ArrayList<>();
     private final long periodInSeconds;
 
-    private final Runnable reload = new Runnable() {
-        @Override public void run() {
-            for (Reloadable config : configs) {
-                config.reload();
-            }
-        }
-    };
-
     public AutoReloader(long periodInSeconds) {
         this.periodInSeconds = periodInSeconds;
     }
@@ -73,14 +65,13 @@ public class AutoReloader {
             if (reloaderService != null) {
                 return;
             }
-            ThreadFactory threadFactory = new ThreadFactory() {
-                @Override public Thread newThread(Runnable runnable) {
-                    Thread thread = new Thread(runnable);
-                    thread.setName("config-auto-reloader");
-                    return thread;
-                }
+            ThreadFactory threadFactory = (runnable) -> {
+                return new Thread(runnable, "config-auto-reloader");
             };
             reloaderService = Executors.newSingleThreadScheduledExecutor(threadFactory);
+            Runnable reload = () -> {
+                configs.forEach(Reloadable::reload);
+            };
             reloaderService.scheduleAtFixedRate(reload, 2, periodInSeconds, TimeUnit.SECONDS);
         } finally {
             startLock.unlock();
