@@ -73,7 +73,7 @@
         <plugin.dependency>3.3.0</plugin.dependency>
         <plugin.source>3.2.1</plugin.source>
         <plugin.javadoc>3.4.0</plugin.javadoc>
-        <plugin.enforcer>3.0.0</plugin.enforcer>
+        <plugin.enforcer>3.1.0</plugin.enforcer>
         <plugin.deploy>3.0.0-M2</plugin.deploy>
         <plugin.release>3.0.0-M6</plugin.release>
         <plugin.flatten>1.2.7</plugin.flatten>
