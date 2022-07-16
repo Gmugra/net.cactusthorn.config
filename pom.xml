@@ -81,7 +81,7 @@
         <plugin.gpg>3.0.1</plugin.gpg>
         <plugin.nexus-staging>1.6.13</plugin.nexus-staging>
         <plugin.bnd>6.3.1</plugin.bnd>
-        <plugin.bundle>5.1.6</plugin.bundle>
+        <plugin.bundle>5.1.7</plugin.bundle>
             <dependency.bndlib>6.3.1</dependency.bndlib>
 
         <plugin.checkstyle>3.1.2</plugin.checkstyle>
