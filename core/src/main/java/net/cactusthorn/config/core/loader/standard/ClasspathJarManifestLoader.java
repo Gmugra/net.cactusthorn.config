@@ -33,14 +33,16 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.cactusthorn.config.core.loader.Loader;
 
 public class ClasspathJarManifestLoader implements Loader {
 
-    private static final Logger LOG = Logger.getLogger(ClasspathJarManifestLoader.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ClasspathJarManifestLoader.class);
 
     private static final String SUB_PREFIX = "jar:manifest?";
     private static final String PREFIX = "classpath:" + SUB_PREFIX;

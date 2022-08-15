@@ -47,11 +47,6 @@ public class ZooKeeperLoaderTest extends ZooKeeperTestAncestor {
 
     @BeforeAll public static void setupLog() throws Exception {
         server = init(8090);
-
-        // java.util.logging -> SLF4j
-        org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger();
-        org.slf4j.bridge.SLF4JBridgeHandler.install();
-        java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
     }
 
     @AfterAll public static void shutdown() throws Exception {

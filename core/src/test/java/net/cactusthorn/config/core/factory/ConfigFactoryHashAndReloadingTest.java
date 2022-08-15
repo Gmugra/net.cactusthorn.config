@@ -27,12 +27,7 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -41,15 +36,6 @@ import net.cactusthorn.config.core.TestConfig;
 import net.cactusthorn.config.core.loader.ConfigHolder;
 
 public class ConfigFactoryHashAndReloadingTest {
-
-    @BeforeAll static void setUpLogger() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        rootLogger.setLevel(Level.FINE);
-        // switch off default Handlers to do not get anything in console
-        for (Handler h : rootLogger.getHandlers()) {
-            h.setLevel(Level.OFF);
-        }
-    }
 
     @Test public void updateFile(@TempDir Path path) throws IOException, InterruptedException {
         URI uri = prepareTempFile(path, "testF.properties", "test.properties");

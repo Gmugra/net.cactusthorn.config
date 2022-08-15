@@ -25,12 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.Loader;
@@ -39,15 +34,6 @@ public class ClasspathJSONLoaderTest {
 
     private static final Loader LOADER = new ClasspathJSONLoader();
     private static final ClassLoader CL = ClasspathJSONLoaderTest.class.getClassLoader();
-
-    @BeforeAll static void setUpLogger() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        rootLogger.setLevel(Level.FINE);
-        // switch off default Handlers to do not get anything in console
-        for (Handler h : rootLogger.getHandlers()) {
-            h.setLevel(Level.OFF);
-        }
-    }
 
     @Test public void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.json")));
