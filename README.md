@@ -53,7 +53,6 @@ The Java library with the goal of minimizing the code required to handle applica
 
 -   [Miscellaneous](#miscellaneous)
     -   [Extras](#extras)
-    -   [Logging](#logging)
     -   [Profiles](#profiles)
     -   [Integration with DI containers](#integration-with-di-containers)
     -   [Eclipse IDE](#eclipse-ide)
@@ -69,7 +68,7 @@ So, this project is providing library with similar with *OWNER* API, but
 -   Required at least Java 8, as result it support "more fresh" language features.
 
 ## Features
--   Core is plain Java 8 without any external dependencies
+-   Core is plain Java 8 without any external dependencies (except [slf4j-api](https://www.slf4j.org))
 
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
 
@@ -915,27 +914,6 @@ FYI: The method always reload *not cached* sources, even if they not changed (se
 -   **[yaml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml)** : provide loaders for files in [YAML](https://yaml.org) format
 -   **[hjson](https://github.com/Gmugra/net.cactusthorn.config/tree/main/hjson)** : provide loaders for files in [Hjson](https://hjson.github.io) format
 -   **[zookeeper](https://github.com/Gmugra/net.cactusthorn.config/tree/main/zookeeper)** : provide loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
-
-### Logging
-The runtime part of the library is using [Java Logging API](https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html).
-That's because one of the requirements is that external libraries must not be used, and JUL is only option in this case.
-However, JUL is rarely chosen for productive use, so, in the application which is using this library, it need to care about to redirect JUL calls to the logging API which is using in the application.
-
-e.g., in case of [SLF4J](http://www.slf4j.org/), which is, looks like, the most popular at the moment, you need next dependency:
-```xml
-<dependency>
-	<groupId>org.slf4j</groupId>
-	<artifactId>jul-to-slf4j</artifactId>
-	<version>1.7.32</version>
-</dependency>
-```
-and e.g. this code somewhere at start of the application:
-```java
-// java.util.logging -> SLF4j
-org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger();
-org.slf4j.bridge.SLF4JBridgeHandler.install();
-java.util.logging.Logger.getLogger("").setLevel(java.util.logging.Level.FINEST);
-```
 
 ### Profiles
 There is no specific support for profiles, but it is easy to achieve similar behavior using *System properties and/or environment variables* in sources URIs,

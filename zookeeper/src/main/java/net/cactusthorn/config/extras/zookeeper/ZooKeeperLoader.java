@@ -27,14 +27,16 @@ import java.util.Collections;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.extras.zookeeper.util.ZNodeToMapParser;
 
 public class ZooKeeperLoader implements Loader {
 
-    private static final Logger LOG = Logger.getLogger(ZooKeeperLoader.class.getName());
+    private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperLoader.class);
 
     private static final String SCHEME = "zookeeper";
 

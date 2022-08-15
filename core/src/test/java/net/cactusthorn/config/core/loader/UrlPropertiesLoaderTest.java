@@ -28,12 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.io.TempDir;
@@ -44,15 +39,6 @@ public class UrlPropertiesLoaderTest {
 
     private static final Loader LOADER = new UrlPropertiesLoader();
     private static final ClassLoader CL = UrlPropertiesLoaderTest.class.getClassLoader();
-
-    @BeforeAll static void setUpLogger() {
-        Logger rootLogger = LogManager.getLogManager().getLogger("");
-        rootLogger.setLevel(Level.FINE);
-        // switch off default Handlers to do not get anything in console
-        for (Handler h : rootLogger.getHandlers()) {
-            h.setLevel(Level.OFF);
-        }
-    }
 
     @Test public void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("file:./a.properties")));

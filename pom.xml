@@ -237,12 +237,6 @@
                 <version>${dependency.logback}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jul-to-slf4j</artifactId>
-                <version>${dependency.slf4j}</version>
-                <scope>test</scope>
-            </dependency>
 
         </dependencies>
     </dependencyManagement>
