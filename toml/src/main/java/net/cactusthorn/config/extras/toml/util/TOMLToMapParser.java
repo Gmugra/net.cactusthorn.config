@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
 import org.tomlj.TomlParseResult;
+import org.tomlj.TomlTable;
 
 public final class TOMLToMapParser {
 
@@ -47,6 +48,9 @@ public final class TOMLToMapParser {
         Map<String, String> result = new HashMap<>();
         for (String key : tomlResult.dottedKeySet()) {
             Object value = tomlResult.get(key);
+            if (value == null) {
+                continue;
+            }
             if (value instanceof TomlArray) {
                 String array = convertArray(key, (TomlArray) value);
                 if (array != null) {
@@ -63,11 +67,16 @@ public final class TOMLToMapParser {
         if (tomlArray.isEmpty()) {
             return null;
         }
-        if (tomlArray.containsArrays()) {
-            throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, key));
+        for (Object o : tomlArray.toList()) {
+            if (o instanceof TomlArray) {
+                throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, key));
+            }
         }
-        if (tomlArray.containsTables()) {
-            throw new UnsupportedOperationException(msg(TABLES_IN_ARRAY, key));
+
+        for (Object o : tomlArray.toList()) {
+            if (o instanceof TomlTable) {
+                throw new UnsupportedOperationException(msg(TABLES_IN_ARRAY, key));
+            }
         }
         return tomlArray.toList().stream().map(o -> o.toString()).collect(Collectors.joining(","));
     }
