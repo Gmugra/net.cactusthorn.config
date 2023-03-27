@@ -20,12 +20,12 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-zookeeper</artifactId>
-    <version>0.80</version>
+    <version>0.81</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-zookeeper:0.80'
+api 'net.cactusthorn.config:config-zookeeper:0.81'
 ```
 
 ## OSGi

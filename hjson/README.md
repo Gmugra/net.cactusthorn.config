@@ -106,12 +106,12 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-hjson</artifactId>
-    <version>0.80</version>
+    <version>0.81</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-hjson:0.80'
+api 'net.cactusthorn.config:config-hjson:0.81'
 ```
 
 ## OSGi
@@ -121,7 +121,7 @@ This is why there is a special bundle-JAR which includes *hjson-java* (and it's 
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-hjson</artifactId>
-    <version>0.80</version>
+    <version>0.81</version>
     <classifier>bundle</classifier>
 </dependency>
 ```

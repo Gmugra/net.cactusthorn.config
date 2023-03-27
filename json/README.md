@@ -67,12 +67,12 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-json</artifactId>
-    <version>0.80</version>
+    <version>0.81</version>
 </dependency>
 ```
 or with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-json:0.80'
+api 'net.cactusthorn.config:config-json:0.81'
 ```
 
 ## OSGi

@@ -2,7 +2,7 @@
 
 The Java library with the goal of minimizing the code required to handle application configuration.
 
-[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e95b3233c26d4b8ab31e1956c16fcc0d)](https://www.codacy.com/gh/Gmugra/net.cactusthorn.config/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Gmugra/net.cactusthorn.config&amp;utm_campaign=Badge_Grade) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/config-core/0.80)](https://search.maven.org/search?q=g:%22net.cactusthorn.config%22) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
+[![build](https://github.com/Gmugra/net.cactusthorn.config/actions/workflows/maven.yml/badge.svg)](https://github.com/Gmugra/net.cactusthorn.config/actions) [![Coverage Status](https://coveralls.io/repos/github/Gmugra/net.cactusthorn.config/badge.svg?branch=main)](https://coveralls.io/github/Gmugra/net.cactusthorn.config?branch=main) [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/Gmugra/net.cactusthorn.config.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Gmugra/net.cactusthorn.config/context:java) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/e95b3233c26d4b8ab31e1956c16fcc0d)](https://www.codacy.com/gh/Gmugra/net.cactusthorn.config/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Gmugra/net.cactusthorn.config&amp;utm_campaign=Badge_Grade) [![Maven Central with version prefix filter](https://img.shields.io/maven-central/v/net.cactusthorn.config/config-core/0.81)](https://search.maven.org/search?q=g:%22net.cactusthorn.config%22) [![GitHub](https://img.shields.io/github/license/Gmugra/net.cactusthorn.config)](https://github.com/Gmugra/net.cactusthorn.config/blob/main/LICENSE) [![Build by Maven](http://maven.apache.org/images/logos/maven-feather.png)](http://maven.apache.org)
 
 ## Table of Contents
 
@@ -119,7 +119,7 @@ In order to use the library in a project, it's need to add the dependency to the
 <dependency>
     <groupId>net.cactusthorn.config</groupId>
     <artifactId>config-core</artifactId>
-    <version>0.80</version>
+    <version>0.81</version>
 </dependency>
 ```
 It's also need to include the compiler used to convert annotated "source"-interfaces into the code:
@@ -127,13 +127,13 @@ It's also need to include the compiler used to convert annotated "source"-interf
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
-    <version>3.9.0</version>
+    <version>3.11.0</version>
     <configuration>
          <annotationProcessorPaths>
               <path>
                   <groupId>net.cactusthorn.config</groupId>
                   <artifactId>config-compiler</artifactId>
-                  <version>0.80</version>
+                  <version>0.81</version>
               </path>
          </annotationProcessorPaths>
     </configuration>
@@ -143,8 +143,8 @@ FYI: With this configuration, Maven will output the generated code into `target/
 
 Same with Gradle:
 ```groovy
-api 'net.cactusthorn.config:config-core:0.80'
-annotationProcessor 'net.cactusthorn.config:config-compiler:0.80'
+api 'net.cactusthorn.config:config-core:0.81'
+annotationProcessor 'net.cactusthorn.config:config-compiler:0.81'
 ```
 
 ### Basic usage
