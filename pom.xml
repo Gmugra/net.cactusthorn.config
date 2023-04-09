@@ -76,7 +76,7 @@
         <plugin.enforcer>3.2.1</plugin.enforcer>
         <plugin.deploy>3.1.0</plugin.deploy>
         <plugin.release>3.0.0</plugin.release>
-        <plugin.flatten>1.3.0</plugin.flatten>
+        <plugin.flatten>1.4.1</plugin.flatten>
         <plugin.jxr>3.3.0</plugin.jxr>
         <plugin.gpg>3.0.1</plugin.gpg>
         <plugin.nexus-staging>1.6.13</plugin.nexus-staging>
