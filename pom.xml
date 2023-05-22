@@ -84,7 +84,7 @@
         <plugin.bundle>5.1.8</plugin.bundle>
             <dependency.bndlib>6.4.0</dependency.bndlib>
 
-        <plugin.checkstyle>3.2.1</plugin.checkstyle>
+        <plugin.checkstyle>3.3.0</plugin.checkstyle>
             <dependency.checkstyle>9.3</dependency.checkstyle>
         <plugin.jacoco>0.8.8</plugin.jacoco>
         <plugin.pmd>3.20.0</plugin.pmd>
