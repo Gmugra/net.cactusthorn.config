@@ -93,7 +93,7 @@
             <dependency.spotbugs>4.7.3</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.8</dependency.jaxb-runtime>
-        <plugin.duplicate-finder>1.5.1</plugin.duplicate-finder>
+        <plugin.duplicate-finder>2.0.1</plugin.duplicate-finder>
         <plugin.mycila-license>4.1</plugin.mycila-license>
 
     </properties>
