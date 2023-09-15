@@ -72,7 +72,7 @@
         <plugin.install>3.1.1</plugin.install>
         <plugin.dependency>3.6.0</plugin.dependency>
         <plugin.source>3.3.0</plugin.source>
-        <plugin.javadoc>3.5.0</plugin.javadoc>
+        <plugin.javadoc>3.6.0</plugin.javadoc>
         <plugin.enforcer>3.3.0</plugin.enforcer>
         <plugin.deploy>3.1.1</plugin.deploy>
         <plugin.release>3.0.1</plugin.release>
