@@ -59,7 +59,7 @@
         <dependency.tomlj>1.1.0</dependency.tomlj>
         <dependency.gson>2.10.1</dependency.gson>
         <dependency.hjson>3.1.0</dependency.hjson>
-        <dependency.snakeyaml>2.0</dependency.snakeyaml>
+        <dependency.snakeyaml>2.2</dependency.snakeyaml>
         <dependency.curator>5.5.0</dependency.curator>
         <dependency.logback>1.2.11</dependency.logback>
         <dependency.slf4j>1.7.36</dependency.slf4j>
