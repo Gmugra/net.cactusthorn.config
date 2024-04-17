@@ -61,7 +61,7 @@
         <dependency.hjson>3.1.0</dependency.hjson>
         <dependency.snakeyaml>2.2</dependency.snakeyaml>
         <dependency.curator>5.5.0</dependency.curator>
-        <dependency.logback>1.2.11</dependency.logback>
+        <dependency.logback>1.5.6</dependency.logback>
         <dependency.slf4j>1.7.36</dependency.slf4j>
 
         <plugin.compiler>3.11.0</plugin.compiler>
