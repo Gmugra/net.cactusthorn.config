@@ -74,7 +74,7 @@
         <plugin.source>3.3.0</plugin.source>
         <plugin.javadoc>3.6.3</plugin.javadoc>
         <plugin.enforcer>3.4.1</plugin.enforcer>
-        <plugin.deploy>3.1.1</plugin.deploy>
+        <plugin.deploy>3.1.2</plugin.deploy>
         <plugin.release>3.0.1</plugin.release>
         <plugin.flatten>1.5.0</plugin.flatten>
         <plugin.jxr>3.3.1</plugin.jxr>
