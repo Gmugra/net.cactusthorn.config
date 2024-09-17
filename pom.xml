@@ -69,7 +69,7 @@
         <plugin.resources>3.3.1</plugin.resources>
         <plugin.test>3.3.1</plugin.test>
         <plugin.clean>3.3.2</plugin.clean>
-        <plugin.install>3.1.2</plugin.install>
+        <plugin.install>3.1.3</plugin.install>
         <plugin.dependency>3.6.1</plugin.dependency>
         <plugin.source>3.3.1</plugin.source>
         <plugin.javadoc>3.6.3</plugin.javadoc>
