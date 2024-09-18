@@ -70,7 +70,7 @@
         <plugin.test>3.3.1</plugin.test>
         <plugin.clean>3.4.0</plugin.clean>
         <plugin.install>3.1.3</plugin.install>
-        <plugin.dependency>3.6.1</plugin.dependency>
+        <plugin.dependency>3.8.0</plugin.dependency>
         <plugin.source>3.3.1</plugin.source>
         <plugin.javadoc>3.6.3</plugin.javadoc>
         <plugin.enforcer>3.5.0</plugin.enforcer>
