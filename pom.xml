@@ -78,7 +78,7 @@
         <plugin.release>3.1.1</plugin.release>
         <plugin.flatten>1.6.0</plugin.flatten>
         <plugin.jxr>3.5.0</plugin.jxr>
-        <plugin.gpg>3.2.6</plugin.gpg>
+        <plugin.gpg>3.2.7</plugin.gpg>
         <plugin.nexus-staging>1.7.0</plugin.nexus-staging>
         <plugin.bnd>6.4.0</plugin.bnd>
         <plugin.bundle>5.1.9</plugin.bundle>
