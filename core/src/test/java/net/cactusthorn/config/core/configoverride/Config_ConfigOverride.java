@@ -27,7 +27,7 @@ public final class Config_ConfigOverride implements ConfigOverride {
   private final ConcurrentHashMap<String, Object> VALUES = new ConcurrentHashMap<>();
 
   public Config_ConfigOverride(final Loaders loaders) {
-    ConfigInitializer_ConfigOverride initializer = new ConfigInitializer_ConfigOverride(loaders);
+    var initializer = new ConfigInitializer_ConfigOverride(loaders);
     VALUES.putAll(initializer.initialize());
   }
 
@@ -43,7 +43,7 @@ public final class Config_ConfigOverride implements ConfigOverride {
 
   @Override
   public String toString() {
-    StringBuilder buf = new StringBuilder();
+    var buf = new StringBuilder();
     buf.append('[');
     buf.append("string").append('=').append(String.valueOf(VALUES.get("test.string")));
     buf.append(']');
@@ -54,7 +54,7 @@ public final class Config_ConfigOverride implements ConfigOverride {
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Config_ConfigOverride)) return false;
-    Config_ConfigOverride other = (Config_ConfigOverride) o;
+    var other = (Config_ConfigOverride) o;
     return this.string().equals(other.string());
   }
 }

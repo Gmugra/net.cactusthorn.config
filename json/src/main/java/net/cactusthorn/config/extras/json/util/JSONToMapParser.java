@@ -35,30 +35,28 @@ import java.util.HashMap;
 import java.util.ArrayDeque;
 import java.util.Collections;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class JSONToMapParser {
 
     public Map<String, String> parse(Reader reader) throws IOException {
-        JsonElement rootElement = JsonParser.parseReader(reader);
+        var rootElement = JsonParser.parseReader(reader);
         if (rootElement.isJsonNull()) {
             return Collections.emptyMap();
         }
         if (!rootElement.isJsonObject()) {
             throw new UnsupportedOperationException(msg(ROOT_OBJECT));
         }
-        Map<String, String> result = new HashMap<>();
+        var result = new HashMap<String, String>();
         processObjectElement(new ArrayDeque<>(), result, rootElement.getAsJsonObject());
         return Collections.unmodifiableMap(result);
     }
 
     private void processObjectElement(Deque<String> key, Map<String, String> result, JsonElement element) {
         if (element.isJsonObject()) {
-            JsonObject jsonObject = element.getAsJsonObject();
-            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+            var jsonObject = element.getAsJsonObject();
+            for (var entry : jsonObject.entrySet()) {
                 key.addLast(entry.getKey());
                 processObjectElement(key, result, entry.getValue());
                 key.removeLast();
@@ -71,10 +69,10 @@ public class JSONToMapParser {
     }
 
     private void processArrayElement(Deque<String> key, Map<String, String> result, JsonElement element) {
-        JsonArray array = element.getAsJsonArray();
-        String keyAsString = key.stream().collect(Collectors.joining("."));
-        StringJoiner joiner = new StringJoiner(",");
-        for (JsonElement arrayElement : array) {
+        var array = element.getAsJsonArray();
+        var keyAsString = key.stream().collect(Collectors.joining("."));
+        var joiner = new StringJoiner(",");
+        for (var arrayElement : array) {
             if (arrayElement.isJsonNull()) {
                 continue;
             }

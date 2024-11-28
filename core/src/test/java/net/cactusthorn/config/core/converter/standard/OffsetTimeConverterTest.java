@@ -28,33 +28,33 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class OffsetTimeConverterTest {
+class OffsetTimeConverterTest {
 
     private static final OffsetTime TIME = OffsetTime.of(1, 30, 0, 0, ZoneOffset.of("+02:00"));
     private static final Converter<OffsetTime> CONVERTER = new OffsetTimeConverter();
 
-    @Test public void simple() {
-        OffsetTime result = CONVERTER.convert("01:30:00+02:00");
+    @Test void simple() {
+        var result = CONVERTER.convert("01:30:00+02:00");
         assertEquals(TIME, result);
     }
 
-    @Test public void simpleEmptyParameters() {
-        OffsetTime result = CONVERTER.convert("01:30:00+02:00", new String[0]);
+    @Test void simpleEmptyParameters() {
+        var result = CONVERTER.convert("01:30:00+02:00", new String[0]);
         assertEquals(TIME, result);
     }
 
-    @Test public void simpleNullParameter() {
-        OffsetTime result = CONVERTER.convert("01:30:00+02:00", null);
+    @Test void simpleNullParameter() {
+        var result = CONVERTER.convert("01:30:00+02:00", null);
         assertEquals(TIME, result);
     }
 
-    @Test public void complex() {
-        OffsetTime result = CONVERTER.convert("01:30:00+02:00", new String[] {"HH:mm:ssXXX", "HH'-'mm'-'ssXXX"});
+    @Test void complex() {
+        var result = CONVERTER.convert("01:30:00+02:00", new String[] {"HH:mm:ssXXX", "HH'-'mm'-'ssXXX"});
         assertEquals(TIME, result);
     }
 
-    @Test public void singleParam() {
-        OffsetTime result = CONVERTER.convert("01-30-00+02:00", new String[] {"HH'-'mm'-'ssXXX"});
+    @Test void singleParam() {
+        var result = CONVERTER.convert("01-30-00+02:00", new String[] {"HH'-'mm'-'ssXXX"});
         assertEquals(TIME, result);
     }
 }

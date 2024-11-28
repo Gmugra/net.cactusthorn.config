@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class InstantConverterTest {
+class InstantConverterTest {
 
     private static Converter<Instant> converter = new InstantConverter();
 
-    @Test public void correct() {
-        Instant instant = converter.convert("2007-12-03T10:15:30.00Z");
+    @Test void correct() {
+        var instant = converter.convert("2007-12-03T10:15:30.00Z");
         assertEquals(Instant.parse("2007-12-03T10:15:30.00Z"), instant);
     }
 }

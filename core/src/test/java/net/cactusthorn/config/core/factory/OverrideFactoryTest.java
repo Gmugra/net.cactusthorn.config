@@ -22,19 +22,17 @@ package net.cactusthorn.config.core.factory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.core.loader.Loaders;
 
-public class OverrideFactoryTest {
+class OverrideFactoryTest {
 
-    public static final class MyFactory extends ConfigFactoryAncestor {
+    private static final class MyFactory extends ConfigFactoryAncestor {
 
         private MyFactory(Loaders loaders) {
             super(loaders);
@@ -88,12 +86,9 @@ public class OverrideFactoryTest {
         }
     }
 
-    @Test
-    public void checkIt() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("ddd", "125");
-        MyFactory factory = MyFactory.builder().setSource(properties).build();
-        ConfigHolder holder = factory.configHolder();
+    @Test void checkIt() {
+        var factory = MyFactory.builder().setSource(Map.of("ddd", "125")).build();
+        var holder = factory.configHolder();
         assertEquals("125", holder.getString("ddd"));
         assertEquals("AAAA", factory.someMethod());
     }

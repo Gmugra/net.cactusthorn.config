@@ -20,12 +20,10 @@
 package net.cactusthorn.config.core.loader;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static java.util.Optional.of;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.SortedMap;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -33,12 +31,12 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigHolderTest {
+class ConfigHolderTest {
 
     static ConfigHolder holder;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
+        var properties = new HashMap<String, String>();
         properties.put("string", "ABC");
         properties.put("int", "10");
         properties.put("byte", "15");
@@ -54,137 +52,135 @@ public class ConfigHolderTest {
         holder = ConfigFactory.builder().setSource(properties).build().configHolder();
     }
 
-    @Test public void getString() {
+    @Test void getString() {
         assertEquals("ABC", holder.getString("string"));
         assertEquals("default", holder.getString("notExtsts", "default"));
         assertEquals("ABC", holder.getString("string", "default"));
         assertFalse(holder.getOptionalString("notExtsts").isPresent());
-        assertEquals("ABC", holder.getOptionalString("string").get());
+        assertEquals(of("ABC"), holder.getOptionalString("string"));
     }
 
-    @Test public void getInt() {
+    @Test void getInt() {
         assertEquals(10, holder.getInt("int"));
         assertEquals(20, holder.getInt("notExtsts", 20));
         assertEquals(10, holder.getInt("int", 20));
         assertFalse(holder.getOptionalInt("notExtsts").isPresent());
-        assertEquals(10, holder.getOptionalInt("int").get());
+        assertEquals(of(10), holder.getOptionalInt("int"));
     }
 
-    @Test public void getShort() {
+    @Test void getShort() {
         assertEquals((short) 20, holder.getShort("short"));
         assertEquals((short) 10, holder.getShort("notExtsts", (short) 10));
         assertEquals((short) 20, holder.getShort("short", (short) 10));
         assertFalse(holder.getOptionalShort("notExtsts").isPresent());
-        assertEquals((short) 20, holder.getOptionalShort("short").get());
+        assertEquals(of((short) 20), holder.getOptionalShort("short"));
     }
 
-    @Test public void getByte() {
+    @Test void getByte() {
         assertEquals((byte) 15, holder.getByte("byte"));
         assertEquals((byte) 20, holder.getByte("notExtsts", (byte) 20));
         assertEquals((byte) 15, holder.getByte("byte", (byte) 20));
         assertFalse(holder.getOptionalByte("notExtsts").isPresent());
-        assertEquals((byte) 15, holder.getOptionalByte("byte").get());
+        assertEquals(of((byte) 15), holder.getOptionalByte("byte"));
     }
 
-    @Test public void getLong() {
+    @Test void getLong() {
         assertEquals(30L, holder.getLong("long"));
         assertEquals(20L, holder.getLong("notExtsts", 20L));
         assertEquals(30L, holder.getLong("long", 20L));
         assertFalse(holder.getOptionalLong("notExtsts").isPresent());
-        assertEquals(30L, holder.getOptionalLong("long").get());
+        assertEquals(of(30L), holder.getOptionalLong("long"));
     }
 
-    @Test public void getBoolean() {
+    @Test void getBoolean() {
         assertTrue(holder.getBoolean("bool"));
         assertTrue(holder.getBoolean("notExtsts", true));
         assertTrue(holder.getBoolean("bool", false));
         assertFalse(holder.getOptionalBoolean("notExtsts").isPresent());
-        assertTrue(holder.getOptionalBoolean("bool").get());
+        assertEquals(of(true), holder.getOptionalBoolean("bool"));
     }
 
-    @Test public void getFloat() {
+    @Test void getFloat() {
         assertEquals(125.5f, holder.getFloat("float"));
         assertEquals(133.4f, holder.getFloat("notExtsts", 133.4f));
         assertEquals(125.5f, holder.getFloat("float", 133.4f));
         assertFalse(holder.getOptionalFloat("notExtsts").isPresent());
-        assertEquals(125.5f, holder.getOptionalFloat("float").get());
+        assertEquals(of(125.5f), holder.getOptionalFloat("float"));
     }
 
-    @Test public void getDouble() {
+    @Test void getDouble() {
         assertEquals(137.45d, holder.getDouble("double"));
         assertEquals(133.4d, holder.getDouble("notExtsts", 133.4d));
         assertEquals(137.45d, holder.getDouble("double", 133.4d));
         assertFalse(holder.getOptionalDouble("notExtsts").isPresent());
-        assertEquals(137.45d, holder.getOptionalDouble("double").get());
+        assertEquals(of(137.45d), holder.getOptionalDouble("double"));
     }
 
-    @Test public void contains() {
+    @Test void contains() {
         assertTrue(holder.contains("double"));
     }
 
-    @Test public void getChar() {
+    @Test void getChar() {
         assertEquals('X', holder.getChar("char"));
         assertEquals('D', holder.getChar("notExtsts", 'D'));
         assertEquals('X', holder.getChar("char", 'D'));
         assertFalse(holder.getOptionalChar("notExtsts").isPresent());
-        assertEquals('X', holder.getOptionalChar("char").get());
+        assertEquals(of('X'), holder.getOptionalChar("char"));
     }
 
-    @Test public void getProperties() {
+    @Test void getProperties() {
         assertFalse(holder.getProperties().isEmpty());
         assertThrows(UnsupportedOperationException.class, () -> holder.getProperties().clear());
     }
 
-    @Test public void list() {
-        Optional<List<UUID>> list = holder.getOptionalList(UUID::fromString, "list", ",");
+    @Test void list() {
+        var list = holder.getOptionalList(UUID::fromString, "list", ",");
         assertEquals(2, list.get().size());
     }
 
-    @Test public void getNotExist() {
+    @Test void getNotExist() {
         assertThrows(IllegalArgumentException.class, () -> holder.get(UUID::fromString, "notExist"));
     }
 
-    @Test public void duplicatedKey() {
-        Map<String, String> p = new HashMap<>();
-        p.put("map", "A|10,A|20");
-        ConfigHolder h = ConfigFactory.builder().setSource(p).build().configHolder();
+    @Test void duplicatedKey() {
+        ConfigHolder h = ConfigFactory.builder().setSource(Map.of("map", "A|10,A|20")).build().configHolder();
         assertThrows(IllegalStateException.class, () -> h.getMap(s -> s, Integer::valueOf, "map", ","));
     }
 
-    @Test public void getMap() {
-        Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
+    @Test void getMap() {
+        var result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
         assertEquals(10, result.get("A"));
         assertThrows(IllegalArgumentException.class, () -> holder.getMap(s -> s, Integer::valueOf, "notExists", ","));
     }
 
-    @Test public void getMapDefault() {
-        Map<String, Integer> result = holder.getMap(s -> s, Integer::valueOf, "map", ",", "C|30");
+    @Test void getMapDefault() {
+        var result = holder.getMap(s -> s, Integer::valueOf, "map", ",", "C|30");
         assertEquals(10, result.get("A"));
         result = holder.getMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
         assertEquals(30, result.get("C"));
     }
 
-    @Test public void getOptionalMap() {
-        Optional<Map<String, Integer>> result = holder.getOptionalMap(s -> s, Integer::valueOf, "map", ",");
+    @Test void getOptionalMap() {
+        var result = holder.getOptionalMap(s -> s, Integer::valueOf, "map", ",");
         assertEquals(10, result.get().get("A"));
         assertFalse(holder.getOptionalMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
     }
 
-    @Test public void getSortedMap() {
-        SortedMap<String, Integer> result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
+    @Test void getSortedMap() {
+        var result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
         assertEquals(50, result.get("A"));
         assertThrows(IllegalArgumentException.class, () -> holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ","));
     }
 
-    @Test public void getSortedMapDefault() {
-        SortedMap<String, Integer> result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",", "C|30");
+    @Test void getSortedMapDefault() {
+        var result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",", "C|30");
         assertEquals(50, result.get("A"));
         result = holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ",", "C|30");
         assertEquals(30, result.get("C"));
     }
 
-    @Test public void getOptionalSortedMap() {
-        Optional<SortedMap<String, Integer>> result = holder.getOptionalSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
+    @Test void getOptionalSortedMap() {
+        var result = holder.getOptionalSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
         assertEquals(50, result.get().get("A"));
         assertFalse(holder.getOptionalSortedMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
     }

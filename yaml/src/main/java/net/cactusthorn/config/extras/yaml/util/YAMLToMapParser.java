@@ -38,19 +38,19 @@ import org.yaml.snakeyaml.Yaml;
 public class YAMLToMapParser {
 
     public Map<String, String> parse(Reader reader) {
-        Yaml yaml = new Yaml();
+        var yaml = new Yaml();
         Map<String, Object> mapping = yaml.load(reader);
         if (mapping == null) {
             return Collections.emptyMap();
         }
-        Map<String, String> result = new HashMap<>();
+        var result = new HashMap<String, String>();
         processMap(new ArrayDeque<>(), result, mapping);
         return Collections.unmodifiableMap(result);
     }
 
     @SuppressWarnings("unchecked") private void processMap(Deque<String> key, Map<String, String> result, Map<String, Object> map) {
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
-            Object value = entry.getValue();
+        for (var entry : map.entrySet()) {
+            var value = entry.getValue();
             if (value instanceof Map<?, ?>) {
                 key.addLast(entry.getKey());
                 processMap(key, result, (Map<String, Object>) value);
@@ -68,9 +68,9 @@ public class YAMLToMapParser {
     }
 
     private void processList(Deque<String> key, Map<String, String> result, List<?> list) {
-        String keyAsString = key.stream().collect(Collectors.joining("."));
-        StringJoiner joiner = new StringJoiner(",");
-        for (Object value : list) {
+        var keyAsString = key.stream().collect(Collectors.joining("."));
+        var joiner = new StringJoiner(",");
+        for (var value : list) {
             if (value == null) {
                 continue;
             }

@@ -24,7 +24,6 @@ import java.util.Map;
 
 import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.standard.DurationConverter;
-import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.util.ConfigInitializer;
@@ -38,10 +37,10 @@ public final class ConfigInitializer_TestConfig extends ConfigInitializer {
 
   @Override
   public Map<String, Object> initialize() {
-    ConfigHolder ch = loaders().load(Config_TestConfig.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
+    var ch = loaders().load(Config_TestConfig.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
     CONVERTERS.computeIfAbsent(DurationConverter.class, c -> new DurationConverter());
     CONVERTERS.computeIfAbsent(ToTestConverter.class, c -> new ToTestConverter());
-    Map<String,Object> values = new HashMap<>();
+    var values = new HashMap<String,Object>();
     values.put("aaa", ch.get(s -> s, expandKey(globalPrefix("aaa")), "ddd"));
     values.put("test.dlist", ch.getList(s -> s, expandKey(globalPrefix("test.dlist")), ",", "A,A"));
     values.put("test.dlist2", ch.getList(s -> s, expandKey(globalPrefix("test.dlist2")), ",", "B,B"));

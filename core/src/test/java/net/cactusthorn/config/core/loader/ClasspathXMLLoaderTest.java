@@ -22,54 +22,53 @@ package net.cactusthorn.config.core.loader;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.standard.ClasspathXMLLoader;
 
-public class ClasspathXMLLoaderTest {
+class ClasspathXMLLoaderTest {
 
     private static final Loader LOADER = new ClasspathXMLLoader();
     private static final ClassLoader CL = ClasspathXMLLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.xml")));
     }
 
-    @Test public void acceptFragment() {
+    @Test void acceptFragment() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.xml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotOpaque() {
+    @Test void notAcceptNotOpaque() {
         assertFalse(LOADER.accept(URI.create("classpath://a.xml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotXml() {
+    @Test void notAcceptNotXml() {
         assertFalse(LOADER.accept(URI.create("classpath:a.properties#ISO-8859-1")));
     }
 
-    @Test public void notAcceptScheme() {
+    @Test void notAcceptScheme() {
         assertFalse(LOADER.accept(URI.create("mail:a.xml#ISO-8859-1")));
     }
 
-    @Test public void load() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:standard-properties.xml#UTF-8"), CL);
+    @Test void load() {
+        var properties = LOADER.load(URI.create("classpath:standard-properties.xml#UTF-8"), CL);
         assertEquals("foobar", properties.get("server.http.hostname"));
     }
 
-    @Test public void loadWrong() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:standard-properties-wrong.xml"), CL);
+    @Test void loadWrong() {
+        var properties = LOADER.load(URI.create("classpath:standard-properties-wrong.xml"), CL);
         assertTrue(properties.isEmpty());
     }
 
-    @Test public void loadOwner() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:owner.xml"), CL);
+    @Test void loadOwner() {
+        var properties = LOADER.load(URI.create("classpath:owner.xml"), CL);
         assertEquals("localhost", properties.get("server.http.hostname"));
     }
 
-    @Test public void loadOwnerSpecial() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:owner-special.xml"), CL);
+    @Test void loadOwnerSpecial() {
+        var properties = LOADER.load(URI.create("classpath:owner-special.xml"), CL);
         assertEquals("å∫ç∂´ƒ©˙ˆ∆ü", properties.get("foo.baz.specialChars"));
     }
 }

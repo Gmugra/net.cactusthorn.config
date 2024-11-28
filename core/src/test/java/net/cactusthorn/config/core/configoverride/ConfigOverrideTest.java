@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigOverrideTest {
+class ConfigOverrideTest {
 
-    @Test public void first() {
-        ConfigOverride conf = ConfigFactory.builder().addSource("system:properties").build().create(ConfigOverride.class);
+    @Test void first() {
+        var conf = ConfigFactory.builder().addSource("system:properties").build().create(ConfigOverride.class);
         assertEquals("SECOND", conf.string());
     }
 }

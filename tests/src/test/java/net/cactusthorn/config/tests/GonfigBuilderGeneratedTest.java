@@ -23,20 +23,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class GonfigBuilderGeneratedTest {
+class GonfigBuilderGeneratedTest {
 
     private static AllCorrect config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
+        var properties = new HashMap<String, String>();
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
@@ -52,43 +52,43 @@ public class GonfigBuilderGeneratedTest {
         config = ConfigFactory.builder().setSource(properties).build().create(AllCorrect.class);
     }
 
-    @Test public void ddd() {
+    @Test void ddd() {
         assertEquals(125d, config.ddd());
     }
 
-    @Test public void fromStringEnum() {
+    @Test void fromStringEnum() {
         assertEquals(AllCorrect.FromStringEnum.AAA, config.fromStringEnum());
     }
 
-    @Test public void intValue() {
+    @Test void intValue() {
         assertEquals(124, config.intValue());
     }
 
-    @Test public void list() {
+    @Test void list() {
         assertFalse(config.list().isPresent());
     }
 
-    @Test public void set() {
+    @Test void set() {
         assertEquals(1, config.set().size());
-        assertEquals("46400000-8cc0-11bd-b43e-10d46e4ef14d", config.set().iterator().next().toString());
+        assertEquals(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"), config.set().iterator().next());
     }
 
-    @Test public void simpleEnum() {
+    @Test void simpleEnum() {
         assertEquals(AllCorrect.SimpleEnum.AAA, config.simpleEnum());
     }
 
-    @Test public void sorted() {
+    @Test void sorted() {
         assertEquals(2, config.sorted().size());
-        Iterator<Float> it = config.sorted().iterator();
+        var it = config.sorted().iterator();
         assertEquals(126f, it.next());
         assertEquals(300f, it.next());
     }
 
-    @Test public void uuid() {
-        assertEquals("46400000-8cc0-11bd-b43e-10d46e4ef14d", config.uuid().get().toString());
+    @Test void uuid() {
+        assertEquals(Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")), config.uuid());
     }
 
-    @Test public void value() {
+    @Test void value() {
         assertEquals("simpleString", config.value());
     }
 }

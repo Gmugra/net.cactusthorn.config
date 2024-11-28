@@ -32,7 +32,7 @@ final class SerialVersionUIDPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         generator.interfaceInfo().serialVersionUID().ifPresent(svuid -> {
-            FieldSpec fieldSpec = FieldSpec.builder(TypeName.LONG, "serialVersionUID", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+            var fieldSpec = FieldSpec.builder(TypeName.LONG, "serialVersionUID", Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
                     .initializer("$LL", svuid).build();
             classBuilder.addField(fieldSpec);
         });

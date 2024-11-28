@@ -30,25 +30,25 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class MyConfigTest {
+class MyConfigTest {
 
-    @Test public void properties() {
-        MyConfig myConfig = ConfigFactory.builder().addSource("classpath:myconfig.properties").build().create(MyConfig.class);
+    @Test void properties() {
+        var myConfig = ConfigFactory.builder().addSource("classpath:myconfig.properties").build().create(MyConfig.class);
         assertEquals(URI.create("http://java.sun.com/j2se/1.3/"), myConfig.uri());
     }
 
-    @Test public void propertiesXML() {
-        MyConfig myConfig = ConfigFactory.builder().addSource("classpath:myconfig.xml").build().create(MyConfig.class);
+    @Test void propertiesXML() {
+        var myConfig = ConfigFactory.builder().addSource("classpath:myconfig.xml").build().create(MyConfig.class);
         assertEquals(LocalDate.of(2005, 11, 12), myConfig.date());
     }
 
-    @Test public void ownerXML() {
-        MyConfig myConfig = ConfigFactory.builder().addSource("classpath:myconfig-owner.xml").build().create(MyConfig.class);
+    @Test void ownerXML() {
+        var myConfig = ConfigFactory.builder().addSource("classpath:myconfig-owner.xml").build().create(MyConfig.class);
         assertTrue(myConfig.units().contains(TimeUnit.HOURS));
     }
 
-    @Test public void toml() {
-        MyConfig myConfig = ConfigFactory.builder().addSource("classpath:myconfig.toml").build().create(MyConfig.class);
+    @Test void toml() {
+        var myConfig = ConfigFactory.builder().addSource("classpath:myconfig.toml").build().create(MyConfig.class);
         assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), myConfig.ids().get().get(1));
         assertEquals(LocalDate.of(2005, 11, 12), myConfig.date());
     }

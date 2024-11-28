@@ -41,11 +41,9 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Pattern;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -111,7 +109,7 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
 
     public DefaultConverterValidator(ProcessingEnvironment processingEnv) {
         super(processingEnv);
-        for (Class<?> clazz : CONVERTERS.keySet()) {
+        for (var clazz : CONVERTERS.keySet()) {
             classTypes.put(processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType(), clazz);
         }
     }
@@ -120,19 +118,19 @@ public class DefaultConverterValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        DeclaredType declaredType = (DeclaredType) typeMirror;
-        Element element = declaredType.asElement();
+        var declaredType = (DeclaredType) typeMirror;
+        var element = declaredType.asElement();
         // @formatter:off
-        Optional<Type> classType =
+        return
             classTypes.entrySet().stream()
             .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
             .map(e -> e.getValue())
-            .findAny();
-        // @formatter:off
-        if (classType.isPresent()) {
-            TypeMirror converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType.get())).asType();
-            return MethodInfo.builder(methodElement).withConverter(converter, Converter.EMPTY);
-        }
-        return next(methodElement, typeMirror);
+            .findAny()
+            .map(classType -> {
+              var converter = processingEnv().getElementUtils().getTypeElement(CONVERTERS.get(classType)).asType();
+              return MethodInfo.builder(methodElement).withConverter(converter, Converter.EMPTY);
+            })
+            .orElseGet(() -> next(methodElement, typeMirror));
+        // @formatter:on
     }
 }

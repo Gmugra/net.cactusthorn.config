@@ -121,15 +121,15 @@ public enum ByteSizeUnit {
     }
 
     private static Map<String, ByteSizeUnit> makeUnitsMap() {
-        Map<String, ByteSizeUnit> map = new HashMap<String, ByteSizeUnit>();
-        for (ByteSizeUnit unit : values()) {
+        var map = new HashMap<String, ByteSizeUnit>();
+        for (var unit : values()) {
             map.put(unit.prefix + "byte", unit);
             map.put(unit.prefix + "bytes", unit);
             if (unit.prefix.length() == 0) {
                 map.put("b", unit);
                 map.put("", unit); // no unit specified means bytes
             } else {
-                String first = unit.prefix.substring(0, 1);
+                var first = unit.prefix.substring(0, 1);
                 if (unit.standard == IEC) {
                     map.put(first, unit); // 512m
                     map.put(first + "i", unit); // 512mi

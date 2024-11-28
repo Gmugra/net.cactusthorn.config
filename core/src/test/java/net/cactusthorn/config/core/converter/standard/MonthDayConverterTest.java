@@ -27,33 +27,33 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class MonthDayConverterTest {
+class MonthDayConverterTest {
 
     private static final MonthDay MONTH_DAY = MonthDay.of(1, 15);
     private static final Converter<MonthDay> CONVERTER = new MonthDayConverter();
 
-    @Test public void simple() {
-        MonthDay result = CONVERTER.convert("--01-15");
+    @Test void simple() {
+        var result = CONVERTER.convert("--01-15");
         assertEquals(MONTH_DAY, result);
     }
 
-    @Test public void simpleNullParameters() {
-        MonthDay result = CONVERTER.convert("--01-15", null);
+    @Test void simpleNullParameters() {
+        var result = CONVERTER.convert("--01-15", null);
         assertEquals(MONTH_DAY, result);
     }
 
-    @Test public void simpleEmptyParameters() {
-        MonthDay result = CONVERTER.convert("--01-15", new String[0]);
+    @Test void simpleEmptyParameters() {
+        var result = CONVERTER.convert("--01-15", new String[0]);
         assertEquals(MONTH_DAY, result);
     }
 
-    @Test public void complex() {
-        MonthDay result = CONVERTER.convert("01|15", new String[] {"'x'MM|dd", "MM|dd"});
+    @Test void complex() {
+        var result = CONVERTER.convert("01|15", new String[] {"'x'MM|dd", "MM|dd"});
         assertEquals(MONTH_DAY, result);
     }
 
-    @Test public void singleParam() {
-        MonthDay result = CONVERTER.convert("01|15", new String[] {"MM|dd"});
+    @Test void singleParam() {
+        var result = CONVERTER.convert("01|15", new String[] {"MM|dd"});
         assertEquals(MONTH_DAY, result);
     }
 }

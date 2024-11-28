@@ -19,6 +19,7 @@
  */
 package net.cactusthorn.config.tests.converter;
 
+@FunctionalInterface
 public interface MyInterface {
     String getValue();
 }

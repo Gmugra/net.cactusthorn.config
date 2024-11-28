@@ -31,7 +31,7 @@ final class HashCodePart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         // @formatter:off
-        MethodSpec hashCode =
+        var hashCode =
             MethodSpec.methodBuilder("hashCode")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)

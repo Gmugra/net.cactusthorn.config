@@ -25,8 +25,6 @@ import static javax.lang.model.element.ElementKind.*;
 
 import net.cactusthorn.config.compiler.methodinfo.StringMethod;
 
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -61,9 +59,9 @@ public class StringTypeValidator extends MethodValidatorAncestor {
             return MethodInfo.builder(methodElement).withStringMethod(StringMethod.STRING, typeMirror);
         }
 
-        TypeElement typeElement = (TypeElement) ((DeclaredType) typeMirror).asElement();
+        var typeElement = (TypeElement) ((DeclaredType) typeMirror).asElement();
 
-        Set<StringMethod> methods =
+        var methods =
             typeElement.getEnclosedElements().stream().map(this::find).filter(sm -> sm != null).collect(Collectors.toSet());
 
         StringMethod stringMethod = null;
@@ -85,9 +83,9 @@ public class StringTypeValidator extends MethodValidatorAncestor {
     }
 
     private StringMethod find(Element element) {
-        Set<Modifier> modifiers = element.getModifiers();
-        boolean isStatic = modifiers.contains(Modifier.STATIC);
-        boolean isPublic = modifiers.contains(Modifier.PUBLIC);
+        var modifiers = element.getModifiers();
+        var isStatic = modifiers.contains(Modifier.STATIC);
+        var isPublic = modifiers.contains(Modifier.PUBLIC);
         if (element.getKind() == METHOD && isStatic && isPublic && checkParameter(element) && checkExceptions(element)) {
             String methodName = element.getSimpleName().toString();
             return StringMethod.METHODS.contains(methodName) ? StringMethod.fromMethodName(methodName) : null;
@@ -100,13 +98,13 @@ public class StringTypeValidator extends MethodValidatorAncestor {
 
     // Method must contain single String parameter
     private boolean checkParameter(Element methodElement) {
-        List<? extends TypeMirror> parameters = ((ExecutableType) methodElement.asType()).getParameterTypes();
+        var parameters = ((ExecutableType) methodElement.asType()).getParameterTypes();
         return parameters.size() == 1 && processingEnv().getTypeUtils().isSameType(stringTM, parameters.get(0));
     }
 
     // Method can throws only RuntimeExceptions
     private boolean checkExceptions(Element methodElement) {
-        List<? extends TypeMirror> throwns = ((ExecutableType) methodElement.asType()).getThrownTypes();
+        var throwns = ((ExecutableType) methodElement.asType()).getThrownTypes();
         return throwns.stream().noneMatch(tm -> !processingEnv().getTypeUtils().isAssignable(tm, runtimeExceptionTM));
     }
 }

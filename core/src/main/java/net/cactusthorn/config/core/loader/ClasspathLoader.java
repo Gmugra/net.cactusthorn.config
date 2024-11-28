@@ -23,7 +23,6 @@ import static net.cactusthorn.config.core.util.ApiMessages.msg;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.CANT_LOAD_RESOURCE;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
@@ -47,10 +46,10 @@ public abstract class ClasspathLoader implements Loader {
     protected abstract Map<String, String> load(Reader reader) throws Exception;
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
-        String charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
-        try (InputStream stream = classLoader.getResourceAsStream(uri.getSchemeSpecificPart());
-                Reader reader = new InputStreamReader(stream, charsetName);
-                BufferedReader buffer = new BufferedReader(reader)) {
+        var charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
+        try (var stream = classLoader.getResourceAsStream(uri.getSchemeSpecificPart());
+                var reader = new InputStreamReader(stream, charsetName);
+                var buffer = new BufferedReader(reader)) {
             return load(buffer);
         } catch (Exception e) {
             log.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));

@@ -19,13 +19,11 @@
  */
 package net.cactusthorn.config.compiler.configinitgenerator;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.lang.model.element.TypeElement;
 
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
 
 import net.cactusthorn.config.compiler.Generator;
 import net.cactusthorn.config.compiler.GeneratorPart;
@@ -35,14 +33,14 @@ import net.cactusthorn.config.core.util.ConfigInitializer;
 
 public final class ConfigInitGenerator extends Generator {
 
-    private static final List<GeneratorPart> PARTS = Arrays.asList(new UrisPart(), new ConstructorPart(), new InitializePart());
+    private static final List<GeneratorPart> PARTS = List.of(new UrisPart(), new ConstructorPart(), new InitializePart());
 
     public ConfigInitGenerator(TypeElement interfaceElement, List<MethodInfo> methodsInfo, InterfaceInfo interfaceInfo) {
         super(interfaceElement, methodsInfo, ConfigInitializer.INITIALIZER_CLASSNAME_PREFIX, interfaceInfo);
     }
 
     @Override public JavaFile generate() {
-        TypeSpec.Builder classBuilder = classBuilder().superclass(ConfigInitializer.class);
+        var classBuilder = classBuilder().superclass(ConfigInitializer.class);
         PARTS.forEach(p -> p.addPart(classBuilder, this));
         return JavaFile.builder(packageName(), classBuilder.build()).skipJavaLangImports(true).build();
     }

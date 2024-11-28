@@ -30,27 +30,27 @@ import net.cactusthorn.config.core.converter.Converter;
 import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.bytesize.ByteSizeUnit;
 
-public class ByteSizeConverterTest {
+class ByteSizeConverterTest {
 
     private static Converter<ByteSize> converter = new ByteSizeConverter();
 
     @ParameterizedTest //
     @ValueSource(strings = { "10 bytes", "10byte", "10 byte" }) //
-    public void bytes(String value) {
+    void bytes(String value) {
         assertEquals(new ByteSize(10, ByteSizeUnit.BYTES), converter.convert(value));
     }
 
     @ParameterizedTest //
     @ValueSource(strings = { "10m", "10mi", "10mib" }) //
-    public void mebibytes(String value) {
+    void mebibytes(String value) {
         assertEquals(new ByteSize(10, ByteSizeUnit.MEBIBYTES), converter.convert(value));
     }
 
-    @Test public void invalidUnit() {
+    @Test void invalidUnit() {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("10 sillybyte"));
     }
 
-    @Test public void invalidNumber() {
+    @Test void invalidNumber() {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("megabyte"));
     }
 }

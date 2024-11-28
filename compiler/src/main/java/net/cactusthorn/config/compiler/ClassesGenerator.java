@@ -24,6 +24,7 @@ import java.io.IOException;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 
+@FunctionalInterface
 public interface ClassesGenerator {
 
     default void init(ProcessingEnvironment processingEnv) {

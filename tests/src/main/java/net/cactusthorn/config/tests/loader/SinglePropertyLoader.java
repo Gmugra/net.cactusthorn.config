@@ -20,7 +20,6 @@
 package net.cactusthorn.config.tests.loader;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 import net.cactusthorn.config.core.loader.Loader;
@@ -32,8 +31,6 @@ public class SinglePropertyLoader implements Loader {
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
-        Map<String, String> result = new HashMap<>();
-        result.put("key", "value");
-        return result;
+        return Map.of("key", "value");
     }
 }

@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigYamlTest {
+class ConfigYamlTest {
 
-    @Test public void doIt() {
-        ConfigYaml config = ConfigFactory.builder().addSource("classpath:correct.yaml").build().create(ConfigYaml.class);
+    @Test void doIt() {
+        var config = ConfigFactory.builder().addSource("classpath:correct.yaml").build().create(ConfigYaml.class);
         assertFalse(config.ports().isEmpty());
     }
 }

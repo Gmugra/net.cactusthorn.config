@@ -157,12 +157,12 @@ public final class ByteSize {
      *         this but using the specified unit.
      */
     public ByteSize convertTo(ByteSizeUnit byteSizeUnit) {
-        BigDecimal bytes = this.value.multiply(this.unit.getFactor()).setScale(0, RoundingMode.CEILING);
+        var bytes = this.value.multiply(this.unit.getFactor()).setScale(0, RoundingMode.CEILING);
         return new ByteSize(bytes.divide(byteSizeUnit.getFactor()), byteSizeUnit);
     }
 
     @Override public String toString() {
-        return value.toString() + " " + unit.toStringShortForm();
+        return value.toString() + ' ' + unit.toStringShortForm();
     }
 
     @Override public boolean equals(Object o) {
@@ -173,7 +173,7 @@ public final class ByteSize {
             return false;
         }
 
-        ByteSize byteSize = (ByteSize) o;
+        var byteSize = (ByteSize) o;
 
         return getBytes().equals(byteSize.getBytes());
     }

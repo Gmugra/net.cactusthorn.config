@@ -21,7 +21,6 @@ package net.cactusthorn.config.tests.key;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -29,22 +28,19 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class WithKeyTest {
+class WithKeyTest {
 
     private static WithKey config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("simple", "ABC");
-        properties.put("abc", "XYZ");
-        config = ConfigFactory.builder().setSource(properties).build().create(WithKey.class);
+        config = ConfigFactory.builder().setSource(Map.of("simple", "ABC", "abc", "XYZ")).build().create(WithKey.class);
     }
 
-    @Test public void simple() {
+    @Test void simple() {
         assertEquals("ABC", config.simple());
     }
 
-    @Test public void withKey() {
+    @Test void withKey() {
         assertEquals("XYZ", config.withKey());
     }
 }

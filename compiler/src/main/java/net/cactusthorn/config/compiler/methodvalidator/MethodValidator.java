@@ -25,6 +25,7 @@ import javax.lang.model.type.TypeMirror;
 import net.cactusthorn.config.compiler.ProcessorException;
 import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
+@FunctionalInterface
 public interface MethodValidator {
     MethodInfo.Builder validate(ExecutableElement methodElement, TypeMirror typeMirror) throws ProcessorException;
 }

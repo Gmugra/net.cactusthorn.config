@@ -47,7 +47,7 @@ import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 
 import static net.cactusthorn.config.compiler.ConfigClassesGenerator.METHODINFO_COMPARATOR;
 
-public class MethodInfoComparatorTest {
+class MethodInfoComparatorTest {
 
     private static class SimpleName implements Name {
 
@@ -179,28 +179,28 @@ public class MethodInfoComparatorTest {
 
     }
 
-    @Test public void nullNull() {
+    @Test void nullNull() {
         assertEquals(0, METHODINFO_COMPARATOR.compare(null, null));
     }
 
-    @Test public void nullNotNull() {
-        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
+    @Test void nullNotNull() {
+        var methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(1, METHODINFO_COMPARATOR.compare(null, methodInfo));
     }
 
-    @Test public void notNullNull() {
-        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
+    @Test void notNullNull() {
+        var methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(-1, METHODINFO_COMPARATOR.compare(methodInfo, null));
     }
 
-    @Test public void same() {
-        MethodInfo methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
+    @Test void same() {
+        var methodInfo = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
         assertEquals(0, METHODINFO_COMPARATOR.compare(methodInfo, methodInfo));
     }
 
-    @Test public void notSame() {
-        MethodInfo methodInfo1 = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
-        MethodInfo methodInfo2 = MethodInfo.builder(new SimpleExecutableElement("TestTwo")).build();
+    @Test void notSame() {
+        var methodInfo1 = MethodInfo.builder(new SimpleExecutableElement("TestOne")).build();
+        var methodInfo2 = MethodInfo.builder(new SimpleExecutableElement("TestTwo")).build();
         assertNotEquals(0, METHODINFO_COMPARATOR.compare(methodInfo1, methodInfo2));
     }
 }

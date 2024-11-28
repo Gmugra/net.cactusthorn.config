@@ -29,8 +29,8 @@ public class PBEConverter implements Converter<String> {
         if (parameters == null || parameters.length == 0 || "".equals(parameters[0])) {
             throw new IllegalArgumentException();
         }
-        String pass = System.getProperty(parameters[0]);
-        StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+        var pass = System.getProperty(parameters[0]);
+        var encryptor = new StandardPBEStringEncryptor();
         encryptor.setPassword(pass);
         return encryptor.decrypt(value);
     }

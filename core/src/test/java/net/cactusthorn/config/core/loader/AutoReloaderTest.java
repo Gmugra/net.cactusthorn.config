@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.Reloadable;
 
-public class AutoReloaderTest {
+class AutoReloaderTest {
 
     private static int counter = 0;
     private static int counter2 = 0;
 
-    public static class TestIt implements Reloadable {
+    static class TestIt implements Reloadable {
         @Override public void reload() {
             counter++;
         }
@@ -40,7 +40,7 @@ public class AutoReloaderTest {
         }
     }
 
-    public static class DisableIt implements Reloadable {
+    static class DisableIt implements Reloadable {
         @Override public void reload() {
             counter2++;
         }
@@ -54,9 +54,9 @@ public class AutoReloaderTest {
         }
     }
 
-    @Test public void simple() throws InterruptedException {
+    @Test void simple() throws InterruptedException {
         counter = 0;
-        AutoReloader reloader = new AutoReloader(1);
+        var reloader = new AutoReloader(1);
         Thread.sleep(3000);
         assertEquals(0, counter);
 
@@ -69,9 +69,9 @@ public class AutoReloaderTest {
         assertTrue(counter >= 7);
     }
 
-    @Test public void disableIt() throws InterruptedException {
+    @Test void disableIt() throws InterruptedException {
         counter2 = 0;
-        AutoReloader reloader = new AutoReloader(1);
+        var reloader = new AutoReloader(1);
         Thread.sleep(3000);
         assertEquals(0, counter2);
         reloader.register(new DisableIt());

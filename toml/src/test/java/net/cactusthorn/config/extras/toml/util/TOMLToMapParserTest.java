@@ -22,68 +22,65 @@ package net.cactusthorn.config.extras.toml.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class TOMLToMapParserTest {
+class TOMLToMapParserTest {
 
-    @Test public void correct() throws IOException {
-        try (Reader reader = reader("correct.toml")) {
-            Map<String, String> result = new TOMLToMapParser().parse(reader);
+    @Test void correct() throws IOException {
+        try (var reader = reader("correct.toml")) {
+            var result = new TOMLToMapParser().parse(reader);
             assertEquals("frontend", result.get("servers.alpha.role"));
         }
     }
 
-    @Test public void wrong() throws IOException {
-        try (Reader reader = reader("wrong.toml")) {
-            TOMLToMapParser parser = new TOMLToMapParser();
+    @Test void wrong() throws IOException {
+        try (var reader = reader("wrong.toml")) {
+            var parser = new TOMLToMapParser();
             assertThrows(IOException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void empty() throws IOException {
-        try (Reader reader = reader("empty.toml")) {
+    @Test void empty() throws IOException {
+        try (var reader = reader("empty.toml")) {
             assertTrue(new TOMLToMapParser().parse(reader).isEmpty());
         }
     }
 
     @Test public void arrayInArray() throws IOException {
-        try (Reader reader = reader("arrayInArray.toml")) {
-            TOMLToMapParser parser = new TOMLToMapParser();
+        try (var reader = reader("arrayInArray.toml")) {
+            var parser = new TOMLToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void emptyArray() throws IOException {
-        try (Reader reader = reader("emptyArray.toml")) {
-            TOMLToMapParser parser = new TOMLToMapParser();
+    @Test void emptyArray() throws IOException {
+        try (var reader = reader("emptyArray.toml")) {
+            var parser = new TOMLToMapParser();
             assertTrue(parser.parse(reader).isEmpty());
         }
     }
 
-    @Test public void tableInArray() throws IOException {
-        try (Reader reader = reader("tableInArray.toml")) {
-            TOMLToMapParser parser = new TOMLToMapParser();
+    @Test void tableInArray() throws IOException {
+        try (var reader = reader("tableInArray.toml")) {
+            var parser = new TOMLToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void multilineString() throws IOException {
-        try (Reader reader = reader("correct.toml")) {
-            Map<String, String> result = new TOMLToMapParser().parse(reader);
-            String multiline = result.get("str1");
-            String[] lines = multiline.split("\r\n|\r|\n");
+    @Test void multilineString() throws IOException {
+        try (var reader = reader("correct.toml")) {
+            var result = new TOMLToMapParser().parse(reader);
+            var lines = result.get("str1").split("\r\n|\r|\n");
             assertEquals(2, lines.length);
         }
     }
 
     private Reader reader(String resource) {
-        InputStream is = TOMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
+        var is = TOMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 }

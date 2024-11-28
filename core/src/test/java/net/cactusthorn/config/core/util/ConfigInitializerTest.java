@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.Loaders;
 
-public class ConfigInitializerTest {
+class ConfigInitializerTest {
 
     private static final InitIt INIT_IT = new InitIt(null);
 
@@ -46,23 +46,23 @@ public class ConfigInitializerTest {
         }
     }
 
-    @Test public void simple() {
+    @Test void simple() {
         assertEquals("value", INIT_IT.key("value"));
     }
 
-    @Test public void propStart() {
+    @Test void propStart() {
         assertEquals("value", INIT_IT.key("{prop}.value"));
     }
 
-    @Test public void propEnd() {
+    @Test void propEnd() {
         assertEquals("value", INIT_IT.key("value.{prop}"));
     }
 
-    @Test public void propMid() {
+    @Test void propMid() {
         assertEquals("xxx.yyy.value", INIT_IT.key("xxx.{a}.yyy.{bbb}.value"));
     }
 
-    @Test public void propExpand() {
+    @Test void propExpand() {
         System.setProperty("xx", "11");
         System.setProperty("yy", "22");
         assertEquals("xxx.11.yyy.22.value", INIT_IT.key("xxx.{xx}.yyy.{yy}.value"));

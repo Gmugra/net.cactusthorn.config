@@ -25,28 +25,28 @@ import java.net.URI;
 
 import org.junit.jupiter.api.Test;
 
-public class UriTemplateTest {
+class UriTemplateTest {
 
-    @Test public void nocacheStr() {
-        Loaders.UriTemplate template = new Loaders.UriTemplate("nocache:system:properties");
+    @Test void nocacheStr() {
+        var template = new Loaders.UriTemplate("nocache:system:properties");
         assertFalse(template.cachable());
         assertEquals(URI.create("system:properties"), template.uri());
     }
 
-    @Test public void nocacheURI() {
-        Loaders.UriTemplate template = new Loaders.UriTemplate(URI.create("nocache:system:properties"));
+    @Test void nocacheURI() {
+        var template = new Loaders.UriTemplate(URI.create("nocache:system:properties"));
         assertFalse(template.cachable());
         assertEquals(URI.create("system:properties"), template.uri());
     }
 
-    @Test public void cacheStr() {
-        Loaders.UriTemplate template = new Loaders.UriTemplate("system:properties");
+    @Test void cacheStr() {
+        var template = new Loaders.UriTemplate("system:properties");
         assertTrue(template.cachable());
         assertEquals(URI.create("system:properties"), template.uri());
     }
 
-    @Test public void cacheURI() {
-        Loaders.UriTemplate template = new Loaders.UriTemplate(URI.create("system:properties"));
+    @Test void cacheURI() {
+        var template = new Loaders.UriTemplate(URI.create("system:properties"));
         assertTrue(template.cachable());
         assertEquals(URI.create("system:properties"), template.uri());
     }

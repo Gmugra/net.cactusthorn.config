@@ -21,15 +21,9 @@ package net.cactusthorn.config.tests.converter;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class MyInterfaceConverter implements Converter<MyInterface> {
-
-    private static class MyInterfaceImpl implements MyInterface {
-        @Override public String getValue() {
-            return "MY_VALUE";
-        }
-    }
+public final class MyInterfaceConverter implements Converter<MyInterface> {
 
     @Override public MyInterface convert(String value, String[] parameters) {
-        return new MyInterfaceImpl();
+        return () -> "MY_VALUE";
     }
 }

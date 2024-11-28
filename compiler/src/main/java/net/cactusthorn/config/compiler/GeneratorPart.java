@@ -29,6 +29,7 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+@FunctionalInterface
 public interface GeneratorPart {
 
     ClassName LIST = ClassName.get(List.class);

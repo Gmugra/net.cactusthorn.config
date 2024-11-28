@@ -24,86 +24,64 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigMapTest {
+class ConfigMapTest {
 
-    @Test public void map() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<String, Integer> result = config.map();
+    @Test void map() {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        var result = config.map();
         assertEquals(10, result.get("A"));
         assertEquals(20, result.get("BBB"));
         assertFalse(config.map2().isPresent());
     }
 
-    @Test public void optionalMap() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        properties.put("map2", "10000|10;20000|20");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<Integer, Byte> result = config.map2().get();
+    @Test void optionalMap() {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "map2", "10000|10;20000|20");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        var result = config.map2().get();
         assertEquals((byte) 10, result.get(10000));
         assertEquals((byte) 20, result.get(20000));
     }
 
-    @Test public void defaultMap() throws MalformedURLException {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<UUID, URL> result = config.map3();
-        assertEquals(new URL("https://github.com"), result.get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
+    @Test void defaultMap() throws MalformedURLException {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        assertEquals(new URL("https://github.com"), config.map3().get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
     }
 
-    @Test public void sortedMap() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<String, Integer> result = config.sortedMap();
+    @Test void sortedMap() {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        var result = config.sortedMap();
         assertEquals(50, result.get("A"));
         assertEquals(60, result.get("BBB"));
         assertFalse(config.map2().isPresent());
     }
 
-    @Test public void optionalSortedMap() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        properties.put("sortedMap2", "10000|50;20000|60");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<Integer, Byte> result = config.sortedMap2().get();
+    @Test void optionalSortedMap() {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "sortedMap2", "10000|50;20000|60");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        var result = config.sortedMap2().get();
         assertEquals((byte) 50, result.get(10000));
         assertEquals((byte) 60, result.get(20000));
     }
 
-    @Test public void defaultSortedMap() throws MalformedURLException {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Map<UUID, URL> result = config.sortedMap3();
-        assertEquals(new URL("https://github.com"), result.get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
+    @Test void defaultSortedMap() throws MalformedURLException {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        assertEquals(new URL("https://github.com"), config.sortedMap3().get(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
     }
 
-    @Test public void defaultKeyConverter() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("map", "A|10,BBB|20");
-        properties.put("sortedMap", "A|50,BBB|60");
-        properties.put("defaultKeyConverter", "2007-12-03T10:15:30.00Z|Test");
-        ConfigMap config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        Optional<Map<Instant, String>> result = config.defaultKeyConverter();
-        assertEquals("Test", result.get().get(Instant.parse("2007-12-03T10:15:30.00Z")));
+    @Test void defaultKeyConverter() {
+        var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "defaultKeyConverter", "2007-12-03T10:15:30.00Z|Test");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
+        assertEquals("Test", config.defaultKeyConverter().get().get(Instant.parse("2007-12-03T10:15:30.00Z")));
     }
 }

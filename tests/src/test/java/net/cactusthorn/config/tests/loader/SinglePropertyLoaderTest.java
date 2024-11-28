@@ -22,35 +22,33 @@ package net.cactusthorn.config.tests.loader;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
-import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.Loader;
 
-public class SinglePropertyLoaderTest {
+class SinglePropertyLoaderTest {
 
     private static final Loader LOADER = new SinglePropertyLoader();
     private static final ClassLoader CL = SinglePropertyLoaderTest.class.getClassLoader();
     private static final URI SPURI = URI.create("single:property");
 
-    @Test public void accept() {
+    @Test void accept() {
         assertTrue(LOADER.accept(SPURI));
     }
 
-    @Test public void notAccept() {
+    @Test void notAccept() {
         assertFalse(LOADER.accept(URI.create("classpath://a.properties")));
     }
 
-    @Test public void load() {
-        Map<String, String> values = LOADER.load(SPURI, CL);
+    @Test void load() {
+        var values = LOADER.load(SPURI, CL);
         assertEquals("value", values.get("key"));
     }
 
-    @Test public void loadFactory() {
-        ConfigHolder holder = ConfigFactory.builder().addSource("single:property").build().configHolder();
+    @Test void loadFactory() {
+        var holder = ConfigFactory.builder().addSource("single:property").build().configHolder();
         assertEquals("value", holder.getString("key"));
     }
 }

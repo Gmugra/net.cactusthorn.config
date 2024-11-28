@@ -41,19 +41,19 @@ public class AccessiblePart implements GeneratorPart {
     }
 
     private void addKeys(TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder keysBuilder = MethodSpec.methodBuilder("keys").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+        var keysBuilder = MethodSpec.methodBuilder("keys").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(SET_STRING).addStatement("return $T.unmodifiableSet($L.keySet())", Collections.class, VALUES_ATTR);
         classBuilder.addMethod(keysBuilder.build());
     }
 
     private void addGet(TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder keysBuilder = MethodSpec.methodBuilder("get").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+        var keysBuilder = MethodSpec.methodBuilder("get").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(Object.class).addParameter(String.class, "key").addStatement("return $L.get(key)", VALUES_ATTR);
         classBuilder.addMethod(keysBuilder.build());
     }
 
     private void addAsMap(TypeSpec.Builder classBuilder) {
-        MethodSpec.Builder keysBuilder = MethodSpec.methodBuilder("asMap").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
+        var keysBuilder = MethodSpec.methodBuilder("asMap").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(MAP_STRING_OBJECT).addStatement("return $T.unmodifiableMap($L)", Collections.class, VALUES_ATTR);
         classBuilder.addMethod(keysBuilder.build());
     }

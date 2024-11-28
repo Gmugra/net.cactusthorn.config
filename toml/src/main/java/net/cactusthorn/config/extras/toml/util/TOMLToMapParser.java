@@ -32,27 +32,26 @@ import java.util.stream.Collectors;
 
 import org.tomlj.Toml;
 import org.tomlj.TomlArray;
-import org.tomlj.TomlParseResult;
 import org.tomlj.TomlTable;
 
 public final class TOMLToMapParser {
 
     public Map<String, String> parse(Reader reader) throws IOException {
-        TomlParseResult tomlResult = Toml.parse(reader);
+        var tomlResult = Toml.parse(reader);
         if (!tomlResult.errors().isEmpty()) {
             throw new IOException(tomlResult.errors().toString());
         }
         if (tomlResult.isEmpty()) {
             return Collections.emptyMap();
         }
-        Map<String, String> result = new HashMap<>();
-        for (String key : tomlResult.dottedKeySet()) {
-            Object value = tomlResult.get(key);
+        var result = new HashMap<String, String>();
+        for (var key : tomlResult.dottedKeySet()) {
+            var value = tomlResult.get(key);
             if (value == null) {
                 continue;
             }
             if (value instanceof TomlArray) {
-                String array = convertArray(key, (TomlArray) value);
+                var array = convertArray(key, (TomlArray) value);
                 if (array != null) {
                     result.put(key, array);
                 }
@@ -67,13 +66,13 @@ public final class TOMLToMapParser {
         if (tomlArray.isEmpty()) {
             return null;
         }
-        for (Object o : tomlArray.toList()) {
+        for (var o : tomlArray.toList()) {
             if (o instanceof TomlArray) {
                 throw new UnsupportedOperationException(msg(ARRAYS_IN_ARRAY, key));
             }
         }
 
-        for (Object o : tomlArray.toList()) {
+        for (var o : tomlArray.toList()) {
             if (o instanceof TomlTable) {
                 throw new UnsupportedOperationException(msg(TABLES_IN_ARRAY, key));
             }

@@ -28,34 +28,34 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class OffsetDateTimeConverterTest {
+class OffsetDateTimeConverterTest {
 
     private static final OffsetDateTime DATETIME = OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00"));
     private static final Converter<OffsetDateTime> CONVERTER = new OffsetDateTimeConverter();
 
-    @Test public void simple() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00");
+    @Test void simple() {
+        var result = CONVERTER.convert("2011-11-12T01:30:00+02:00");
         assertEquals(DATETIME, result);
     }
 
-    @Test public void simpleEmptyParameters() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00", new String[0]);
+    @Test void simpleEmptyParameters() {
+        var result = CONVERTER.convert("2011-11-12T01:30:00+02:00", new String[0]);
         assertEquals(DATETIME, result);
     }
 
-    @Test public void simpleNullParameter() {
-        OffsetDateTime result = CONVERTER.convert("2011-11-12T01:30:00+02:00", null);
+    @Test void simpleNullParameter() {
+        var result = CONVERTER.convert("2011-11-12T01:30:00+02:00", null);
         assertEquals(DATETIME, result);
     }
 
-    @Test public void complex() {
-        OffsetDateTime result = CONVERTER.convert("12.11.2011T01:30:00+02:00",
+    @Test void complex() {
+        var result = CONVERTER.convert("12.11.2011T01:30:00+02:00",
                 new String[] {"yyyy-MM-dd'T'HH:mm:ssXXX", "dd.MM.yyyy'T'HH:mm:ssXXX"});
         assertEquals(DATETIME, result);
     }
 
-    @Test public void singleParam() {
-        OffsetDateTime result = CONVERTER.convert("12.11.2011T01:30:00+02:00", new String[] {"dd.MM.yyyy'T'HH:mm:ssXXX"});
+    @Test void singleParam() {
+        var result = CONVERTER.convert("12.11.2011T01:30:00+02:00", new String[] {"dd.MM.yyyy'T'HH:mm:ssXXX"});
         assertEquals(DATETIME, result);
     }
 }

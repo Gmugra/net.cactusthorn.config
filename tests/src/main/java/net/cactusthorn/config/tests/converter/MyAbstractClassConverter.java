@@ -21,9 +21,9 @@ package net.cactusthorn.config.tests.converter;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class MyAbstractClassConverter implements Converter<MyAbstractClass> {
+public final class MyAbstractClassConverter implements Converter<MyAbstractClass> {
 
-    private static class MyAbstractClasImpl extends MyAbstractClass {
+    private static final class MyAbstractClasImpl extends MyAbstractClass {
         @Override public String getValue() {
             return "MY_A_VALUE";
         }

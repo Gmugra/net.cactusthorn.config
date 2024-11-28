@@ -23,20 +23,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigFactoryTest {
+class ConfigFactoryTest {
 
     private static AllCorrect config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
+        var properties = new HashMap<String, String>();
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
@@ -51,27 +49,27 @@ public class ConfigFactoryTest {
         config = ConfigFactory.builder().setSource(properties).build().create(AllCorrect.class);
     }
 
-    @Test public void myChar() {
+    @Test void myChar() {
         assertEquals('Y', config.myChar());
     }
 
-    @Test public void sorted() {
+    @Test void sorted() {
         assertEquals(2, config.sorted().size());
-        Iterator<Float> it = config.sorted().iterator();
+        var it = config.sorted().iterator();
         assertEquals(126f, it.next());
         assertEquals(300f, it.next());
     }
 
-    @Test public void accessibleKeys() {
+    @Test void accessibleKeys() {
         assertEquals(11, config.keys().size());
         assertThrows(UnsupportedOperationException.class, () -> config.keys().clear());
     }
 
-    @Test public void accessibleGet() {
+    @Test void accessibleGet() {
         assertEquals("simpleString", config.get("value"));
     }
 
-    @Test public void accessibleAsMap() {
+    @Test void accessibleAsMap() {
         assertEquals(11, config.asMap().size());
         assertEquals("simpleString", config.asMap().get("value"));
         assertThrows(UnsupportedOperationException.class, () -> config.asMap().clear());

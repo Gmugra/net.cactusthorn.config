@@ -29,16 +29,16 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class URLConverterTest {
+class URLConverterTest {
 
     private static Converter<URL> converter = new URLConverter();
 
-    @Test public void correct() throws MalformedURLException {
-        URL url = converter.convert("https://github.com");
+    @Test void correct() throws MalformedURLException {
+        var url = converter.convert("https://github.com");
         assertEquals(new URL("https://github.com"), url);
     }
 
-    @Test public void wrong() throws MalformedURLException {
+    @Test void wrong() throws MalformedURLException {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("github.com"));
     }
 }

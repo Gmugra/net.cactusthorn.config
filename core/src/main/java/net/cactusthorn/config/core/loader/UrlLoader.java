@@ -23,7 +23,6 @@ import static net.cactusthorn.config.core.util.ApiMessages.msg;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.CANT_LOAD_RESOURCE;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URI;
@@ -55,10 +54,10 @@ public abstract class UrlLoader implements Loader {
     }
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
-        String charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
-        try (InputStream stream = uri.toURL().openStream();
-                Reader reader = new InputStreamReader(stream, charsetName);
-                BufferedReader buffer = new BufferedReader(reader)) {
+        var charsetName = uri.getFragment() == null ? StandardCharsets.UTF_8.name() : uri.getFragment();
+        try (var stream = uri.toURL().openStream();
+                var reader = new InputStreamReader(stream, charsetName);
+                var buffer = new BufferedReader(reader)) {
             return load(buffer);
         } catch (Exception e) {
             log.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
@@ -76,7 +75,7 @@ public abstract class UrlLoader implements Loader {
             if (uri.getFragment() == null) {
                 return Files.getLastModifiedTime(Paths.get(uri)).toMillis();
             }
-            String uriAsStr = uri.toString();
+            var uriAsStr = uri.toString();
             uriAsStr = uriAsStr.substring(0, uriAsStr.indexOf('#'));
             return Files.getLastModifiedTime(Paths.get(URI.create(uriAsStr))).toMillis();
         } catch (Exception e) {

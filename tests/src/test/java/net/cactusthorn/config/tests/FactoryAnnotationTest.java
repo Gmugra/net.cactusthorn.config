@@ -22,17 +22,16 @@ package net.cactusthorn.config.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FactoryAnnotationTest {
+class FactoryAnnotationTest {
 
     private static AllCorrect config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
+        var properties = new HashMap<String, String>();
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
@@ -47,7 +46,7 @@ public class FactoryAnnotationTest {
         config = Factory_MyFactory.builder().setSource(properties).build().createAllCorrect();
     }
 
-    @Test public void accessibleGet() {
+    @Test void accessibleGet() {
         assertEquals("simpleString", config.get("value"));
     }
 }

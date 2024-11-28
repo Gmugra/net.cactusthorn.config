@@ -34,10 +34,11 @@ public final class ClasspathPropertiesLoader extends ClasspathLoader {
         return accept(uri, EXTENSION);
     }
 
+    @SuppressWarnings("unchecked")
     @Override protected Map<String, String> load(Reader reader) throws Exception {
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.load(reader);
-        @SuppressWarnings({"unchecked", "rawtypes"}) Map<String, String> result = (Map) properties;
+        @SuppressWarnings({"rawtypes"}) var result = (Map) properties;
         return result;
     }
 }

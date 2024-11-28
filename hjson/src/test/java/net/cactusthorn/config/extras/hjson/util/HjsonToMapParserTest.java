@@ -25,71 +25,69 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class HjsonToMapParserTest {
+class HjsonToMapParserTest {
 
-    @Test public void correct() throws IOException {
-        try (Reader reader = reader("correct.hjson")) {
-            Map<String, String> result = new HjsonToMapParser().parse(reader);
+    @Test void correct() throws IOException {
+        try (var reader = reader("correct.hjson")) {
+            var result = new HjsonToMapParser().parse(reader);
             assertEquals("true", result.get("database.enabled"));
             assertEquals("f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000", result.get("id"));
         }
     }
 
-    @Test public void multilineValue() throws IOException {
-        try (Reader reader = reader("correct.hjson")) {
-            Map<String, String> result = new HjsonToMapParser().parse(reader);
-            String multiline = result.get("database.temp_targets.multiline");
-            String[] lines = multiline.split("\r\n|\r|\n");
+    @Test void multilineValue() throws IOException {
+        try (var reader = reader("correct.hjson")) {
+            var result = new HjsonToMapParser().parse(reader);
+            var multiline = result.get("database.temp_targets.multiline");
+            var lines = multiline.split("\r\n|\r|\n");
             assertEquals(3, lines.length);
             assertEquals("First line.", new BufferedReader(new StringReader(multiline)).readLine());
         }
     }
 
-    @Test public void empty() throws IOException {
-        try (Reader reader = reader("empty.hjson")) {
+    @Test void empty() throws IOException {
+        try (var reader = reader("empty.hjson")) {
             assertTrue(new HjsonToMapParser().parse(reader).isEmpty());
         }
     }
 
-    @Test public void wrongRoot() throws IOException {
-        try (Reader reader = reader("wrongroot.hjson")) {
-            HjsonToMapParser parser = new HjsonToMapParser();
+    @Test void wrongRoot() throws IOException {
+        try (var reader = reader("wrongroot.hjson")) {
+            var parser = new HjsonToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void wrong() throws IOException {
-        try (Reader reader = reader("wrong.txt")) {
-            HjsonToMapParser parser = new HjsonToMapParser();
+    @Test void wrong() throws IOException {
+        try (var reader = reader("wrong.txt")) {
+            var parser = new HjsonToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void arrayInArray() throws IOException {
-        try (Reader reader = reader("arrayInArray.hjson")) {
-            HjsonToMapParser parser = new HjsonToMapParser();
+    @Test void arrayInArray() throws IOException {
+        try (var reader = reader("arrayInArray.hjson")) {
+            var parser = new HjsonToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void objectInArray() throws IOException {
-        try (Reader reader = reader("objectInArray.hjson")) {
-            HjsonToMapParser parser = new HjsonToMapParser();
+    @Test void objectInArray() throws IOException {
+        try (var reader = reader("objectInArray.hjson")) {
+            var parser = new HjsonToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
     private Reader reader(String resource) {
-        InputStream is = HjsonToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
+        var is = HjsonToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 }

@@ -36,7 +36,7 @@ final class GettersPart implements GeneratorPart {
     }
 
     private void addGetter(TypeSpec.Builder classBuilder, MethodInfo methodInfo) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(methodInfo.name()).addModifiers(Modifier.PUBLIC)
+        var builder = MethodSpec.methodBuilder(methodInfo.name()).addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class);
         if (methodInfo.returnInterface().isPresent() || methodInfo.returnOptional()) {
             builder.addAnnotation(AnnotationSpec.builder(SuppressWarnings.class).addMember("value", "$S", "unchecked").build());

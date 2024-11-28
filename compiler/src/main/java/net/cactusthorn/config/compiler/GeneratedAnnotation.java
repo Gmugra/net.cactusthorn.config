@@ -19,28 +19,14 @@
  */
 package net.cactusthorn.config.compiler;
 
+import javax.annotation.processing.Generated;
+
 import com.squareup.javapoet.AnnotationSpec;
 
 public final class GeneratedAnnotation {
 
-    private static final AnnotationSpec GENERATED;
-
-    static {
-        Class<?> clazz = null;
-        try {
-            clazz = Class.forName("javax.annotation.processing.Generated"); //Java 9
-        } catch (ClassNotFoundException e) {
-            try {
-                clazz = Class.forName("javax.annotation.Generated"); //Java 8
-            } catch (ClassNotFoundException e1) {
-                throw new IllegalStateException(e);
-            }
-        }
-        GENERATED = AnnotationSpec.builder(clazz).addMember("value", "$S", "net.cactusthorn.config.compiler.ConfigProcessor")
-                .addMember("comments", "$S", "https://github.com/Gmugra/net.cactusthorn.config").build();
-    }
-
     public static AnnotationSpec annotationSpec() {
-        return GENERATED;
+        return AnnotationSpec.builder(Generated.class).addMember("value", "$S", "net.cactusthorn.config.compiler.ConfigProcessor")
+            .addMember("comments", "$S", "https://github.com/Gmugra/net.cactusthorn.config").build();
     }
 }

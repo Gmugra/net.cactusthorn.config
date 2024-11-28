@@ -19,9 +19,6 @@
  */
 package net.cactusthorn.config.compiler;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -71,7 +68,7 @@ public class Annotations {
 
     public Set<Disable.Feature> disable() {
         Disable annotation = element.getAnnotation(Disable.class);
-        return annotation != null ? new HashSet<>(Arrays.asList(annotation.value())) : Collections.emptySet();
+        return annotation != null ? Set.of(annotation.value()) : Set.of();
     }
 
     public Optional<String> defaultValue() {

@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class DefaultValuesTest {
+class DefaultValuesTest {
 
     private static DefaultValues config;
 
@@ -34,22 +34,22 @@ public class DefaultValuesTest {
         config = ConfigFactory.builder().build().create(DefaultValues.class);
     }
 
-    @Test public void str() {
+    @Test void str() {
         assertEquals("string", config.str());
     }
 
-    @Test public void list() {
+    @Test void list() {
         assertEquals(3, config.list().size());
         assertEquals("A", config.list().get(0));
         assertEquals("B", config.list().get(1));
         assertEquals("C", config.list().get(2));
     }
 
-    @Test public void set() {
+    @Test void set() {
         assertEquals(2, config.set().size());
     }
 
-    @Test public void sorted() {
+    @Test void sorted() {
         assertEquals(2, config.sorted().size());
         assertEquals("B", config.sorted().iterator().next());
     }

@@ -59,7 +59,7 @@ public final class MethodInfo {
                         InterfaceInfo interfaceInfo) {
         // @formatter:on
 
-        Annotations annotations = new Annotations(methodElement);
+        var annotations = new Annotations(methodElement);
         returnTypeName = ClassName.get(methodElement.getReturnType());
         name = methodElement.getSimpleName().toString();
         key = annotations.key().orElse(name);

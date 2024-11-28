@@ -22,41 +22,33 @@ package net.cactusthorn.config.tests.listener;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
-import net.cactusthorn.config.core.loader.ReloadEvent;
-import net.cactusthorn.config.core.loader.ReloadListener;
 
-public class ListenerTest {
+class ListenerTest {
 
     private static final String PROPERTY_NAME = "value";
 
     private static String oldValue;
     private static String newValue;
 
-    private static class MyListener implements ReloadListener {
-
-        @Override public void reloadPerformed(ReloadEvent event) {
-            oldValue = (String) event.oldProperties().get(PROPERTY_NAME);
-            newValue = (String) event.newProperties().get(PROPERTY_NAME);
-        }
-    }
-
-    @Test public void doIt() {
+    @Test void doIt() {
         oldValue = "000";
         newValue = "111";
-        Map<String, String> props = new HashMap<>();
+        var props = new HashMap<String, String>();
         props.put(PROPERTY_NAME, "ABC");
 
-        MyConfig config = ConfigFactory.builder().setSource(props).build().create(MyConfig.class);
+        var config = ConfigFactory.builder().setSource(props).build().create(MyConfig.class);
         assertEquals("ABC", config.value());
         assertEquals("000", oldValue);
         assertEquals("111", newValue);
 
-        config.addReloadListener(new MyListener());
+        config.addReloadListener(event -> {
+            oldValue = (String) event.oldProperties().get(PROPERTY_NAME);
+            newValue = (String) event.newProperties().get(PROPERTY_NAME);
+        });
         props.put(PROPERTY_NAME, "XYZ");
         config.reload();
         assertEquals("XYZ", config.value());

@@ -19,9 +19,7 @@
  */
 package net.cactusthorn.config.extras.zookeeper;
 
-import java.util.List;
 import java.net.URI;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,42 +52,38 @@ public class ZooKeeperLoaderTest extends ZooKeeperTestAncestor {
     }
 
     @Test public void load() {
-        String uri = "zookeeper://";
-        uri += server.getConnectString();
-        uri += BASE_PATH;
+        var uri = "zookeeper://" + server.getConnectString() + BASE_PATH;
         uri += "?sessionTimeoutMs=10000&connectionTimeoutMs=2000";
-        Map<String, String> properties = LOADER.load(URI.create(uri), ZooKeeperLoaderTest.class.getClassLoader());
+        var properties = LOADER.load(URI.create(uri), ZooKeeperLoaderTest.class.getClassLoader());
         assertEquals(THANKS_VALUE, properties.get(THANKS_KEY));
         assertEquals(GREETINGS_VALUE, properties.get(GREETINGS_KEY));
     }
 
     @Test public void loadDefaultTimeouts() {
-        String uri = "zookeeper://";
-        uri += server.getConnectString();
-        uri += BASE_PATH;
-        Map<String, String> properties = LOADER.load(URI.create(uri), ZooKeeperLoaderTest.class.getClassLoader());
+        var uri = "zookeeper://" + server.getConnectString() + BASE_PATH;
+        var properties = LOADER.load(URI.create(uri), ZooKeeperLoaderTest.class.getClassLoader());
         assertEquals(THANKS_VALUE, properties.get(THANKS_KEY));
         assertEquals(GREETINGS_VALUE, properties.get(GREETINGS_KEY));
     }
 
     @Test public void wrongConnectString() {
-        Logger logger = (Logger) LoggerFactory.getLogger(LOADER.getClass());
-        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        var logger = (Logger) LoggerFactory.getLogger(LOADER.getClass());
+        var appender = new ListAppender<ILoggingEvent>();
         appender.start();
         logger.addAppender(appender);
 
-        String uri = "zookeeper://localhost:65405" + BASE_PATH + "?blockUntilConnectedMaxWaitTimeMs=100";
+        var uri = "zookeeper://localhost:65405" + BASE_PATH + "?blockUntilConnectedMaxWaitTimeMs=100";
         LOADER.load(URI.create(uri), ZooKeeperLoaderTest.class.getClassLoader());
 
-        List<ILoggingEvent> logEvents = appender.list;
+        var logEvents = appender.list;
         assertTrue(logEvents.get(0).getFormattedMessage().startsWith("Can't load resource " + uri));
     }
 
     @Test public void fullLoad() {
-        String uri = "zookeeper://";
+        var uri = "zookeeper://";
         uri += server.getConnectString();
         uri += BASE_PATH;
-        ZooKeeperConfig config = ConfigFactory.builder().addSource(uri).build().create(ZooKeeperConfig.class);
+        var config = ConfigFactory.builder().addSource(uri).build().create(ZooKeeperConfig.class);
         assertEquals(THANKS_VALUE, config.thanks());
         assertEquals(4, config.greetings().size());
     }

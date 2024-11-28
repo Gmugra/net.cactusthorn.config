@@ -24,62 +24,59 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import net.cactusthorn.config.core.loader.Loader;
 
-public class UrlTOMLLoaderTest {
+class UrlTOMLLoaderTest {
 
     private static final Loader LOADER = new UrlTOMLLoader();
     private static final ClassLoader CL = UrlTOMLLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("file:./a.toml")));
     }
 
-    @Test public void notAcceptExtension() {
+    @Test void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.properties")));
     }
 
-    @Test public void notAcceptException() {
+    @Test void notAcceptException() {
         assertFalse(LOADER.accept(URI.create("github.com/a.toml")));
     }
 
-    @Test public void notAcceptException2() {
+    @Test void notAcceptException2() {
         assertFalse(LOADER.accept(URI.create("system:a.toml")));
     }
 
-    @Test public void load(@TempDir Path path) throws IOException {
-        Path file = path.resolve("correct.toml");
-        try (InputStream stream = CL.getResourceAsStream("correct.toml")) {
+    @Test void load(@TempDir Path path) throws IOException {
+        var file = path.resolve("correct.toml");
+        try (var stream = CL.getResourceAsStream("correct.toml")) {
             Files.copy(stream, file);
         }
-        URI uri = file.toUri();
-        Map<String, String> properties = LOADER.load(uri, CL);
+        var properties = LOADER.load(file.toUri(), CL);
         assertEquals("frontend", properties.get("servers.alpha.role"));
     }
 
-    @Test public void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
-        Path file = path.resolve("correct.toml");
-        try (InputStream stream = CL.getResourceAsStream("correct.toml")) {
+    @Test void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
+        var file = path.resolve("correct.toml");
+        try (var stream = CL.getResourceAsStream("correct.toml")) {
             Files.copy(stream, file);
         }
-        URI uri = file.toUri();
+        var uri = file.toUri();
         uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
-        Map<String, String> properties = LOADER.load(uri, CL);
+        var properties = LOADER.load(uri, CL);
         assertEquals("frontend", properties.get("servers.alpha.role"));
     }
 
-    @Test public void notLoad() throws IOException {
-        Map<String, String> properties = LOADER.load(URI.create("file:./a.toml"), CL);
+    @Test void notLoad() throws IOException {
+        var properties = LOADER.load(URI.create("file:./a.toml"), CL);
         assertTrue(properties.isEmpty());
     }
 }

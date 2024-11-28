@@ -26,24 +26,24 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class PBEConverterTest {
+class PBEConverterTest {
 
     private static Converter<String> converter = new PBEConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         System.setProperty("bpe-pass", "megapass");
         assertEquals("postgres", converter.convert("U79blAyCnFylcjX5wpCl/TVDHmy+MSSw", new String[] {"bpe-pass"}));
     }
 
-    @Test public void passNameNull() {
+    @Test void passNameNull() {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("U79blAyCnFylcjX5wpCl/TVDHmy+MSSw", null));
     }
 
-    @Test public void passNameEmpty() {
+    @Test void passNameEmpty() {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("U79blAyCnFylcjX5wpCl/TVDHmy+MSSw", Converter.EMPTY));
     }
 
-    @Test public void passNameZeroSize() {
+    @Test void passNameZeroSize() {
         assertThrows(IllegalArgumentException.class, () -> converter.convert("U79blAyCnFylcjX5wpCl/TVDHmy+MSSw", new String[0]));
     }
 

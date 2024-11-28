@@ -20,8 +20,7 @@
 package net.cactusthorn.config.compiler.methodvalidator;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -48,30 +47,34 @@ public class ConverterValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        Optional<TypeMirror> converterType = getConverterClass(methodElement);
-        if (converterType.isPresent()) {
-            return MethodInfo.builder(methodElement).withConverter(converterType.get(), Converter.EMPTY);
+        var converterType = getConverterClass(methodElement);
+        if (converterType != null) {
+            return MethodInfo.builder(methodElement).withConverter(converterType, Converter.EMPTY);
         }
-        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
-        for (AnnotationMirror annotationMirror : annotationMirrors) {
-            Optional<TypeMirror> superConverterType = getConverterClass(annotationMirror.getAnnotationType().asElement());
-            if (superConverterType.isPresent()) {
-                String[] parameters = findParameters(annotationMirror);
-                return MethodInfo.builder(methodElement).withConverter(superConverterType.get(), parameters);
-            }
-        }
-
-        return next(methodElement, typeMirror);
+        return
+            methodElement.getAnnotationMirrors()
+                .stream()
+                .map(am -> {
+                    var superConverterType = getConverterClass(am.getAnnotationType().asElement());
+                    if (superConverterType != null) {
+                        var parameters = findParameters(am);
+                        return MethodInfo.builder(methodElement).withConverter(superConverterType, parameters);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElseGet(() -> next(methodElement, typeMirror));
     }
 
     private String[] findParameters(AnnotationMirror annotationMirror) {
-        Map<? extends ExecutableElement, ? extends AnnotationValue> values = annotationMirror.getElementValues();
-        for (Map.Entry<? extends ExecutableElement, ? extends AnnotationValue> entry : values.entrySet()) {
+        var values = annotationMirror.getElementValues();
+        for (var entry : values.entrySet()) {
             if ("value()".equals(entry.getKey().toString())) {
-                Object value = entry.getValue().getValue();
+                var value = entry.getValue().getValue();
                 if (value instanceof List<?>) {
-                    @SuppressWarnings("unchecked") List<? extends AnnotationValue> list = (List<? extends AnnotationValue>) value;
-                    String[] result = new String[list.size()];
+                    @SuppressWarnings("unchecked") var list = (List<? extends AnnotationValue>) value;
+                    var result = new String[list.size()];
                     for (int i = 0; i < result.length; i++) {
                         result[i] = list.get(i).getValue().toString();
                     }
@@ -82,15 +85,15 @@ public class ConverterValidator extends MethodValidatorAncestor {
         return Converter.EMPTY;
     }
 
-    private Optional<TypeMirror> getConverterClass(Element element) {
+    private TypeMirror getConverterClass(Element element) {
         try {
-            ConverterClass annotation = element.getAnnotation(ConverterClass.class);
+            var annotation = element.getAnnotation(ConverterClass.class);
             if (annotation != null) {
                 annotation.value(); // this will throw MirroredTypeException
             }
-            return Optional.empty();
+            return null;
         } catch (MirroredTypeException mte) {
-            return Optional.of(mte.getTypeMirror());
+            return mte.getTypeMirror();
         }
     }
 }

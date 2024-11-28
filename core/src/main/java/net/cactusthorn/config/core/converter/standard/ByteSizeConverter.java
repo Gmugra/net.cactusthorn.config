@@ -37,12 +37,12 @@ public class ByteSizeConverter implements Converter<ByteSize> {
     private static final NumericAndCharSplitter SPLITTER = new NumericAndCharSplitter();
 
     @Override public ByteSize convert(String input, String[] parameters) {
-        String[] parts = SPLITTER.split(input);
-        String value = parts[0];
-        String unit = parts[1];
+        var parts = SPLITTER.split(input);
+        var value = parts[0];
+        var unit = parts[1];
 
-        BigDecimal bdValue = new BigDecimal(value);
-        ByteSizeUnit bsuUnit = ByteSizeUnit.parse(unit);
+        var bdValue = new BigDecimal(value);
+        var bsuUnit = ByteSizeUnit.parse(unit);
 
         if (bsuUnit == null) {
             throw new IllegalArgumentException(msg(INVALID_UNIT_STRING, unit));

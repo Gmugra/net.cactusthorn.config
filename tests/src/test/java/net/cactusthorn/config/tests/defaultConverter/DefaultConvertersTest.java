@@ -42,7 +42,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,12 +50,12 @@ import net.cactusthorn.config.core.converter.bytesize.ByteSize;
 import net.cactusthorn.config.core.converter.bytesize.ByteSizeUnit;
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class DefaultConvertersTest {
+class DefaultConvertersTest {
 
     private static DefaultConverters config;
 
-    @BeforeAll public static void init() {
-        Map<String, String> properties = new HashMap<>();
+    @BeforeAll static void init() {
+        var properties = new HashMap<String, String>();
         properties.put("character", "ABC");
         properties.put("url", "https://github.com");
         properties.put("uri", "https://gmail.com");
@@ -82,91 +81,91 @@ public class DefaultConvertersTest {
         config = ConfigFactory.builder().setSource(properties).build().create(DefaultConverters.class);
     }
 
-    @Test public void character() throws MalformedURLException {
+    @Test void character() throws MalformedURLException {
         assertEquals(Character.valueOf('A'), config.character());
     }
 
-    @Test public void url() throws MalformedURLException {
+    @Test void url() throws MalformedURLException {
         assertEquals(new URL("https://github.com"), config.url());
     }
 
-    @Test public void uri() throws MalformedURLException {
+    @Test void uri() throws MalformedURLException {
         assertEquals(URI.create("https://gmail.com"), config.uri());
     }
 
-    @Test public void path() throws MalformedURLException {
+    @Test void path() throws MalformedURLException {
         assertEquals(Paths.get("my.xml"), config.path());
     }
 
-    @Test public void currency() {
+    @Test void currency() {
         assertEquals(Currency.getInstance("EUR"), config.currency());
     }
 
-    @Test public void locale() {
+    @Test void locale() {
         assertEquals(Locale.GERMANY, config.locale());
     }
 
-    @Test public void instant() {
+    @Test void instant() {
         assertEquals(Instant.parse("2007-12-03T10:15:30.00Z"), config.instant());
     }
 
-    @Test public void duration() {
+    @Test void duration() {
         assertEquals(Duration.of(15, ChronoUnit.MINUTES), config.duration());
     }
 
-    @Test public void period() {
+    @Test void period() {
         assertEquals(Period.ofDays(10), config.period());
     }
 
-    @Test public void localDate() {
+    @Test void localDate() {
         assertEquals(LocalDate.of(2016, 3, 10), config.localDate());
     }
 
-    @Test public void localDateTime() {
+    @Test void localDateTime() {
         assertEquals(LocalDateTime.of(2016, 3, 10, 8, 11, 33), config.localDateTime());
     }
 
-    @Test public void localTime() {
+    @Test void localTime() {
         assertEquals(LocalTime.of(8, 11, 33), config.localTime());
     }
 
-    @Test public void zonedDateTime() {
+    @Test void zonedDateTime() {
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), config.zonedDateTime().toInstant());
     }
 
-    @Test public void offsetDateTime() {
+    @Test void offsetDateTime() {
         assertEquals(OffsetDateTime.of(2011, 11, 12, 1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetDateTime());
     }
 
-    @Test public void offsetTime() {
+    @Test void offsetTime() {
         assertEquals(OffsetTime.of(1, 30, 0, 0, ZoneOffset.of("+02:00")), config.offsetTime());
     }
 
-    @Test public void year() {
+    @Test void year() {
         assertEquals(Year.of(2016), config.year());
     }
 
-    @Test public void yearMonth() {
+    @Test void yearMonth() {
         assertEquals(YearMonth.of(2016, 11), config.yearMonth());
     }
 
-    @Test public void byteSize() {
+    @Test void byteSize() {
         assertEquals(new ByteSize(10, ByteSizeUnit.BYTES), config.byteSize());
     }
 
-    @Test public void pattern() {
+    @Test void pattern() {
         assertEquals("[^\\w]", config.pattern().pattern());
     }
 
-    @Test public void monthDay() {
+    @Test void monthDay() {
         assertEquals(MonthDay.of(1, 15), config.monthDay());
     }
 
-    @Test public void zoneId() {
+    @Test void zoneId() {
         assertEquals(ZoneId.of("GMT+02:00"), config.zoneId());
     }
 
-    @Test public void zoneOffset() {
+    @Test void zoneOffset() {
         assertEquals(ZoneOffset.of("+02:00"), config.zoneOffset());
     }
 }

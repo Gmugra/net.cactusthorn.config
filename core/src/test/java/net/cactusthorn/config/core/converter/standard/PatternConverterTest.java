@@ -27,11 +27,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class PatternConverterTest {
+class PatternConverterTest {
 
     private static final Converter<Pattern> CONVERTER = new PatternConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         assertEquals("[^\\w]", CONVERTER.convert("[^\\w]").pattern());
     }
 }

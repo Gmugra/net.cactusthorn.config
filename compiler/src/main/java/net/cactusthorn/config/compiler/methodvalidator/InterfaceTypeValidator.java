@@ -25,7 +25,6 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERF
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACES;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_INTERFACE_ARG_INTERFACE;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         }
     }
 
-    public static final List<Class<?>> INTERFACES = Arrays.asList(List.class, Set.class, SortedSet.class, Map.class, SortedMap.class);
+    public static final List<Class<?>> INTERFACES = List.of(List.class, Set.class, SortedSet.class, Map.class, SortedMap.class);
     private final Map<TypeMirror, Type> interfaces = new HashMap<>();
 
     private final MethodValidator valueValidator;
@@ -93,8 +92,8 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        DeclaredType declaredType = (DeclaredType) typeMirror;
-        Element element = declaredType.asElement();
+        var declaredType = (DeclaredType) typeMirror;
+        var element = declaredType.asElement();
         if (!isInterface(element)) {
             return next(methodElement, typeMirror);
         }
@@ -122,12 +121,12 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
 
     private InterfaceType getSupportedInterfaceType(ExecutableElement methodElement, DeclaredType declaredType, Element element) {
         // @formatter:off
-       Type interfaceType = interfaces.entrySet().stream()
-           .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
-           .map(e -> e.getValue()).findAny()
-           .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), methodElement));
-       // @formatter:on
-        List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
+        var interfaceType = interfaces.entrySet().stream()
+            .filter(e -> processingEnv().getTypeUtils().isSameType(element.asType(), e.getKey()))
+            .map(e -> e.getValue()).findAny()
+            .orElseThrow(() -> new ProcessorException(msg(RETURN_INTERFACES, INTERFACES), methodElement));
+        // @formatter:on
+        var arguments = declaredType.getTypeArguments();
         if (arguments.isEmpty()) {
             throw new ProcessorException(msg(RETURN_INTERFACE_ARG_EMPTY), methodElement);
         }
@@ -139,8 +138,8 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
     }
 
     private MethodInfo.Builder validateMap(ExecutableElement methodElement, InterfaceType interfaceType) {
-        MethodInfo.Builder key = validateArgument(methodElement, interfaceType, 0, keyValidator, false);
-        MethodInfo.Builder value = validateArgument(methodElement, interfaceType, 1, valueValidator, true).withMapKey(key.build());
+        var key = validateArgument(methodElement, interfaceType, 0, keyValidator, false);
+        var value = validateArgument(methodElement, interfaceType, 1, valueValidator, true).withMapKey(key.build());
         return value;
     }
 
@@ -153,8 +152,8 @@ public class InterfaceTypeValidator extends MethodValidatorAncestor {
         if (interfaceType.arguments().get(argumentIndex).getKind() == TypeKind.WILDCARD) {
             throw new ProcessorException(msg(RETURN_INTERFACE_ARG_WILDCARD), methodElement);
         }
-        DeclaredType argumentDeclaredType = (DeclaredType) interfaceType.arguments().get(argumentIndex);
-        Element argumentElement = argumentDeclaredType.asElement();
+        var argumentDeclaredType = (DeclaredType) interfaceType.arguments().get(argumentIndex);
+        var argumentElement = argumentDeclaredType.asElement();
         if (argumentElement.getKind() != ElementKind.INTERFACE) {
             return validator.validate(methodElement, interfaceType.arguments().get(argumentIndex))
                     .withInterface(interfaceType.interfaceType());

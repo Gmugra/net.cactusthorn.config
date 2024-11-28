@@ -21,21 +21,18 @@ package net.cactusthorn.config.extras.jasypt;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class PBEDecryptorTest {
+class PBEDecryptorTest {
 
-    @Test public void doIt() {
+    @Test void doIt() {
         System.setProperty("pbe-password", "megapass");
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("encrypted", "U79blAyCnFylcjX5wpCl/TVDHmy+MSSw");
-        ConfigPBE config = ConfigFactory.builder().setSource(properties).build().create(ConfigPBE.class);
+        var config = ConfigFactory.builder().setSource(Map.of("encrypted", "U79blAyCnFylcjX5wpCl/TVDHmy+MSSw"))
+            .build().create(ConfigPBE.class);
         assertEquals("postgres", config.encrypted());
     }
 }

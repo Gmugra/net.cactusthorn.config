@@ -27,33 +27,33 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class LocalDateTimeConverterTest {
+class LocalDateTimeConverterTest {
 
     private static final LocalDateTime DATE = LocalDateTime.of(2016, 3, 10, 8, 11, 33);
     private static final Converter<LocalDateTime> CONVERTER = new LocalDateTimeConverter();
 
-    @Test public void simple() {
-        LocalDateTime result = CONVERTER.convert("2016-03-10T08:11:33");
+    @Test void simple() {
+        var result = CONVERTER.convert("2016-03-10T08:11:33");
         assertEquals(DATE, result);
     }
 
-    @Test public void simpleNullParameters() {
-        LocalDateTime result = CONVERTER.convert("2016-03-10T08:11:33", null);
+    @Test void simpleNullParameters() {
+        var result = CONVERTER.convert("2016-03-10T08:11:33", null);
         assertEquals(DATE, result);
     }
 
-    @Test public void simpleEmptyParameters() {
-        LocalDateTime result = CONVERTER.convert("2016-03-10T08:11:33", new String[0]);
+    @Test void simpleEmptyParameters() {
+        var result = CONVERTER.convert("2016-03-10T08:11:33", new String[0]);
         assertEquals(DATE, result);
     }
 
-    @Test public void complex() {
-        LocalDateTime result = CONVERTER.convert("10.03.2016 08:11:33", new String[] { "yyyy-MM-dd'T'HH:mm:ss", "dd.MM.yyyy' 'HH:mm:ss" });
+    @Test void complex() {
+        var result = CONVERTER.convert("10.03.2016 08:11:33", new String[] { "yyyy-MM-dd'T'HH:mm:ss", "dd.MM.yyyy' 'HH:mm:ss" });
         assertEquals(DATE, result);
     }
 
-    @Test public void singleParam() {
-        LocalDateTime result = CONVERTER.convert("2016-03-10T08:11:33", new String[] { "yyyy-MM-dd'T'HH:mm:ss" });
+    @Test void singleParam() {
+        var result = CONVERTER.convert("2016-03-10T08:11:33", new String[] { "yyyy-MM-dd'T'HH:mm:ss" });
         assertEquals(DATE, result);
     }
 }

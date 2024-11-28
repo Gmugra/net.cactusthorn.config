@@ -24,61 +24,59 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import com.google.gson.JsonSyntaxException;
 
-public class JSONToMapParserTest {
+class JSONToMapParserTest {
 
-    @Test public void correct() throws IOException {
-        try (Reader reader = reader("correct.json")) {
-            Map<String, String> result = new JSONToMapParser().parse(reader);
+    @Test void correct() throws IOException {
+        try (var reader = reader("correct.json")) {
+            var result = new JSONToMapParser().parse(reader);
             assertEquals("true", result.get("database.enabled"));
         }
     }
 
-    @Test public void wrongRoot() throws IOException {
-        try (Reader reader = reader("wrongroot.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
+    @Test void wrongRoot() throws IOException {
+        try (var reader = reader("wrongroot.json")) {
+            var parser = new JSONToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void wrong() throws IOException {
-        try (Reader reader = reader("wrong.txt")) {
-            JSONToMapParser parser = new JSONToMapParser();
+    @Test void wrong() throws IOException {
+        try (var reader = reader("wrong.txt")) {
+            var parser = new JSONToMapParser();
             assertThrows(JsonSyntaxException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void empty() throws IOException {
-        try (Reader reader = reader("empty.json")) {
+    @Test void empty() throws IOException {
+        try (var reader = reader("empty.json")) {
             assertTrue(new JSONToMapParser().parse(reader).isEmpty());
         }
     }
 
-    @Test public void arrayInArray() throws IOException {
-        try (Reader reader = reader("arrayInArray.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
+    @Test void arrayInArray() throws IOException {
+        try (var reader = reader("arrayInArray.json")) {
+            var parser = new JSONToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
-    @Test public void objectInArray() throws IOException {
-        try (Reader reader = reader("objectInArray.json")) {
-            JSONToMapParser parser = new JSONToMapParser();
+    @Test void objectInArray() throws IOException {
+        try (var reader = reader("objectInArray.json")) {
+            var parser = new JSONToMapParser();
             assertThrows(UnsupportedOperationException.class, () -> parser.parse(reader));
         }
     }
 
     private Reader reader(String resource) {
-        InputStream is = JSONToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
+        var is = JSONToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 }

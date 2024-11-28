@@ -24,44 +24,43 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.Loader;
 
-public class ClasspathHjsonLoaderTest {
+class ClasspathHjsonLoaderTest {
 
     private static final Loader LOADER = new ClasspathHjsonLoader();
     private static final ClassLoader CL = ClasspathHjsonLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.hjson")));
     }
 
-    @Test public void acceptFragment() {
+    @Test void acceptFragment() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.hjson#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotOpaque() {
+    @Test void notAcceptNotOpaque() {
         assertFalse(LOADER.accept(URI.create("classpath://a.hjson#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotHjson() {
+    @Test void notAcceptNotHjson() {
         assertFalse(LOADER.accept(URI.create("classpath:a.properties#ISO-8859-1")));
     }
 
-    @Test public void notAcceptScheme() {
+    @Test void notAcceptScheme() {
         assertFalse(LOADER.accept(URI.create("mail:a.hjson#ISO-8859-1")));
     }
 
-    @Test public void load() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:correct.hjson#UTF-8"), CL);
+    @Test void load() {
+        var properties = LOADER.load(URI.create("classpath:correct.hjson#UTF-8"), CL);
         assertEquals("true", properties.get("database.enabled"));
     }
 
     @Test public void loadWrong() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:standard-properties-wrong.hjson"), CL);
+        var properties = LOADER.load(URI.create("classpath:standard-properties-wrong.hjson"), CL);
         assertTrue(properties.isEmpty());
     }
 }

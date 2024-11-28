@@ -26,17 +26,14 @@ import static net.cactusthorn.config.core.Disable.Feature.GLOBAL_PREFIX;
 
 import java.io.Serializable;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.type.TypeMirror;
 
 import net.cactusthorn.config.core.Accessible;
-import net.cactusthorn.config.core.Disable;
 import net.cactusthorn.config.core.Reloadable;
 
 public final class InterfaceInfo {
@@ -51,13 +48,13 @@ public final class InterfaceInfo {
     private final Annotations.ConfigInfo configInfo;
 
     InterfaceInfo(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
-        Annotations a = new Annotations(interfaceTypeElement);
-        prefix = a.prefix().map(s -> s + KEY_SEPARATOR).orElse("");
-        split = a.split().orElse(DEFAULT_SPLIT);
-        Set<Disable.Feature> disable = a.disable();
+        var annotations = new Annotations(interfaceTypeElement);
+        prefix = annotations.prefix().map(s -> s + KEY_SEPARATOR).orElse("");
+        split = annotations.split().orElse(DEFAULT_SPLIT);
+        var disable = annotations.disable();
         autoReloadable = !disable.contains(AUTO_RELOAD);
         globalPrefix = !disable.contains(GLOBAL_PREFIX);
-        configInfo = a.config();
+        configInfo = annotations.config();
         serialVersionUID = findSerializable(processingEnv, interfaceTypeElement);
         accessible = findInterface(processingEnv, interfaceTypeElement, Accessible.class);
         reloadable = findInterface(processingEnv, interfaceTypeElement, Reloadable.class);
@@ -96,12 +93,12 @@ public final class InterfaceInfo {
     }
 
     private boolean findInterface(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement, Class<?> interfaceClass) {
-        TypeMirror accessibleType = processingEnv.getElementUtils().getTypeElement(interfaceClass.getName()).asType();
+        var accessibleType = processingEnv.getElementUtils().getTypeElement(interfaceClass.getName()).asType();
         return processingEnv.getTypeUtils().isAssignable(interfaceTypeElement.asType(), accessibleType);
     }
 
     private Optional<Long> findSerializable(ProcessingEnvironment processingEnv, TypeElement interfaceTypeElement) {
-        TypeMirror serializableType = processingEnv.getElementUtils().getTypeElement(Serializable.class.getName()).asType();
+        var serializableType = processingEnv.getElementUtils().getTypeElement(Serializable.class.getName()).asType();
         if (processingEnv.getTypeUtils().isAssignable(interfaceTypeElement.asType(), serializableType)) {
             // @formatter:off
             return
@@ -115,7 +112,7 @@ public final class InterfaceInfo {
                         .map(VariableElement::getConstantValue)
                         .map(Long.class::cast)
                         .findAny()
-                            .orElse(0L));
+                        .orElse(0L));
             // @formatter:on
         }
         return Optional.empty();

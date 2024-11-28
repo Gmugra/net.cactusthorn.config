@@ -60,9 +60,9 @@ public abstract class ConfigInitializer {
         if (key.indexOf('{') == -1) {
             return key;
         }
-        Map<String, String> values = new HashMap<>(System.getenv());
+        var values = new HashMap<>(System.getenv());
         values.putAll((Map) System.getProperties());
-        String result = new VariablesParser(key).replace(values);
+        var result = new VariablesParser(key).replace(values);
         result = result.replaceAll("\\.+", ".").replaceAll("^\\.+", "").replaceAll("\\.+$", "");
         return result;
     }

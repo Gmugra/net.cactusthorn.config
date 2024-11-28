@@ -35,12 +35,12 @@ public class ZooKeeperTestAncestor {
     protected static final String GREETINGS_VALUE = "hi,bonjour,hiya,hi!";
 
     protected static TestingServer init(int port) throws Exception {
-        TestingServer server = new TestingServer(port);
+        var server = new TestingServer(port);
         server.start();
-        try (CuratorFramework client = CuratorFrameworkFactory.newClient(server.getConnectString(), 1000, 1000, NEVER_RETRY_POLICY)) {
+        try (var client = CuratorFrameworkFactory.newClient(server.getConnectString(), 1000, 1000, NEVER_RETRY_POLICY)) {
             client.start();
             client.blockUntilConnected();
-            String basePath = BASE_PATH;
+            var basePath = BASE_PATH;
             setDataInZooKeeperServer(client, basePath, THANKS_KEY, THANKS_VALUE);
             setDataInZooKeeperServer(client, basePath, GREETINGS_KEY, GREETINGS_VALUE);
         }
@@ -48,7 +48,7 @@ public class ZooKeeperTestAncestor {
     }
 
     private static void setDataInZooKeeperServer(CuratorFramework client, String basePath, String property, String value) throws Exception {
-        String path = ZKPaths.makePath(basePath, property);
+        var path = ZKPaths.makePath(basePath, property);
         client.create().creatingParentsIfNeeded().forPath(path, value.getBytes());
     }
 

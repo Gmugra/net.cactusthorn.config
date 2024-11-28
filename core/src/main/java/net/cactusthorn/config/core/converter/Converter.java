@@ -19,6 +19,7 @@
  */
 package net.cactusthorn.config.core.converter;
 
+@FunctionalInterface
 public interface Converter<T> {
 
     String[] EMPTY = new String[] {""};

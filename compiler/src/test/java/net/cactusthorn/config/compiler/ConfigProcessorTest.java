@@ -21,7 +21,6 @@ package net.cactusthorn.config.compiler;
 
 import org.junit.jupiter.api.Test;
 
-import com.google.testing.compile.Compilation;
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 import static com.google.testing.compile.CompilationSubject.assertThat;
@@ -31,72 +30,72 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFAC
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.METHOD_WITHOUT_PARAMETERS;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_FACTORY_METHOD_CONFIG;
 
-public class ConfigProcessorTest {
+class ConfigProcessorTest {
 
-    private static Compiler compiler() {
+    static Compiler compiler() {
         return Compiler.javac().withProcessors(new ConfigProcessor());
     }
 
-    @Test public void allCorrect() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"));
+    @Test void allCorrect() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
-    @Test public void abstractClass() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AbstractClass.java"));
+    @Test void abstractClass() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/AbstractClass.java"));
         assertThat(compilation).hadErrorContaining(msg(ONLY_INTERFACE));
     }
 
-    @Test public void withoutMethods() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/WithoutMethods.java"));
+    @Test void withoutMethods() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/WithoutMethods.java"));
         assertThat(compilation).hadErrorContaining(msg(METHOD_MUST_EXIST));
     }
 
-    @Test public void extendsInterface() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"),
+    @Test void extendsInterface() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/AllCorrect.java"),
                 JavaFileObjects.forResource("test/SubOne.java"), JavaFileObjects.forResource("test/SubTwo.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
-    @Test public void disableAutoReload() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/DisableAutoReload.java"));
+    @Test void disableAutoReload() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/DisableAutoReload.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
-    @Test public void factory() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
+    @Test void factory() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
                 JavaFileObjects.forResource("factory/MyFactory.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
-    @Test public void factoryAbstractClass() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
+    @Test void factoryAbstractClass() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("test/SimpleConfig.java"),
                 JavaFileObjects.forResource("factory/MyAbstractFactory.java"));
         assertThat(compilation).hadErrorContaining(msg(ONLY_INTERFACE));
     }
 
-    @Test public void factoryWithoutMethods() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/WithoutMethods.java"));
+    @Test void factoryWithoutMethods() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("factory/WithoutMethods.java"));
         assertThat(compilation).hadErrorContaining(msg(METHOD_MUST_EXIST));
     }
 
-    @Test public void factoryMethodWithParameter() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/MethodWithParameter.java"));
+    @Test void factoryMethodWithParameter() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("factory/MethodWithParameter.java"));
         assertThat(compilation).hadErrorContaining(msg(METHOD_WITHOUT_PARAMETERS));
     }
 
-    @Test public void factoryWrongReturn() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("factory/WrongReturn.java"));
+    @Test void factoryWrongReturn() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("factory/WrongReturn.java"));
         assertThat(compilation).hadErrorContaining(msg(RETURN_FACTORY_METHOD_CONFIG));
     }
 
-    @Test public void disableGPMethod() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPMethod.java"));
+    @Test void disableGPMethod() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPMethod.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 
-    @Test public void disableGPGlobal() {
-        Compilation compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPGlobal.java"));
+    @Test void disableGPGlobal() {
+        var compilation = compiler().compile(JavaFileObjects.forResource("globalprefix/DisableGPGlobal.java"));
         assertThat(compilation).succeededWithoutWarnings();
     }
 }

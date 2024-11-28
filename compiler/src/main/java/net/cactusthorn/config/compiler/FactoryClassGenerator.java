@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -63,15 +62,14 @@ public class FactoryClassGenerator implements ClassesGenerator {
     private static final TypeName BUILDER_TYPE_NAME = ClassName.get("", "Builder");
 
     @Override public void generate(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) throws ProcessorException, IOException {
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Factory.class);
-        for (Element element : elements) {
+        for (var element : roundEnv.getElementsAnnotatedWith(Factory.class)) {
 
             validateInterface(element);
 
-            TypeElement interfaceTypeElement = (TypeElement) element;
+            var interfaceTypeElement = (TypeElement) element;
 
             // @formatter:off
-            List<ExecutableElement> interfaceMethods =
+            var interfaceMethods =
                 interfaceTypeElement.getEnclosedElements()
                     .stream()
                     .filter(e -> e.getKind() == ElementKind.METHOD)
@@ -83,16 +81,16 @@ public class FactoryClassGenerator implements ClassesGenerator {
             validateMethodsParameters(interfaceMethods);
             validateMethodsReturns(processingEnv, interfaceMethods);
 
-            String factoryClassName = FACTORY_CLASSNAME_PREFIX + interfaceTypeElement.getSimpleName();
+            var factoryClassName = FACTORY_CLASSNAME_PREFIX + interfaceTypeElement.getSimpleName();
 
-            TypeSpec.Builder classBuilder = createClassBuilder(interfaceTypeElement, factoryClassName);
+            var classBuilder = createClassBuilder(interfaceTypeElement, factoryClassName);
             addConstructor(classBuilder);
             addBuilder(classBuilder, factoryClassName);
             addBuilderMethod(classBuilder);
             addInterfaceMethods(processingEnv, classBuilder, interfaceMethods);
 
-            String packageName = ClassName.get(interfaceTypeElement).packageName();
-            JavaFile configFactoryFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).build();
+            var packageName = ClassName.get(interfaceTypeElement).packageName();
+            var configFactoryFile = JavaFile.builder(packageName, classBuilder.build()).skipJavaLangImports(true).build();
             // System.out.println(configFactoryFile.toString());
             configFactoryFile.writeTo(processingEnv.getFiler());
         }
@@ -111,7 +109,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     public void validateMethodsParameters(List<ExecutableElement> interfaceMethods) {
-        for (ExecutableElement interfaceMethod : interfaceMethods) {
+        for (var interfaceMethod : interfaceMethods) {
             if (!interfaceMethod.getParameters().isEmpty()) {
                 throw new ProcessorException(msg(METHOD_WITHOUT_PARAMETERS), interfaceMethod);
             }
@@ -119,9 +117,9 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     public void validateMethodsReturns(ProcessingEnvironment processingEnv, List<ExecutableElement> interfaceMethods) {
-        for (ExecutableElement interfaceMethod : interfaceMethods) {
-            Element returnTypeElement = processingEnv.getTypeUtils().asElement(interfaceMethod.getReturnType());
-            Config annotation = returnTypeElement.getAnnotation(Config.class);
+        for (var interfaceMethod : interfaceMethods) {
+            var returnTypeElement = processingEnv.getTypeUtils().asElement(interfaceMethod.getReturnType());
+            var annotation = returnTypeElement.getAnnotation(Config.class);
             if (annotation == null) {
                 throw new ProcessorException(msg(RETURN_FACTORY_METHOD_CONFIG), returnTypeElement);
             }
@@ -162,7 +160,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addBuilder(TypeSpec.Builder classBuilder, String factoryClassName) {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("Builder").addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+        var builder = TypeSpec.classBuilder("Builder").addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                 .superclass(ConfigFactoryBuilder.class);
         builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).addStatement("super()").build());
         addLoaderMethod(builder);
@@ -184,8 +182,8 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addLoaderClassMethod(TypeSpec.Builder builder) {
-        WildcardTypeName wildcard = WildcardTypeName.subtypeOf(Loader.class);
-        ParameterizedTypeName parameterType = ParameterizedTypeName.get(ClassName.get(Class.class), wildcard);
+        var wildcard = WildcardTypeName.subtypeOf(Loader.class);
+        var parameterType = ParameterizedTypeName.get(ClassName.get(Class.class), wildcard);
         builder.addMethod(
                 MethodSpec.methodBuilder("addLoader").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class).returns(BUILDER_TYPE_NAME)
                         .addParameter(parameterType, "loaderClass").addStatement("return (Builder) super.addLoader(loaderClass)").build());
@@ -198,7 +196,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addSetSourceMethod(TypeSpec.Builder builder) {
-        ParameterizedTypeName parameterType = ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class),
+        var parameterType = ParameterizedTypeName.get(ClassName.get(Map.class), TypeName.get(String.class),
                 TypeName.get(String.class));
         builder.addMethod(
                 MethodSpec.methodBuilder("setSource").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class).returns(BUILDER_TYPE_NAME)
@@ -230,7 +228,7 @@ public class FactoryClassGenerator implements ClassesGenerator {
     }
 
     private void addBuildMethod(TypeSpec.Builder builder, String factoryClassName) {
-        TypeName factoryTypeName = ClassName.get("", factoryClassName);
+        var factoryTypeName = ClassName.get("", factoryClassName);
         builder.addMethod(MethodSpec.methodBuilder("build").addModifiers(Modifier.PUBLIC).addAnnotation(Override.class)
                 .returns(factoryTypeName).addStatement("return new $T(createLoaders())", factoryTypeName).build());
     }

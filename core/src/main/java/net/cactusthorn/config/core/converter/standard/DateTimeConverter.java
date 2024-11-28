@@ -32,8 +32,8 @@ public abstract class DateTimeConverter<T> implements Converter<T> {
     }
 
     protected DateTimeFormatter createFormatter(String[] parameters) {
-        DateTimeFormatterBuilder builder = new DateTimeFormatterBuilder();
-        for (String parameter : parameters) {
+        var builder = new DateTimeFormatterBuilder();
+        for (var parameter : parameters) {
             builder.appendPattern('[' + parameter + ']');
         }
         // @formatter:off

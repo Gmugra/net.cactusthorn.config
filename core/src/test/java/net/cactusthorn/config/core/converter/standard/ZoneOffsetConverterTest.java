@@ -27,11 +27,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class ZoneOffsetConverterTest {
+class ZoneOffsetConverterTest {
 
     private static final Converter<ZoneOffset> CONVERTER = new ZoneOffsetConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         assertEquals(ZoneOffset.of("+02:00"), CONVERTER.convert("+02:00"));
     }
 }

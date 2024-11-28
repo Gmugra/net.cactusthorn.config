@@ -31,7 +31,7 @@ final class ToStringPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         // @formatter:off
-        MethodSpec.Builder toStringBuilder =
+        var toStringBuilder =
             MethodSpec.methodBuilder("toString")
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(Override.class)

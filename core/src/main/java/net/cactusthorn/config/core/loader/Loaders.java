@@ -24,13 +24,12 @@ import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import net.cactusthorn.config.core.Reloadable;
 import net.cactusthorn.config.core.util.VariablesParser;
@@ -56,11 +55,11 @@ public final class Loaders {
             }
         }
 
-        @SuppressWarnings({"rawtypes", "unchecked"}) URI uri() {
+        @SuppressWarnings({"rawtypes", "unchecked"}) public URI uri() {
             if (!variable) {
                 return uri;
             }
-            Map<String, String> values = new HashMap<>(System.getenv());
+            var values = new HashMap<>(System.getenv());
             values.putAll((Map) System.getProperties());
             return URI.create(new VariablesParser(template).replace(values));
         }
@@ -72,7 +71,7 @@ public final class Loaders {
         private static final String USERHOME_PREFIX = "file:~/";
 
         private URI replace(URI u) {
-            String tmp = replace(u.toString());
+            var tmp = replace(u.toString());
             return URI.create(tmp);
         }
 
@@ -80,7 +79,7 @@ public final class Loaders {
         private static final String USER_HOME = "user.home";
 
         private String replace(String str) {
-            String result = str;
+            var result = str;
             if (result.indexOf(NOCACHE) == 0) {
                 this.cachable = false;
                 result = result.substring(NOCACHE.length());
@@ -88,7 +87,7 @@ public final class Loaders {
             if (result.indexOf(USERHOME_PREFIX) == -1) {
                 return result;
             }
-            String userHome = Paths.get(System.getProperty(USER_HOME)).toUri().toString();
+            var userHome = Paths.get(System.getProperty(USER_HOME)).toUri().toString();
             return result.replace(USERHOME_PREFIX, userHome);
         }
     }
@@ -128,7 +127,7 @@ public final class Loaders {
     }
 
     public ConfigHolder load(ClassLoader classLoader, LoadStrategy strategy, String[] uris) {
-        LoadStrategy withStrategy = strategy == LoadStrategy.UNKNOWN ? loadStrategy : strategy;
+        var withStrategy = strategy == LoadStrategy.UNKNOWN ? loadStrategy : strategy;
         LinkedHashSet<UriTemplate> withTemplates;
         if (uris.length == 1 && "".equals(uris[0])) {
             withTemplates = templates;
@@ -142,13 +141,14 @@ public final class Loaders {
     }
 
     private ConfigHolder load(ClassLoader classLoader, LoadStrategy strategy, LinkedHashSet<UriTemplate> uriTemplates) {
-        List<Map<String, String>> values = new ArrayList<>();
-        for (UriTemplate template : uriTemplates) {
-            URI uri = template.uri();
-            Loader loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
-                    .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
-            values.add(load(classLoader, loader, template.cachable(), uri));
-        }
+        var values = uriTemplates.stream()
+            .map(template -> {
+              var uri = template.uri();
+              var loader = loaders.stream().filter(l -> l.accept(uri)).findFirst()
+                      .orElseThrow(() -> new UnsupportedOperationException(msg(LOADER_NOT_FOUND, uri)));
+              return load(classLoader, loader, template.cachable(), uri);
+            })
+            .collect(Collectors.toList());
         return new ConfigHolder(strategy.combine(values, properties));
     }
 
@@ -161,8 +161,8 @@ public final class Loaders {
     }
 
     private void validateContentHashCode(ClassLoader classLoader, Loader loader, URI uri) {
-        long newHashCode = loader.contentHashCode(uri, classLoader);
-        Long currentHashCode = hashCodes.get(uri);
+        var newHashCode = loader.contentHashCode(uri, classLoader);
+        var currentHashCode = hashCodes.get(uri);
         if (currentHashCode == null) {
             hashCodes.putIfAbsent(uri, newHashCode);
         } else if (currentHashCode != newHashCode) {

@@ -28,12 +28,12 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class URIConverterTest {
+class URIConverterTest {
 
     private static Converter<URI> converter = new URIConverter();
 
-    @Test public void correct() throws MalformedURLException {
-        URI uri = converter.convert("https://github.com");
+    @Test void correct() throws MalformedURLException {
+        var uri = converter.convert("https://github.com");
         assertEquals(URI.create("https://github.com"), uri);
     }
 }

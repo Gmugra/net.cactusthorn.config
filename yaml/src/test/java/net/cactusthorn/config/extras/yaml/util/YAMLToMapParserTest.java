@@ -24,59 +24,56 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class YAMLToMapParserTest {
+class YAMLToMapParserTest {
 
-    @Test public void correct() throws IOException {
-        try (Reader reader = reader("correct.yaml")) {
-            YAMLToMapParser parser = new YAMLToMapParser();
-            Map<String, String> result = parser.parse(reader);
+    @Test void correct() throws IOException {
+        try (var reader = reader("correct.yaml")) {
+            var parser = new YAMLToMapParser();
+            var result = parser.parse(reader);
             assertEquals("true", result.get("database.enabled"));
         }
     }
 
-    @Test public void wrong() throws IOException {
-        try (Reader reader = reader("wrong.txt")) {
+    @Test void wrong() throws IOException {
+        try (var reader = reader("wrong.txt")) {
             assertThrows(Exception.class, () -> new YAMLToMapParser().parse(reader));
         }
     }
 
-    @Test public void empty() throws IOException {
-        try (Reader reader = reader("empty.yaml")) {
+    @Test void empty() throws IOException {
+        try (var reader = reader("empty.yaml")) {
             assertTrue(new YAMLToMapParser().parse(reader).isEmpty());
         }
     }
 
-    @Test public void arrayInArray() throws IOException {
-        try (Reader reader = reader("arrayInArray.yaml")) {
+    @Test void arrayInArray() throws IOException {
+        try (var reader = reader("arrayInArray.yaml")) {
             assertThrows(UnsupportedOperationException.class, () -> new YAMLToMapParser().parse(reader));
         }
     }
 
-    @Test public void mapInArray() throws IOException {
-        try (Reader reader = reader("mapInArray.yaml")) {
+    @Test void mapInArray() throws IOException {
+        try (var reader = reader("mapInArray.yaml")) {
             assertThrows(UnsupportedOperationException.class, () -> new YAMLToMapParser().parse(reader));
         }
     }
 
-    @Test public void multilineString() throws IOException {
-        try (Reader reader = reader("correct.yaml")) {
-            Map<String, String> result = new YAMLToMapParser().parse(reader);
-            String multiline = result.get("str1");
-            String[] lines = multiline.split("\r\n|\r|\n");
+    @Test void multilineString() throws IOException {
+        try (var reader = reader("correct.yaml")) {
+            var result = new YAMLToMapParser().parse(reader);
+            var lines = result.get("str1").split("\r\n|\r|\n");
             assertEquals(2, lines.length);
         }
     }
 
     private Reader reader(String resource) {
-        InputStream is = YAMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
+        var is = YAMLToMapParserTest.class.getClassLoader().getResourceAsStream(resource);
         return new InputStreamReader(is, StandardCharsets.UTF_8);
     }
 }

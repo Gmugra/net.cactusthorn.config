@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigHjsonTest {
+class ConfigHjsonTest {
 
-    @Test public void doIt() {
-        ConfigHjson config = ConfigFactory.builder().addSource("classpath:correct.hjson").build().create(ConfigHjson.class);
+    @Test void doIt() {
+        var config = ConfigFactory.builder().addSource("classpath:correct.hjson").build().create(ConfigHjson.class);
         assertFalse(config.ports().isEmpty());
     }
 }

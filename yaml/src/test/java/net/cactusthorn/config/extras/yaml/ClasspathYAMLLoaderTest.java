@@ -24,44 +24,43 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.Loader;
 
-public class ClasspathYAMLLoaderTest {
+class ClasspathYAMLLoaderTest {
 
     private static final Loader LOADER = new ClasspathYAMLLoader();
     private static final ClassLoader CL = ClasspathYAMLLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.yaml")));
     }
 
-    @Test public void acceptFragment() {
+    @Test void acceptFragment() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.yaml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotOpaque() {
+    @Test void notAcceptNotOpaque() {
         assertFalse(LOADER.accept(URI.create("classpath://a.yaml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotJson() {
+    @Test void notAcceptNotJson() {
         assertFalse(LOADER.accept(URI.create("classpath:a.properties#ISO-8859-1")));
     }
 
-    @Test public void notAcceptScheme() {
+    @Test void notAcceptScheme() {
         assertFalse(LOADER.accept(URI.create("mail:a.yaml#ISO-8859-1")));
     }
 
-    @Test public void load() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:correct.yaml#UTF-8"), CL);
+    @Test void load() {
+        var properties = LOADER.load(URI.create("classpath:correct.yaml#UTF-8"), CL);
         assertEquals("true", properties.get("database.enabled"));
     }
 
-    @Test public void loadWrong() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:standard-properties-wrong.yaml"), CL);
+    @Test void loadWrong() {
+        var properties = LOADER.load(URI.create("classpath:standard-properties-wrong.yaml"), CL);
         assertTrue(properties.isEmpty());
     }
 }

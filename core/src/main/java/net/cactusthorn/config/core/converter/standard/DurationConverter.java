@@ -90,10 +90,10 @@ public class DurationConverter implements Converter<Duration> {
      * @throws IllegalArgumentException if input is invalid
      */
     private Duration parseDuration(String input) {
-        String[] parts = SPLITTER.split(input);
-        String numberString = parts[0];
-        String originalUnitString = parts[1];
-        String unitString = originalUnitString;
+        var parts = SPLITTER.split(input);
+        var numberString = parts[0];
+        var originalUnitString = parts[1];
+        var unitString = originalUnitString;
 
         if (numberString.length() == 0) {
             throw new IllegalArgumentException(msg(DURATION_NO_NUMBER, input));

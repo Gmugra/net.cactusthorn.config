@@ -27,11 +27,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class LocaleConverterTest {
+class LocaleConverterTest {
 
     private static final Converter<Locale> CONVERTER = new LocaleConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         assertEquals(Locale.GERMANY, CONVERTER.convert("de-DE"));
     }
 }

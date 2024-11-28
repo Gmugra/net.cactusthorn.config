@@ -22,7 +22,6 @@ package net.cactusthorn.config.core.factory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,14 +32,13 @@ import org.junit.jupiter.api.io.TempDir;
 
 import net.cactusthorn.config.core.DisabledAutoReload;
 import net.cactusthorn.config.core.TestConfig;
-import net.cactusthorn.config.core.loader.ConfigHolder;
 
-public class ConfigFactoryHashAndReloadingTest {
+class ConfigFactoryHashAndReloadingTest {
 
-    @Test public void updateFile(@TempDir Path path) throws IOException, InterruptedException {
-        URI uri = prepareTempFile(path, "testF.properties", "test.properties");
-        ConfigFactory factory = ConfigFactory.builder().addSource(uri).build();
-        ConfigHolder holder = factory.configHolder();
+    @Test void updateFile(@TempDir Path path) throws IOException, InterruptedException {
+        var uri = prepareTempFile(path, "testF.properties", "test.properties");
+        var factory = ConfigFactory.builder().addSource(uri).build();
+        var holder = factory.configHolder();
         assertEquals("bbb", holder.getString("aaa"));
         Thread.sleep(1000);
         prepareTempFile(path, "testF.properties", "test2.properties");
@@ -48,10 +46,10 @@ public class ConfigFactoryHashAndReloadingTest {
         assertEquals("zzz", holder.getString("aaa"));
     }
 
-    @Test public void updateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
-        URI uri = prepareTempFile(path, "testFA.properties", "test.properties");
-        ConfigFactory factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
-        TestConfig testConfig = factory.create(TestConfig.class);
+    @Test void updateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
+        var uri = prepareTempFile(path, "testFA.properties", "test.properties");
+        var factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
+        var testConfig = factory.create(TestConfig.class);
         assertEquals("bbb", testConfig.aaa());
         Thread.sleep(1000);
         prepareTempFile(path, "testFA.properties", "test2.properties");
@@ -59,10 +57,10 @@ public class ConfigFactoryHashAndReloadingTest {
         assertEquals("zzz", testConfig.aaa());
     }
 
-    @Test public void disableUpdateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
-        URI uri = prepareTempFile(path, "testDFA.properties", "test.properties");
-        ConfigFactory factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
-        DisabledAutoReload config = factory.create(DisabledAutoReload.class);
+    @Test void disableUpdateFileAuto(@TempDir Path path) throws IOException, InterruptedException {
+        var uri = prepareTempFile(path, "testDFA.properties", "test.properties");
+        var factory = ConfigFactory.builder().addSource(uri).autoReload(2).build();
+        var config = factory.create(DisabledAutoReload.class);
         assertEquals("bbb", config.aaa());
         Thread.sleep(1000);
         prepareTempFile(path, "testDFA.properties", "test2.properties");
@@ -71,8 +69,8 @@ public class ConfigFactoryHashAndReloadingTest {
     }
 
     private URI prepareTempFile(Path tempDir, String fileName, String resourceName) throws IOException {
-        Path file = tempDir.resolve(fileName);
-        try (InputStream stream = ConfigFactoryHashAndReloadingTest.class.getClassLoader().getResourceAsStream(resourceName)) {
+        var file = tempDir.resolve(fileName);
+        try (var stream = ConfigFactoryHashAndReloadingTest.class.getClassLoader().getResourceAsStream(resourceName)) {
             Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
         }
         return file.toUri();

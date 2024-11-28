@@ -59,12 +59,12 @@ public class ZooKeeperLoader implements Loader {
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
         try {
-            String connectString = uri.getAuthority();
-            String basePath = uri.getPath();
-            Map<String, String> parameters = parseQuery(uri.getQuery());
-            int sessionTimeoutMs = Integer.parseInt(parameters.getOrDefault(SESSION_TIMEOUT_MS_PARAM, SESSION_TIMEOUT_DEAFAULT));
-            int connectionTimeoutMs = Integer.parseInt(parameters.getOrDefault(CONNECTION_TIMEOUT_MS_PARAM, CONNECTION_TIMEOUT_DEFAULT));
-            int bucMaxWaitTimeMs = Integer.parseInt(parameters.getOrDefault(BUC_MAX_WAIT_TIME_MS_PARAM, BUC_MAX_WAIT_TIME_DEFAULT));
+            var connectString = uri.getAuthority();
+            var basePath = uri.getPath();
+            var parameters = parseQuery(uri.getQuery());
+            var sessionTimeoutMs = Integer.parseInt(parameters.getOrDefault(SESSION_TIMEOUT_MS_PARAM, SESSION_TIMEOUT_DEAFAULT));
+            var connectionTimeoutMs = Integer.parseInt(parameters.getOrDefault(CONNECTION_TIMEOUT_MS_PARAM, CONNECTION_TIMEOUT_DEFAULT));
+            var bucMaxWaitTimeMs = Integer.parseInt(parameters.getOrDefault(BUC_MAX_WAIT_TIME_MS_PARAM, BUC_MAX_WAIT_TIME_DEFAULT));
             return PARSER.parse(connectString, sessionTimeoutMs, connectionTimeoutMs, bucMaxWaitTimeMs, basePath);
         } catch (Exception e) {
             LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));

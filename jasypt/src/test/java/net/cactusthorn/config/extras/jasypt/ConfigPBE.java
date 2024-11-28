@@ -21,6 +21,7 @@ package net.cactusthorn.config.extras.jasypt;
 
 import net.cactusthorn.config.core.Config;
 
+@FunctionalInterface
 @Config public interface ConfigPBE {
 
     @PBEDecryptor("pbe-password") String encrypted();

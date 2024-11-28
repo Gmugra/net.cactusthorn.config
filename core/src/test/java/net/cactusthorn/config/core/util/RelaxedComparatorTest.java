@@ -22,47 +22,46 @@ package net.cactusthorn.config.core.util;
 import static org.junit.jupiter.api.Assertions.*;
 import static net.cactusthorn.config.core.util.RelaxedComparator.RELAXED_ORDER;
 
-import java.util.Map;
 import java.util.TreeMap;
 
 import org.junit.jupiter.api.Test;
 
-public class RelaxedComparatorTest {
+class RelaxedComparatorTest {
 
-    @Test public void bothNull() {
+    @Test void bothNull() {
         assertEquals(0, RELAXED_ORDER.compare(null, null));
     }
 
-    @Test public void key1Null() {
+    @Test void key1Null() {
         assertEquals(1, RELAXED_ORDER.compare(null, ""));
     }
 
-    @Test public void key2Null() {
+    @Test void key2Null() {
         assertEquals(-1, RELAXED_ORDER.compare("", null));
     }
 
-    @Test public void same() {
+    @Test void same() {
         assertEquals(0, RELAXED_ORDER.compare("person.first-name", "person.first-name"));
     }
 
-    @Test public void check1() {
+    @Test void check1() {
         assertEquals(0, RELAXED_ORDER.compare("person.first-name", "person.firstName"));
     }
 
-    @Test public void check2() {
+    @Test void check2() {
         assertEquals(0, RELAXED_ORDER.compare("PERSON_FIRSTNAME", "person.firstName"));
     }
 
-    @Test public void check3() {
+    @Test void check3() {
         assertEquals(0, RELAXED_ORDER.compare("PERSON_FIRSTNAME", "person...first_-_Name"));
     }
 
-    @Test public void notSame() {
+    @Test void notSame() {
         assertFalse(RELAXED_ORDER.compare("PERSON_FIRSTNAME", "person.first") == 0);
     }
 
-    @Test public void map() {
-        Map<String, String> m = new TreeMap<>(RELAXED_ORDER);
+    @Test void map() {
+        var m = new TreeMap<String, String>(RELAXED_ORDER);
         m.put("person.firstName", "A");
         m.put("PERSON_FIRSTNAME", "B");
         assertEquals(1, m.size());

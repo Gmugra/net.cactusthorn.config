@@ -25,11 +25,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class CharacterConverterTest {
+class CharacterConverterTest {
 
     private static Converter<Character> converter = new CharacterConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         assertEquals('A', converter.convert("ABC"));
     }
 }

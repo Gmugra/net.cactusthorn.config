@@ -38,7 +38,7 @@ final class EqualsPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
         // @formatter:off
-        MethodSpec.Builder equalsBuilder =
+        var equalsBuilder =
             MethodSpec.methodBuilder("equals")
             .addModifiers(Modifier.PUBLIC)
             .addAnnotation(Override.class)
@@ -55,16 +55,16 @@ final class EqualsPart implements GeneratorPart {
     private static final byte THREE = (byte) 3;
 
     private CodeBlock createReturn(List<MethodInfo> methodsInfo) {
-        StringJoiner template = new StringJoiner(" && ", "return ", "");
-        Object[] args = new Object[methodsInfo.size() * THREE];
+        var template = new StringJoiner(" && ", "return ", "");
+        var args = new Object[methodsInfo.size() * THREE];
         for (int i = 0; i < methodsInfo.size(); i++) {
             template.add("$T.equals($L(), other.$L())");
-            MethodInfo mi = methodsInfo.get(i);
+            var mi = methodsInfo.get(i);
             args[i * THREE] = Objects.class;
             args[i * THREE + 1] = mi.name();
             args[i * THREE + 2] = mi.name();
         }
-        CodeBlock.Builder builder = CodeBlock.builder();
+        var builder = CodeBlock.builder();
         builder.addStatement(template.toString(), args);
         return builder.build();
     }

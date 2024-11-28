@@ -21,8 +21,6 @@ package net.cactusthorn.config.extras.zookeeper.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Map;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -31,21 +29,21 @@ import net.cactusthorn.config.extras.zookeeper.ZooKeeperTestAncestor;
 
 import org.apache.curator.test.TestingServer;
 
-public class ZNodeToMapParserTest extends ZooKeeperTestAncestor {
+class ZNodeToMapParserTest extends ZooKeeperTestAncestor {
 
     private static TestingServer server;
 
-    @BeforeAll public static void setup() throws Exception {
+    @BeforeAll static void setup() throws Exception {
         server = init(8070);
     }
 
-    @AfterAll public static void shutdown() throws Exception {
+    @AfterAll static void shutdown() throws Exception {
         server.stop();
     }
 
-    @Test public void parse() throws Exception {
-        ZNodeToMapParser parser = new ZNodeToMapParser();
-        Map<String, String> result = parser.parse(server.getConnectString(), 50, 50, 100, BASE_PATH);
+    @Test void parse() throws Exception {
+        var parser = new ZNodeToMapParser();
+        var result = parser.parse(server.getConnectString(), 50, 50, 100, BASE_PATH);
         assertEquals(THANKS_VALUE, result.get(THANKS_KEY));
         assertEquals(GREETINGS_VALUE, result.get(GREETINGS_KEY));
     }

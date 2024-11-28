@@ -56,7 +56,7 @@ public final class MethodValidatorChain implements MethodValidator {
         }
 
         public Builder next(Class<? extends MethodValidatorAncestor> clazz) {
-            MethodValidatorAncestor validator = MethodValidatorAncestor.create(processingEnv, clazz);
+            var validator = MethodValidatorAncestor.create(processingEnv, clazz);
             last.setNext(validator);
             last = validator;
             return this;

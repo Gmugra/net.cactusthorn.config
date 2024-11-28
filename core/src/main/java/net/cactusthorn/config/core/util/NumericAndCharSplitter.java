@@ -47,9 +47,9 @@ public final class NumericAndCharSplitter {
         // arises. For more information, see:
         // https://github.com/typesafehub/config/blob/v1.3.0/config/src/main/java/com/typesafe/config/impl/ConfigImplUtil.java#L118-L164
 
-        int i = input.length() - 1;
+        var i = input.length() - 1;
         while (i >= 0) {
-            char c = input.charAt(i);
+            var c = input.charAt(i);
             if (!Character.isLetter(c)) {
                 break;
             }

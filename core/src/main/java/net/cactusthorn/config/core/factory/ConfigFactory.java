@@ -172,7 +172,7 @@ public final class ConfigFactory extends ConfigFactoryAncestor {
 
     public <T> T create(Class<T> sourceInterface) {
         try {
-            MethodHandle methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findConfigConstructor);
+            var methodHandler = BUILDERS.computeIfAbsent(sourceInterface, this::findConfigConstructor);
             T configImpl = (T) methodHandler.invoke(loaders());
             if (configImpl instanceof Reloadable) {
                 loaders().register((Reloadable) configImpl);
@@ -184,11 +184,11 @@ public final class ConfigFactory extends ConfigFactoryAncestor {
     }
 
     private <T> MethodHandle findConfigConstructor(Class<T> sourceInterface) {
-        Package interfacePackage = sourceInterface.getPackage();
-        String interfaceName = sourceInterface.getSimpleName();
-        String builderClassName = interfacePackage.getName() + '.' + ConfigInitializer.CONFIG_CLASSNAME_PREFIX + interfaceName;
+        var interfacePackage = sourceInterface.getPackage();
+        var interfaceName = sourceInterface.getSimpleName();
+        var builderClassName = interfacePackage.getName() + '.' + ConfigInitializer.CONFIG_CLASSNAME_PREFIX + interfaceName;
         try {
-            Class<?> builderClass = Class.forName(builderClassName);
+            var builderClass = Class.forName(builderClassName);
             return MethodHandles.publicLookup().findConstructor(builderClass, CONFIG_CONSTRUCTOR);
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_FIND_CONFIGBUILDER, sourceInterface.getName()), e);

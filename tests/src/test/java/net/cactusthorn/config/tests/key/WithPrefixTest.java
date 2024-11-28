@@ -21,7 +21,6 @@ package net.cactusthorn.config.tests.key;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -29,27 +28,24 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class WithPrefixTest {
+class WithPrefixTest {
 
     private static WithPrefix config;
 
     @BeforeAll static void setUp() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("prefix.simple", "ABC");
-        properties.put("prefix.abc", "XYZ");
-        properties.put("xyz", "DDD");
+        var properties = Map.of("prefix.simple", "ABC", "prefix.abc", "XYZ", "xyz", "DDD");
         config = ConfigFactory.builder().setSource(properties).build().create(WithPrefix.class);
     }
 
-    @Test public void simple() {
+    @Test void simple() {
         assertEquals("ABC", config.simple());
     }
 
-    @Test public void withKey() {
+    @Test void withKey() {
         assertEquals("XYZ", config.withKey());
     }
 
-    @Test public void disabled() {
+    @Test void disabled() {
         assertEquals("DDD", config.disabled());
     }
 }

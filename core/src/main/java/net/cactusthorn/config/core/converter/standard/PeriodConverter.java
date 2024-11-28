@@ -41,10 +41,10 @@ public class PeriodConverter implements Converter<Period> {
     }
 
     private Period parsePeriod(String input) {
-        String[] parts = SPLITTER.split(input);
-        String numberString = parts[0];
-        String originalUnitString = parts[1];
-        String unitString = originalUnitString;
+        var parts = SPLITTER.split(input);
+        var numberString = parts[0];
+        var originalUnitString = parts[1];
+        var unitString = originalUnitString;
 
         if (numberString.length() == 0) {
             throw new IllegalArgumentException(msg(PERIOD_NO_NUMBER, input));

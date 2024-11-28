@@ -94,13 +94,13 @@ public enum LoadStrategy {
     }
 
     public Map<String, String> combine(List<Map<String, String>> properties, Map<String, String> manualProperties) {
-        Map<String, String> result = strategy.apply(properties);
+        var result = strategy.apply(properties);
         result.putAll(manualProperties); // Map with properties is always has highest priority
         return Collections.unmodifiableMap(result);
     }
 
     private static Map<String, String> first(Map<String, String> result, List<Map<String, String>> list) {
-        for (Map<String, String> uriProperties : list) {
+        for (var uriProperties : list) {
             if (!uriProperties.isEmpty()) {
                 result.putAll(uriProperties);
                 break;

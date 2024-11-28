@@ -22,10 +22,8 @@ package net.cactusthorn.config.compiler.methodvalidator;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.Collection;
-import java.util.List;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeMirror;
@@ -69,13 +67,13 @@ public abstract class MethodValidatorAncestor implements MethodValidator {
     }
 
     protected boolean existConverterAnnotation(Element methodElement) {
-        ConverterClass annotation = methodElement.getAnnotation(ConverterClass.class);
+        var annotation = methodElement.getAnnotation(ConverterClass.class);
         if (annotation != null) {
             return true;
         }
-        List<? extends AnnotationMirror> annotationMirrors = methodElement.getAnnotationMirrors();
-        for (AnnotationMirror annotationMirror : annotationMirrors) {
-            ConverterClass superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
+        var annotationMirrors = methodElement.getAnnotationMirrors();
+        for (var annotationMirror : annotationMirrors) {
+            var superAnnotation = annotationMirror.getAnnotationType().asElement().getAnnotation(ConverterClass.class);
             if (superAnnotation != null) {
                 return true;
             }
@@ -84,8 +82,8 @@ public abstract class MethodValidatorAncestor implements MethodValidator {
     }
 
     protected boolean isElementTypeInClasses(Element element, Collection<Class<?>> classes) {
-        for (Class<?> clazz : classes) {
-            TypeMirror tm = processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType();
+        for (var clazz : classes) {
+            var tm = processingEnv().getElementUtils().getTypeElement(clazz.getName()).asType();
             if (processingEnv().getTypeUtils().isSameType(element.asType(), tm)) {
                 return true;
             }

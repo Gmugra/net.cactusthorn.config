@@ -95,7 +95,7 @@ public final class ConfigHolder {
     }
 
     public char getChar(String key, char defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -111,7 +111,7 @@ public final class ConfigHolder {
     }
 
     public int getInt(String key, int defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -127,7 +127,7 @@ public final class ConfigHolder {
     }
 
     public byte getByte(String key, byte defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -143,7 +143,7 @@ public final class ConfigHolder {
     }
 
     public short getShort(String key, short defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -159,7 +159,7 @@ public final class ConfigHolder {
     }
 
     public long getLong(String key, long defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -175,7 +175,7 @@ public final class ConfigHolder {
     }
 
     public float getFloat(String key, float defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -191,7 +191,7 @@ public final class ConfigHolder {
     }
 
     public double getDouble(String key, double defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -207,7 +207,7 @@ public final class ConfigHolder {
     }
 
     public boolean getBoolean(String key, boolean defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return defaultValue;
         }
@@ -219,7 +219,7 @@ public final class ConfigHolder {
     }
 
     public <T> T get(Function<String, T> convert, String key) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -227,7 +227,7 @@ public final class ConfigHolder {
     }
 
     public <T> T get(Function<String, T> convert, String key, String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return convert.apply(defaultValue);
         }
@@ -235,7 +235,7 @@ public final class ConfigHolder {
     }
 
     public <T> Optional<T> getOptional(Function<String, T> convert, String key) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }
@@ -243,7 +243,7 @@ public final class ConfigHolder {
     }
 
     public <T> List<T> getList(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -251,7 +251,7 @@ public final class ConfigHolder {
     }
 
     public <T> List<T> getList(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return (List<T>) asCollection(convert, ArrayList::new, defaultValue, splitRegEx);
         }
@@ -259,7 +259,7 @@ public final class ConfigHolder {
     }
 
     public <T> Optional<List<T>> getOptionalList(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }
@@ -267,7 +267,7 @@ public final class ConfigHolder {
     }
 
     public <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -275,7 +275,7 @@ public final class ConfigHolder {
     }
 
     public <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return (Set<T>) asCollection(convert, HashSet::new, defaultValue, splitRegEx);
         }
@@ -283,7 +283,7 @@ public final class ConfigHolder {
     }
 
     public <T> Optional<Set<T>> getOptionalSet(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }
@@ -291,7 +291,7 @@ public final class ConfigHolder {
     }
 
     public <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -299,7 +299,7 @@ public final class ConfigHolder {
     }
 
     public <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return (SortedSet<T>) asCollection(convert, TreeSet::new, defaultValue, splitRegEx);
         }
@@ -307,7 +307,7 @@ public final class ConfigHolder {
     }
 
     public <T> Optional<SortedSet<T>> getOptionalSortedSet(Function<String, T> convert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }
@@ -315,7 +315,7 @@ public final class ConfigHolder {
     }
 
     public <K, V> Map<K, V> getMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -324,7 +324,7 @@ public final class ConfigHolder {
 
     public <K, V> Map<K, V> getMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key, String splitRegEx,
             String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return asMap(keyConvert, valueConvert, HashMap::new, defaultValue, splitRegEx);
         }
@@ -333,7 +333,7 @@ public final class ConfigHolder {
 
     public <K, V> Optional<Map<K, V>> getOptionalMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
             String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }
@@ -342,7 +342,7 @@ public final class ConfigHolder {
 
     public <K, V> SortedMap<K, V> getSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
             String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
         }
@@ -351,7 +351,7 @@ public final class ConfigHolder {
 
     public <K, V> SortedMap<K, V> getSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
             String splitRegEx, String defaultValue) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return (SortedMap<K, V>) asMap(keyConvert, valueConvert, TreeMap::new, defaultValue, splitRegEx);
         }
@@ -360,7 +360,7 @@ public final class ConfigHolder {
 
     public <K, V> Optional<SortedMap<K, V>> getOptionalSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert,
             String key, String splitRegEx) {
-        String value = properties.get(key);
+        var value = properties.get(key);
         if (value == null) {
             return Optional.empty();
         }

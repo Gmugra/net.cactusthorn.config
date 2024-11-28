@@ -28,33 +28,33 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class ZonedDateTimeConverterTest {
+class ZonedDateTimeConverterTest {
 
     private static final Converter<ZonedDateTime> CONVERTER = new ZonedDateTimeConverter();
 
-    @Test public void simple() {
-        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z");
+    @Test void simple() {
+        var zdt = CONVERTER.convert("2016-03-10T08:11:33Z");
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
-    @Test public void simpleNullParameters() {
-        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", null);
+    @Test void simpleNullParameters() {
+        var zdt = CONVERTER.convert("2016-03-10T08:11:33Z", null);
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
-    @Test public void simpleEmptyParameters() {
-        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[0]);
+    @Test void simpleEmptyParameters() {
+        var zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[0]);
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
-    @Test public void complex() {
-        ZonedDateTime zdt = CONVERTER.convert("10.03.2016 08:11:33Z",
+    @Test void complex() {
+        var zdt = CONVERTER.convert("10.03.2016 08:11:33Z",
                 new String[] {"yyyy-MM-dd'T'HH:mm:sszzz", "dd.MM.yyyy' 'HH:mm:sszzz"});
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 
-    @Test public void singleParam() {
-        ZonedDateTime zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[] {"yyyy-MM-dd'T'HH:mm:sszzz"});
+    @Test void singleParam() {
+        var zdt = CONVERTER.convert("2016-03-10T08:11:33Z", new String[] {"yyyy-MM-dd'T'HH:mm:sszzz"});
         assertEquals(Instant.parse("2016-03-10T08:11:33Z"), zdt.toInstant());
     }
 }

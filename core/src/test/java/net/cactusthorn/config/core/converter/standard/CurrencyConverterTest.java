@@ -28,11 +28,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class CurrencyConverterTest {
+class CurrencyConverterTest {
 
     private static final Converter<Currency> CONVERTER = new CurrencyConverter();
 
-    @Test public void correct() {
+    @Test void correct() {
         assertEquals(Currency.getInstance(Locale.GERMANY), CONVERTER.convert("EUR"));
     }
 }

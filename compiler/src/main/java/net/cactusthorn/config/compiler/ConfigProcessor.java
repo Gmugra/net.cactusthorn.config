@@ -20,9 +20,6 @@
 package net.cactusthorn.config.compiler;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 
 import java.util.Set;
 
@@ -40,8 +37,8 @@ public final class ConfigProcessor extends AbstractProcessor {
     private static final ConfigClassesGenerator CONFIG_CLASSES_GENERATOR = new ConfigClassesGenerator();
     private static final FactoryClassGenerator FACTORY_CLASS_GENERATOR = new FactoryClassGenerator();
 
-    private static final Set<String> SUPPORTED_ANNOTATIONS = Collections.unmodifiableSet(
-            new HashSet<>(Arrays.asList("net.cactusthorn.config.core.Config", "net.cactusthorn.config.core.factory.Factory")));
+    private static final Set<String> SUPPORTED_ANNOTATIONS = Set.of("net.cactusthorn.config.core.Config",
+        "net.cactusthorn.config.core.factory.Factory");
 
     @Override public Set<String> getSupportedAnnotationTypes() {
         return SUPPORTED_ANNOTATIONS;

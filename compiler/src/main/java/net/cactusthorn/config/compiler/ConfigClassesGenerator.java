@@ -26,7 +26,6 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.ONLY_INTERFAC
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -36,8 +35,6 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.ElementFilter;
-
-import com.squareup.javapoet.JavaFile;
 
 import net.cactusthorn.config.compiler.configgenerator.ConfigGenerator;
 import net.cactusthorn.config.compiler.configinitgenerator.ConfigInitGenerator;
@@ -100,33 +97,32 @@ public class ConfigClassesGenerator implements ClassesGenerator {
 
     @Override public void generate(RoundEnvironment roundEnv, ProcessingEnvironment processingEnv) throws ProcessorException, IOException {
 
-        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Config.class);
-        for (Element element : elements) {
+        for (var element : roundEnv.getElementsAnnotatedWith(Config.class)) {
 
             validateInterface(element);
 
-            TypeElement interfaceTypeElement = (TypeElement) element;
-            InterfaceInfo interfaceInfo = new InterfaceInfo(processingEnv, interfaceTypeElement);
+            var interfaceTypeElement = (TypeElement) element;
+            var interfaceInfo = new InterfaceInfo(processingEnv, interfaceTypeElement);
 
             // @formatter:off
-                List<MethodInfo> methodsInfo =
-                     ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceTypeElement))
-                     .stream()
-                     .filter(e -> !objectMethods.contains(e))
-                     .filter(e -> !(interfaceInfo.accessible() && accessibleMethods.contains(e)))
-                     .filter(e -> !(interfaceInfo.reloadable() && reloadableMethods.contains(e)))
-                     .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo).build())
-                     .sorted(METHODINFO_COMPARATOR)
-                     .collect(Collectors.toList());
-                // @formatter:on
+            var methodsInfo =
+                 ElementFilter.methodsIn(processingEnv.getElementUtils().getAllMembers(interfaceTypeElement))
+                 .stream()
+                 .filter(e -> !objectMethods.contains(e))
+                 .filter(e -> !(interfaceInfo.accessible() && accessibleMethods.contains(e)))
+                 .filter(e -> !(interfaceInfo.reloadable() && reloadableMethods.contains(e)))
+                 .map(m -> typeValidator.validate(m, m.getReturnType()).withInterfaceInfo(interfaceInfo).build())
+                 .sorted(METHODINFO_COMPARATOR)
+                 .collect(Collectors.toList());
+            // @formatter:on
 
             validateMethodExist(element, methodsInfo);
 
-            JavaFile configBuilderFile = new ConfigInitGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+            var configBuilderFile = new ConfigInitGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
             // System.out.println(configBuilderFile.toString());
             configBuilderFile.writeTo(processingEnv.getFiler());
 
-            JavaFile configFile = new ConfigGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
+            var configFile = new ConfigGenerator(interfaceTypeElement, methodsInfo, interfaceInfo).generate();
             // System.out.println(configFile.toString());
             configFile.writeTo(processingEnv.getFiler());
         }

@@ -29,11 +29,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.converter.Converter;
 
-public class PathConverterTest {
+class PathConverterTest {
 
     private static Converter<Path> converter = new PathConverter();
 
-    @Test public void correct() throws MalformedURLException {
+    @Test void correct() throws MalformedURLException {
         assertEquals(Paths.get("my.xml"), converter.convert("my.xml"));
     }
 }

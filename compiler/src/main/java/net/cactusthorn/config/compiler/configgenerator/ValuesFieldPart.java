@@ -30,7 +30,7 @@ import net.cactusthorn.config.compiler.GeneratorPart;
 final class ValuesFieldPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        FieldSpec fieldSpec = FieldSpec.builder(CONCURRENTHASHMAP_STRING_OBJECT, VALUES_ATTR, Modifier.PRIVATE, Modifier.FINAL)
+        var fieldSpec = FieldSpec.builder(CONCURRENTHASHMAP_STRING_OBJECT, VALUES_ATTR, Modifier.PRIVATE, Modifier.FINAL)
                 .initializer("new ConcurrentHashMap<>()").build();
         classBuilder.addField(fieldSpec);
     }

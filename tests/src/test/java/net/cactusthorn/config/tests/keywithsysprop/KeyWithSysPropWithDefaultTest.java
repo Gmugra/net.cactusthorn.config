@@ -21,32 +21,23 @@ package net.cactusthorn.config.tests.keywithsysprop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class KeyWithSysPropWithDefaultTest {
+class KeyWithSysPropWithDefaultTest {
 
-    @Test public void noSystemProperty() {
+    @Test void noSystemProperty() {
         System.clearProperty("superprop");
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("DEV.value", "ABC");
-
-        KeyWithSysPropWithDefault result = ConfigFactory.builder().setSource(properties).build().create(KeyWithSysPropWithDefault.class);
+        var result = ConfigFactory.builder().setSource(Map.of("DEV.value", "ABC")).build().create(KeyWithSysPropWithDefault.class);
         assertEquals("ABC", result.value());
     }
 
-    @Test public void systemPropertyPresent() {
+    @Test void systemPropertyPresent() {
         System.setProperty("superprop", "TEST");
-
-        Map<String, String> properties = new HashMap<>();
-        properties.put("TEST.value", "XYZ");
-
-        KeyWithSysProp result = ConfigFactory.builder().setSource(properties).build().create(KeyWithSysProp.class);
+        var result = ConfigFactory.builder().setSource(Map.of("TEST.value", "XYZ")).build().create(KeyWithSysProp.class);
         assertEquals("XYZ", result.value());
     }
 }

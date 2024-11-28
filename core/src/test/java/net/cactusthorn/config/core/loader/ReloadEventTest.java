@@ -22,32 +22,27 @@ package net.cactusthorn.config.core.loader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class ReloadEventTest {
+class ReloadEventTest {
 
     private static final String PROPERTY_NAME = "value";
 
     private static ReloadEvent event;
 
     @BeforeAll static void setUp() {
-        Map<String, Object> oldValues = new HashMap<>();
-        oldValues.put(PROPERTY_NAME, "OLD");
-        Map<String, Object> newValues = new HashMap<>();
-        newValues.put(PROPERTY_NAME, "NEW");
-        event = new ReloadEvent(new Object(), oldValues, newValues);
+        event = new ReloadEvent(new Object(), Map.of(PROPERTY_NAME, "OLD"), Map.of(PROPERTY_NAME, "NEW"));
     }
 
-    @Test public void oldValues() {
+    @Test void oldValues() {
         assertEquals("OLD", event.oldProperties().get(PROPERTY_NAME));
         assertThrows(UnsupportedOperationException.class, () -> event.oldProperties().put("a", "b"));
     }
 
-    @Test public void newValues() {
+    @Test void newValues() {
         assertEquals("NEW", event.newProperties().get(PROPERTY_NAME));
         assertThrows(UnsupportedOperationException.class, () -> event.newProperties().put("a", "b"));
     }

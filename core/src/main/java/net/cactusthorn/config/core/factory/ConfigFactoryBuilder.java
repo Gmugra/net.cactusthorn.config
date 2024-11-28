@@ -22,13 +22,11 @@ package net.cactusthorn.config.core.factory;
 import static net.cactusthorn.config.core.util.ApiMessages.isEmpty;
 import static net.cactusthorn.config.core.util.ApiMessages.isNull;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.net.URI;
 import java.util.ArrayDeque;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -54,10 +52,7 @@ public abstract class ConfigFactoryBuilder {
     private String globalPrefix = null;
 
     protected ConfigFactoryBuilder() {
-        ServiceLoader<Loader> serviceLoader = ServiceLoader.load(Loader.class);
-        for (Iterator<Loader> it = serviceLoader.iterator(); it.hasNext();) {
-            loaders.add(it.next());
-        }
+        ServiceLoader.load(Loader.class).forEach(loaders::add);
     }
 
     public ConfigFactoryBuilder addLoader(Loader loader) {
@@ -73,7 +68,7 @@ public abstract class ConfigFactoryBuilder {
             throw new IllegalArgumentException(isNull("loaderClass"));
         }
         try {
-            MethodHandle methodHandle = MethodHandles.publicLookup().findConstructor(loaderClass, DEFAULT_CONSTRUCTOR);
+            var methodHandle = MethodHandles.publicLookup().findConstructor(loaderClass, DEFAULT_CONSTRUCTOR);
             return addLoader((Loader) methodHandle.invoke());
         } catch (Throwable e) {
             throw new IllegalArgumentException(e);

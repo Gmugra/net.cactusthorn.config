@@ -21,7 +21,6 @@ package net.cactusthorn.config.core.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UncheckedIOException;
@@ -49,8 +48,9 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     private static final String PROPS_DTD_URI = "http://java.sun.com/dtd/properties.dtd";
     private static final String PROPS_DTD;
     static {
-        try (InputStream is = XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+        final var is = XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd");
+        final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        try (is; reader) {
             PROPS_DTD = reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -65,12 +65,12 @@ public final class XMLToMapHandler extends DefaultHandler2 {
 
     @Override public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId)
             throws SAXException, IOException {
-        InputSource inputSource = null;
-        if (systemId.equals(PROPS_DTD_URI)) {
-            isJavaPropertiesFormat = true;
-            inputSource = new InputSource(new StringReader(PROPS_DTD));
-            inputSource.setSystemId(PROPS_DTD_URI);
+        if (!systemId.equals(PROPS_DTD_URI)) {
+            return null;
         }
+        isJavaPropertiesFormat = true;
+        var inputSource = new InputSource(new StringReader(PROPS_DTD));
+        inputSource.setSystemId(PROPS_DTD_URI);
         return inputSource;
     }
 
@@ -88,11 +88,11 @@ public final class XMLToMapHandler extends DefaultHandler2 {
                 paths.addFirst(qName);
             }
         } else {
-            String path = paths.size() == 0 ? qName : paths.peekFirst() + '.' + qName;
+            var path = paths.size() == 0 ? qName : paths.peekFirst() + '.' + qName;
             paths.addFirst(path);
             for (int i = 0; i < attributes.getLength(); i++) {
-                String attrName = attributes.getQName(i);
-                String attrValue = attributes.getValue(i);
+                var attrName = attributes.getQName(i);
+                var attrValue = attributes.getValue(i);
                 properties.put(path + '.' + attrName, attrValue);
             }
         }
@@ -105,8 +105,8 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     private static final String COMMENT = "comment";
 
     @Override public void endElement(String uri, String localName, String qName) throws SAXException {
-        String key = paths.peekFirst();
-        String propertyValue = this.value.peekFirst().toString().trim();
+        var key = paths.peekFirst();
+        var propertyValue = this.value.peekFirst().toString().trim();
         if (!propertyValue.isEmpty() && !(isJavaPropertiesFormat && COMMENT.equals(key))) {
             properties.put(key, propertyValue);
         }

@@ -22,196 +22,175 @@ package net.cactusthorn.config.core.factory;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.TestConfig;
-import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 
-public class ConfigFactoryTest {
+class ConfigFactoryTest {
 
-    @Test public void map() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.string", "TEST");
-        properties.put("test.list", "A,B,C");
-        properties.put("test.set", "A,B,C,C");
-        properties.put("test.sort", "A,B,C,C");
-        properties.put("test.url", "https://google.com");
-        TestConfig testConfig = ConfigFactory.builder().setSource(properties).build().create(TestConfig.class);
+    @Test void map() {
+        var properties = Map.of("test.string", "TEST", "test.list", "A,B,C", "test.set", "A,B,C,C", "test.sort",
+            "A,B,C,C", "test.url", "https://google.com");
+        var testConfig = ConfigFactory.builder().setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 
-    @Test public void listNoDefault() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.string", "TEST");
-        properties.put("test.set", "A,B,C,C");
-        properties.put("test.sort", "A,B,C,C");
-        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+    @Test void listNoDefault() {
+        var properties =  Map.of("test.string", "TEST", "test.set", "A,B,C,C", "test.sort", "A,B,C,C");
+        var factory = ConfigFactory.builder().setSource(properties).build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
-    @Test public void setNoDefault() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.string", "TEST");
-        properties.put("test.list", "A,B,C");
-        properties.put("test.sort", "A,B,C,C");
-        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+    @Test void setNoDefault() {
+        var properties =  Map.of("test.string", "TEST", "test.list", "A,B,C", "test.sort", "A,B,C,C");
+        var factory = ConfigFactory.builder().setSource(properties).build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
-    @Test public void sortNoDefault() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.string", "TEST");
-        properties.put("test.list", "A,B,C");
-        properties.put("test.set", "A,B,C,C");
-        ConfigFactory factory = ConfigFactory.builder().setSource(properties).build();
+    @Test void sortNoDefault() {
+        var properties =  Map.of("test.string", "TEST", "test.list", "A,B,C", "test.set", "A,B,C,C");
+        var factory = ConfigFactory.builder().setSource(properties).build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
-    @Test public void classpath() {
-        URI uri = URI.create("classpath:config/testconfig.properties");
-        TestConfig testConfig = ConfigFactory.builder().addSource(uri).build().create(TestConfig.class);
+    @Test void classpath() {
+        var uri = URI.create("classpath:config/testconfig.properties");
+        var testConfig = ConfigFactory.builder().addSource(uri).build().create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void classpathFromString() {
+    @Test void classpathFromString() {
         TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void classpathAndMap() {
-        URI uri = URI.create("classpath:config/testconfig.properties");
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.string", "TEST");
-        TestConfig testConfig = ConfigFactory.builder().addSource(uri).setSource(properties).build().create(TestConfig.class);
+    @Test void classpathAndMap() {
+        var uri = URI.create("classpath:config/testconfig.properties");
+        var properties = Map.of("test.string", "TEST");
+        var testConfig = ConfigFactory.builder().addSource(uri).setSource(properties).build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 
-    @Test public void systemProperty() {
+    @Test void systemProperty() {
         System.setProperty("testit", "config");
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
+        var testConfig = ConfigFactory.builder().addSource("classpath:{testit}/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void systemPropertyWithDefault() {
+    @Test void systemPropertyWithDefault() {
         System.clearProperty("testit");
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:{testit:config}/testconfig.properties").build()
+        var testConfig = ConfigFactory.builder().addSource("classpath:{testit:config}/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void userHome() throws IOException {
-        Path userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
-        Path file = userHome.resolve("standard-properties.xml");
-        try (InputStream stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
+    @Test void userHome() throws IOException {
+        var userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
+        var file = userHome.resolve("standard-properties.xml");
+        try (var stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
             Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
         }
-        ConfigHolder holder = ConfigFactory.builder().addSource("file:~/standard-properties.xml").build().configHolder();
+        var holder = ConfigFactory.builder().addSource("file:~/standard-properties.xml").build().configHolder();
         assertEquals("foobar", holder.getString("server.http.hostname"));
     }
 
-    @Test public void userHomeURI() throws IOException {
-        Path userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
-        Path file = userHome.resolve("standard-properties.xml");
-        try (InputStream stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
+    @Test void userHomeURI() throws IOException {
+        var userHome = java.nio.file.Paths.get(System.getProperty("user.home"));
+        var file = userHome.resolve("standard-properties.xml");
+        try (var stream = ConfigFactoryTest.class.getClassLoader().getResourceAsStream("standard-properties.xml")) {
             Files.copy(stream, file, StandardCopyOption.REPLACE_EXISTING);
         }
-        ConfigHolder holder = ConfigFactory.builder().addSource(URI.create("file:~/standard-properties.xml")).build().configHolder();
+        var holder = ConfigFactory.builder().addSource(URI.create("file:~/standard-properties.xml")).build().configHolder();
         assertEquals("foobar", holder.getString("server.http.hostname"));
     }
 
-    @Test public void merge() {
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties", "classpath:test.properties")
+    @Test void merge() {
+        var testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties", "classpath:test.properties")
                 .build().create(TestConfig.class);
         assertEquals("bbb", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void merge2() {
+    @Test void merge2() {
         System.setProperty("aaa", "PROP");
-        TestConfig testConfig = ConfigFactory.builder()
+        var testConfig = ConfigFactory.builder()
                 .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("PROP", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void first() {
+    @Test void first() {
         System.setProperty("aaa", "PROP");
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
                 .addSource("classpath:config/testconfig.properties", "system:properties", "classpath:test.properties").build()
                 .create(TestConfig.class);
         assertEquals("ddd", testConfig.aaa());
         assertEquals("RESOURCE", testConfig.str());
     }
 
-    @Test public void customConverter() {
-        TestConfig testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
+    @Test void customConverter() {
+        var testConfig = ConfigFactory.builder().addSource("classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("test::default", testConfig.testconverter());
     }
 
-    @Test public void setSourceNull() {
+    @Test void setSourceNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setSource(null));
     }
 
-    @Test public void addSourceUriNull() {
+    @Test void addSourceUriNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource((URI[]) null));
     }
 
-    @Test public void addSourceStrNull() {
+    @Test void addSourceStrNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource((String[]) null));
     }
 
-    @Test public void addSourceUriEmpty() {
+    @Test void addSourceUriEmpty() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource(new URI[0]));
     }
 
-    @Test public void addSourceStrEmpty() {
+    @Test void addSourceStrEmpty() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().addSource(new String[0]));
     }
 
-    @Test public void addSourceStrNullElement() {
+    @Test void addSourceStrNullElement() {
         ConfigFactory.builder().addSource(new String[] {null});
     }
 
-    @Test public void loaderNotFound() {
-        ConfigFactory factory = ConfigFactory.builder().addSource("system:yyy").build();
+    @Test void loaderNotFound() {
+        var factory = ConfigFactory.builder().addSource("system:yyy").build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
     }
 
-    @Test public void unknownBuilder() {
-        ConfigFactory factory = ConfigFactory.builder().build();
+    @Test void unknownBuilder() {
+        var factory = ConfigFactory.builder().build();
         assertThrows(IllegalArgumentException.class, () -> factory.create(String.class));
     }
 
-    @Test public void globalPrefixNull() {
+    @Test void globalPrefixNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setGlobalPrefix(null));
     }
 
-    @Test public void globalPrefixEmpty() {
+    @Test void globalPrefixEmpty() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setGlobalPrefix(""));
     }
 
-    @Test public void globalPrefix() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("gp.test.string", "TEST");
-        properties.put("gp.test.list", "A,B,C");
-        properties.put("gp.test.set", "A,B,C,C");
-        properties.put("gp.test.sort", "A,B,C,C");
-        properties.put("gp.test.url", "https://google.com");
+    @Test void globalPrefix() {
+        var properties = Map.of("gp.test.string", "TEST", "gp.test.list", "A,B,C", "gp.test.set", "A,B,C,C",
+            "gp.test.sort", "A,B,C,C", "gp.test.url", "https://google.com");
+
         ConfigFactory.builder().setGlobalPrefix("gp").build();
-        TestConfig testConfig = ConfigFactory.builder().setSource(properties).setGlobalPrefix("gp").build().create(TestConfig.class);
+        var testConfig = ConfigFactory.builder().setSource(properties).setGlobalPrefix("gp").build().create(TestConfig.class);
         assertEquals("TEST", testConfig.str());
     }
 }

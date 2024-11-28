@@ -25,11 +25,11 @@ import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigReloadTest {
+class ConfigReloadTest {
 
-    @Test public void simple() {
+    @Test void simple() {
         System.setProperty("superValue", "SV");
-        ConfigReload config = ConfigFactory.builder().addSource("system:properties").build().create(ConfigReload.class);
+        var config = ConfigFactory.builder().addSource("system:properties").build().create(ConfigReload.class);
         assertEquals("SV", config.superValue());
         System.setProperty("superValue", "SVR");
         config.reload();

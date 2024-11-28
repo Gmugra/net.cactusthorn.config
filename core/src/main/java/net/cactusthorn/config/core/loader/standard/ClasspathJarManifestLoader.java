@@ -19,7 +19,6 @@
  */
 package net.cactusthorn.config.core.loader.standard;
 
-import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
@@ -27,11 +26,8 @@ import static net.cactusthorn.config.core.util.ApiMessages.msg;
 import static net.cactusthorn.config.core.util.ApiMessages.Key.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -53,26 +49,23 @@ public class ClasspathJarManifestLoader implements Loader {
 
     @Override public Map<String, String> load(URI uri, ClassLoader classLoader) {
 
-        String param = uri.getSchemeSpecificPart().substring(SUB_PREFIX.length());
-        String[] parts = param.split("=", 2);
-        String name = parts[0];
-        String value = parts.length > 1 ? parts[1] : null;
+        var param = uri.getSchemeSpecificPart().substring(SUB_PREFIX.length());
+        var parts = param.split("=", 2);
+        var value = parts.length > 1 ? parts[1] : null;
+        var name = parts[0];
 
         try {
-            Enumeration<URL> urls = getClass().getClassLoader().getResources(JarFile.MANIFEST_NAME);
-            while (urls.hasMoreElements()) {
-                URL url = urls.nextElement();
-                try (InputStream in = url.openStream()) {
-
-                    Manifest manifest = new Manifest(in);
-                    Attributes attributes = manifest.getMainAttributes();
-                    String attribute = attributes.getValue(name);
-                    if (attribute != null && (value == null || value.equals(attribute))) {
-                        return attributes.entrySet().stream()
-                                .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
-                    }
-                }
-            }
+           for (var it = getClass().getClassLoader().getResources(JarFile.MANIFEST_NAME).asIterator(); it.hasNext();) {
+               try (var in = it.next().openStream()) {
+                   var manifest = new Manifest(in);
+                   var attributes = manifest.getMainAttributes();
+                   var attribute = attributes.getValue(name);
+                   if (attribute != null && (value == null || value.equals(attribute))) {
+                       return attributes.entrySet().stream()
+                             .collect(Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString()));
+                   }
+               }
+           }
         } catch (IOException e) {
             LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();

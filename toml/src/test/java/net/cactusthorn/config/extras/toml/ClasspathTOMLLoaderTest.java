@@ -22,44 +22,43 @@ package net.cactusthorn.config.extras.toml;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.loader.Loader;
 
-public class ClasspathTOMLLoaderTest {
+class ClasspathTOMLLoaderTest {
 
     private static final Loader LOADER = new ClasspathTOMLLoader();
     private static final ClassLoader CL = ClasspathTOMLLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.toml")));
     }
 
-    @Test public void acceptFragment() {
+    @Test void acceptFragment() {
         assertTrue(LOADER.accept(URI.create("classpath:standard-properties.toml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotOpaque() {
+    @Test void notAcceptNotOpaque() {
         assertFalse(LOADER.accept(URI.create("classpath://a.toml#ISO-8859-1")));
     }
 
-    @Test public void notAcceptNotToml() {
+    @Test void notAcceptNotToml() {
         assertFalse(LOADER.accept(URI.create("classpath:a.properties#ISO-8859-1")));
     }
 
-    @Test public void notAcceptScheme() {
+    @Test void notAcceptScheme() {
         assertFalse(LOADER.accept(URI.create("mail:a.toml#ISO-8859-1")));
     }
 
-    @Test public void load() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:correct.toml#UTF-8"), CL);
+    @Test void load() {
+        var properties = LOADER.load(URI.create("classpath:correct.toml#UTF-8"), CL);
         assertEquals("frontend", properties.get("servers.alpha.role"));
     }
 
-    @Test public void loadWrong() {
-        Map<String, String> properties = LOADER.load(URI.create("classpath:standard-properties-wrong.toml"), CL);
+    @Test void loadWrong() {
+        var properties = LOADER.load(URI.create("classpath:standard-properties-wrong.toml"), CL);
         assertTrue(properties.isEmpty());
     }
 }

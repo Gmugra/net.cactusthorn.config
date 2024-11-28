@@ -25,15 +25,15 @@ import java.math.BigInteger;
 
 import org.junit.jupiter.api.Test;
 
-public class ByteSizeTest {
+class ByteSizeTest {
 
-    @Test public void basics() {
+    @Test void basics() {
         assertEquals(1, new ByteSize(1, ByteSizeUnit.BYTES).getBytesAsLong());
 
-        BigInteger siBytes = BigInteger.valueOf(1000);
-        BigInteger iecBytes = BigInteger.valueOf(1024);
+        var siBytes = BigInteger.valueOf(1000);
+        var iecBytes = BigInteger.valueOf(1024);
 
-        for (ByteSizeUnit bsu : ByteSizeUnit.values()) {
+        for (var bsu : ByteSizeUnit.values()) {
             if (bsu == ByteSizeUnit.BYTES) {
                 assertEquals(1, new ByteSize(1, bsu).getBytesAsLong());
             } else if (bsu.isIEC()) {
@@ -46,7 +46,7 @@ public class ByteSizeTest {
         }
     }
 
-    @Test public void conversion() {
+    @Test void conversion() {
         assertEquals(new ByteSize(0.5, ByteSizeUnit.GIGABYTES),
                 new ByteSize(500, ByteSizeUnit.MEGABYTES).convertTo(ByteSizeUnit.GIGABYTES));
         assertEquals(new ByteSize(9.765625, ByteSizeUnit.KIBIBYTES),
@@ -57,54 +57,54 @@ public class ByteSizeTest {
         assertEquals(new ByteSize(1, ByteSizeUnit.BYTES), bs.convertTo(ByteSizeUnit.BYTES));
     }
 
-    @Test public void equality() {
+    @Test void equality() {
         assertEquals(new ByteSize(500, ByteSizeUnit.MEGABYTES), new ByteSize(0.5, ByteSizeUnit.GIGABYTES));
         assertEquals(new ByteSize(500, ByteSizeUnit.MEBIBYTES), new ByteSize("0.48828125", ByteSizeUnit.GIBIBYTES));
     }
 
-    @Test public void toStr() {
+    @Test void toStr() {
         assertEquals("0.5 GB", new ByteSize(0.5, ByteSizeUnit.GIGABYTES).toString());
     }
 
-    @Test public void getBytesAsInt() {
+    @Test void getBytesAsInt() {
         assertEquals(500000000, new ByteSize(0.5, ByteSizeUnit.GIGABYTES).getBytesAsInt());
     }
 
-    @Test public void hash() {
+    @Test void hash() {
         assertEquals(new ByteSize(0.5, ByteSizeUnit.GIGABYTES).hashCode(), new ByteSize(0.5, ByteSizeUnit.GIGABYTES).hashCode());
     }
 
-    @Test public void bytes() {
+    @Test void bytes() {
         assertEquals("1024 B", new ByteSize(1024).toString());
     }
 
-    @Test public void eqSame() {
-        ByteSize bs = new ByteSize(1024);
+    @Test void eqSame() {
+        var bs = new ByteSize(1024);
         assertTrue(bs.equals(bs));
     }
 
-    @Test public void eqNull() {
-        ByteSize bs = new ByteSize(1024);
+    @Test void eqNull() {
+        var bs = new ByteSize(1024);
         assertFalse(bs.equals(null));
     }
 
-    @Test public void eqWrongObject() {
-        ByteSize bs = new ByteSize(1024);
+    @Test void eqWrongObject() {
+        var bs = new ByteSize(1024);
         assertFalse(bs.equals((Object)"wrong"));
     }
 
-    @Test public void parse() {
-        ByteSizeUnit unit = ByteSizeUnit.parse("k");
+    @Test void parse() {
+        var unit = ByteSizeUnit.parse("k");
         assertEquals(ByteSizeUnit.KIBIBYTES, unit);
     }
 
-    @Test public void toStringLongForm() {
-        ByteSizeUnit unit = ByteSizeUnit.parse("k");
+    @Test void toStringLongForm() {
+        var unit = ByteSizeUnit.parse("k");
         assertEquals("kibibytes", unit.toStringLongForm());
     }
 
-    @Test public void isSI() {
-        ByteSizeUnit unit = ByteSizeUnit.parse("k");
+    @Test void isSI() {
+        var unit = ByteSizeUnit.parse("k");
         assertFalse(unit.isSI());
     }
 }

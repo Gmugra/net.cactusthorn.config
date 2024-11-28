@@ -22,7 +22,6 @@ package net.cactusthorn.config.core.loader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -30,101 +29,90 @@ import org.junit.jupiter.api.Test;
 import net.cactusthorn.config.core.TestConfig;
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class LoadStrategyTest {
+class LoadStrategyTest {
 
-    @Test public void merge() {
-        TestConfig testConfig = ConfigFactory.builder()
+    @Test void merge() {
+        var testConfig = ConfigFactory.builder()
                 .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties").build()
                 .create(TestConfig.class);
         assertEquals("SSSSSSSS", testConfig.dstr());
     }
 
-    @Test public void first() {
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+    @Test void first() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
                 .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties").build()
                 .create(TestConfig.class);
         assertEquals("A", testConfig.dstr());
     }
 
-    @Test public void withMapMerge() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.dstr", "FROMMAP");
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE)
-                .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties").setSource(properties)
+    @Test void withMapMerge() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE)
+                .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties")
+                .setSource(Map.of("test.dstr", "FROMMAP"))
                 .build().create(TestConfig.class);
         assertEquals("FROMMAP", testConfig.dstr());
     }
 
-    @Test public void withMapFirst() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("test.dstr", "FROMMAP");
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
-                .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties").setSource(properties)
+    @Test void withMapFirst() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+                .addSource("classpath:config/testconfig.properties", "classpath:config/testconfig2.properties")
+                .setSource(Map.of("test.dstr", "FROMMAP"))
                 .build().create(TestConfig.class);
         assertEquals("FROMMAP", testConfig.dstr());
     }
 
-    @Test public void firstSkipEmpty() {
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
+    @Test void firstSkipEmpty() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
                 .addSource("classpath:config/notExists.properties", "classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("A", testConfig.dstr());
     }
 
-    @Test public void firstNotExists() {
+    @Test void firstNotExists() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST)
                 .addSource("classpath:config/notExists.properties").build().create(TestConfig.class));
     }
 
-    @Test public void setLoadStrategyNull() {
+    @Test void setLoadStrategyNull() {
         assertThrows(IllegalArgumentException.class, () -> ConfigFactory.builder().setLoadStrategy(null));
     }
 
-    @Test public void firstIgnoreCaseHolder() {
-        Map<String, String> manual = new HashMap<>();
-        manual.put("test.String", "STR");
-        ConfigHolder holder = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE).setSource(manual).build()
+    @Test void firstIgnoreCaseHolder() {
+        var holder = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE)
+            .setSource(Map.of("test.String", "STR")).build()
                 .configHolder();
         assertEquals("STR", holder.getString("test.strinG"));
     }
 
-    @Test public void firstIgnoreCase() {
-        Map<String, String> manual = new HashMap<>();
-        manual.put("test.String", "STR");
-        manual.put("TEST.LIST", "qq,ss");
-        manual.put("tEst.SET", "a,v,x");
-        manual.put("tEst.sort", "a,v,v");
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE).setSource(manual).build()
+    @Test void firstIgnoreCase() {
+        var manual = Map.of("test.String", "STR", "TEST.LIST", "qq,ss", "tEst.SET", "a,v,x", "tEst.sort", "a,v,v");
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYCASEINSENSITIVE).setSource(manual).build()
                 .create(TestConfig.class);
         assertEquals("STR", testConfig.str());
     }
 
-    @Test public void mergeIgnoreCase() {
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYCASEINSENSITIVE)
+    @Test void mergeIgnoreCase() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYCASEINSENSITIVE)
                 .addSource("classpath:config/testconfigIgnoreKeyCase.properties", "classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("IGNORECASE", testConfig.str());
     }
 
-    @Test public void firstRelaxed() {
-        Map<String, String> manual = new HashMap<>();
-        manual.put("test-String", "STRr");
-        manual.put("TEST.LIST", "qq,ss");
-        manual.put("tEst_SET", "a,v,x");
-        manual.put("tEst.sort", "a,v,v");
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYRELAXED).setSource(manual).build()
+    @Test void firstRelaxed() {
+        var manual = Map.of("test-String", "STRr", "TEST.LIST", "qq,ss", "tEst_SET", "a,v,x", "tEst.sort", "a,v,v");
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.FIRST_KEYRELAXED).setSource(manual).build()
                 .create(TestConfig.class);
         assertEquals("STRr", testConfig.str());
     }
 
-    @Test public void mergeRelaxed() {
-        TestConfig testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYRELAXED)
+    @Test void mergeRelaxed() {
+        var testConfig = ConfigFactory.builder().setLoadStrategy(LoadStrategy.MERGE_KEYRELAXED)
                 .addSource("classpath:config/testconfigRelaxedKey.properties", "classpath:config/testconfig.properties").build()
                 .create(TestConfig.class);
         assertEquals("RELAXED", testConfig.str());
     }
 
-    @Test public void unknown() {
+    @Test void unknown() {
         assertThrows(IllegalArgumentException.class,
                 () -> ConfigFactory.builder().setLoadStrategy(LoadStrategy.UNKNOWN).build().create(TestConfig.class));
     }

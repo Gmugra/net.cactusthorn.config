@@ -31,7 +31,7 @@ import net.cactusthorn.config.core.loader.Loaders;
 public class ConstructorPart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        MethodSpec.Builder constructorBuilder = MethodSpec.constructorBuilder().addParameter(Loaders.class, "loaders", Modifier.FINAL)
+        var constructorBuilder = MethodSpec.constructorBuilder().addParameter(Loaders.class, "loaders", Modifier.FINAL)
                 .addStatement("super(loaders)");
         classBuilder.addMethod(constructorBuilder.build());
     }

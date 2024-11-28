@@ -22,7 +22,6 @@ package net.cactusthorn.config.core.loader;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -35,78 +34,78 @@ import org.junit.jupiter.api.io.TempDir;
 
 import net.cactusthorn.config.core.loader.standard.UrlPropertiesLoader;
 
-public class UrlPropertiesLoaderTest {
+class UrlPropertiesLoaderTest {
 
     private static final Loader LOADER = new UrlPropertiesLoader();
     private static final ClassLoader CL = UrlPropertiesLoaderTest.class.getClassLoader();
 
-    @Test public void acceptSimple() {
+    @Test void acceptSimple() {
         assertTrue(LOADER.accept(URI.create("file:./a.properties")));
     }
 
-    @Test public void notAcceptExtension() {
+    @Test void notAcceptExtension() {
         assertFalse(LOADER.accept(URI.create("file:./a.xml")));
     }
 
-    @Test public void notAcceptException() {
+    @Test void notAcceptException() {
         assertFalse(LOADER.accept(URI.create("github.com/a.properties")));
     }
 
-    @Test public void notAcceptException2() {
+    @Test void notAcceptException2() {
         assertFalse(LOADER.accept(URI.create("system:a.xml")));
     }
 
-    @Test public void load(@TempDir Path path) throws IOException {
-        URI uri = prepareTempFile(path, "test.properties");
-        Map<String, String> properties = LOADER.load(uri, CL);
+    @Test void load(@TempDir Path path) throws IOException {
+        var uri = prepareTempFile(path, "test.properties");
+        var properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
-    @Test public void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
-        URI uri = prepareTempFile(path, "test.properties");
+    @Test void loadFragment(@TempDir Path path) throws IOException, URISyntaxException {
+        var uri = prepareTempFile(path, "test.properties");
         uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
-        Map<String, String> properties = LOADER.load(uri, CL);
+        var properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
-    @Disabled @Test public void loadGithub(@TempDir Path path) throws IOException, URISyntaxException {
-        URI uri = URI.create(
+    @Disabled @Test void loadGithub(@TempDir Path path) throws IOException, URISyntaxException {
+        var uri = URI.create(
                 "https://raw.githubusercontent.com/Gmugra/net.cactusthorn.config/main/core/src/test/resources/test.properties#UTF-8");
-        Map<String, String> properties = LOADER.load(uri, CL);
+        var properties = LOADER.load(uri, CL);
         assertEquals("bbb", properties.get("aaa"));
     }
 
-    @Test public void notLoad() throws IOException {
+    @Test void notLoad() throws IOException {
         Map<String, String> properties = LOADER.load(URI.create("file:./a.properties"), CL);
         assertTrue(properties.isEmpty());
     }
 
-    @Test public void contentHashCodeNotFile() {
-        long hashCode = LOADER.contentHashCode(URI.create("https://github.com/a.properties"), CL);
+    @Test void contentHashCodeNotFile() {
+        var hashCode = LOADER.contentHashCode(URI.create("https://github.com/a.properties"), CL);
         assertEquals(0L, hashCode);
     }
 
-    @Test public void contentHashCodeFileNotExist() {
-        long hashCode = LOADER.contentHashCode(URI.create("file:./a.properties"), CL);
+    @Test void contentHashCodeFileNotExist() {
+        var hashCode = LOADER.contentHashCode(URI.create("file:./a.properties"), CL);
         assertEquals(0L, hashCode);
     }
 
-    @Test public void contentHashCodeFile(@TempDir Path path) throws IOException, URISyntaxException {
-        URI uri = prepareTempFile(path, "test.properties");
-        long hashCode = LOADER.contentHashCode(uri, CL);
+    @Test void contentHashCodeFile(@TempDir Path path) throws IOException, URISyntaxException {
+        var uri = prepareTempFile(path, "test.properties");
+        var hashCode = LOADER.contentHashCode(uri, CL);
         assertTrue(hashCode > 0L);
     }
 
-    @Test public void contentHashCodeFileFragment(@TempDir Path path) throws IOException, URISyntaxException {
-        URI uri = prepareTempFile(path, "test.properties");
+    @Test void contentHashCodeFileFragment(@TempDir Path path) throws IOException, URISyntaxException {
+        var uri = prepareTempFile(path, "test.properties");
         uri = new URI(uri.getScheme(), uri.getSchemeSpecificPart(), "UTF-8");
-        long hashCode = LOADER.contentHashCode(uri, CL);
+        var hashCode = LOADER.contentHashCode(uri, CL);
         assertTrue(hashCode > 0L);
     }
 
     private URI prepareTempFile(Path tempDir, String fileName) throws IOException {
-        Path file = tempDir.resolve(fileName);
-        try (InputStream stream = CL.getResourceAsStream(fileName)) {
+        var file = tempDir.resolve(fileName);
+        try (var stream = CL.getResourceAsStream(fileName)) {
             Files.copy(stream, file);
         }
         return file.toUri();

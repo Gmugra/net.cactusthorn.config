@@ -24,12 +24,9 @@ import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_OPTION
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_OPTIONAL_ARG_WILDCARD;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.RETURN_OPTIONAL_DEFAULT;
 
-import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
@@ -64,16 +61,16 @@ public class OptionalTypeValidator extends MethodValidatorAncestor {
         if (typeMirror.getKind() != TypeKind.DECLARED) {
             return next(methodElement, typeMirror);
         }
-        DeclaredType declaredType = (DeclaredType) typeMirror;
-        Element element = declaredType.asElement();
-        TypeMirror optionalTypeMirror = element.asType();
+        var declaredType = (DeclaredType) typeMirror;
+        var element = declaredType.asElement();
+        var optionalTypeMirror = element.asType();
         if (!processingEnv().getTypeUtils().isSameType(optionalTM, optionalTypeMirror)) {
             return next(methodElement, typeMirror);
         }
 
         checkDefaultAnnotation(methodElement);
 
-        List<? extends TypeMirror> arguments = declaredType.getTypeArguments();
+        var arguments = declaredType.getTypeArguments();
         if (arguments.isEmpty()) {
             throw new ProcessorException(msg(RETURN_OPTIONAL_ARG_EMPTY), methodElement);
         }
@@ -84,7 +81,7 @@ public class OptionalTypeValidator extends MethodValidatorAncestor {
     }
 
     private void checkDefaultAnnotation(ExecutableElement methodElement) throws ProcessorException {
-        for (AnnotationMirror annotationMirror : methodElement.getAnnotationMirrors()) {
+        for (var annotationMirror : methodElement.getAnnotationMirrors()) {
             if (processingEnv().getTypeUtils().isSameType(defaultTM, annotationMirror.getAnnotationType())) {
                 throw new ProcessorException(msg(RETURN_OPTIONAL_DEFAULT), methodElement, annotationMirror);
             }

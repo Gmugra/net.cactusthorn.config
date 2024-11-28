@@ -21,20 +21,17 @@ package net.cactusthorn.config.tests.tostring;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class ConfigSimpleTest {
+class ConfigSimpleTest {
 
-    @Test public void simpleToString() {
-        Map<String, String> properties = new HashMap<>();
-        properties.put("name", "ABC");
-        properties.put("number", "20");
-        ConfigSimple config = ConfigFactory.builder().setSource(properties).build().create(ConfigSimple.class);
+    @Test void simpleToString() {
+        var properties = Map.of("name", "ABC", "number", "20");
+        var config = ConfigFactory.builder().setSource(properties).build().create(ConfigSimple.class);
         assertEquals("[name=ABC, number=20]", config.toString());
     }
 }

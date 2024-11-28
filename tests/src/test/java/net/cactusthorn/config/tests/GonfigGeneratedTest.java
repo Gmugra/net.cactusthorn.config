@@ -21,21 +21,22 @@ package net.cactusthorn.config.tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import net.cactusthorn.config.core.factory.ConfigFactory;
 
-public class GonfigGeneratedTest {
+class GonfigGeneratedTest {
 
     private static AllCorrect config;
     private static AllCorrect config2;
 
     @BeforeAll static void setUp() {
-        Map<String, String> v1 = new TreeMap<>();
+        var v1 = new TreeMap<String, String>();
         v1.put("ddd", "125");
         v1.put("fromStringEnum", "BBB");
         v1.put("intValue", "124");
@@ -50,55 +51,55 @@ public class GonfigGeneratedTest {
         config2 = ConfigFactory.builder().setSource(v1).build().create(AllCorrect.class); 
     }
 
-    @Test public void toStr() {
+    @Test void toStr() {
         assertEquals(
                 "[ddd=125.0, fromStringEnum=AAA, intValue=124, list=Optional.empty, myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
                 config.toString());
     }
 
-    @Test public void eqls() {
+    @Test void eqls() {
         assertEquals(config, config2);
     }
 
-    @Test public void ddd() {
+    @Test void ddd() {
         assertEquals(125d, config.ddd());
     }
 
-    @Test public void fromStringEnum() {
+    @Test void fromStringEnum() {
         assertEquals(AllCorrect.FromStringEnum.AAA, config.fromStringEnum());
     }
 
-    @Test public void intValue() {
+    @Test void intValue() {
         assertEquals(124, config.intValue());
     }
 
-    @Test public void list() {
+    @Test void list() {
         assertFalse(config.list().isPresent());
     }
 
-    @Test public void set() {
+    @Test void set() {
         assertEquals(1, config.set().size());
-        assertEquals("46400000-8cc0-11bd-b43e-10d46e4ef14d", config.set().iterator().next().toString());
+        assertEquals(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d"), config.set().iterator().next());
     }
 
-    @Test public void simpleEnum() {
+    @Test void simpleEnum() {
         assertEquals(AllCorrect.SimpleEnum.AAA, config.simpleEnum());
     }
 
-    @Test public void sorted() {
+    @Test void sorted() {
         assertEquals(1, config.sorted().size());
         assertEquals(126f, config.sorted().iterator().next());
     }
 
-    @Test public void superInterface() {
+    @Test void superInterface() {
         assertEquals("SI", config.superInterface());
     }
 
-    @Test public void uuid() {
-        assertEquals("46400000-8cc0-11bd-b43e-10d46e4ef14d", config.uuid().get().toString());
+    @Test void uuid() {
+        assertEquals(Optional.of(UUID.fromString("46400000-8cc0-11bd-b43e-10d46e4ef14d")), config.uuid());
     }
 
-    @Test public void value() {
+    @Test void value() {
         assertEquals("simpleString", config.value());
     }
 }

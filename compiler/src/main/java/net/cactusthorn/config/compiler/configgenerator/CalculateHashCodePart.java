@@ -33,9 +33,9 @@ import net.cactusthorn.config.compiler.GeneratorPart;
 public class CalculateHashCodePart implements GeneratorPart {
 
     @Override public void addPart(TypeSpec.Builder classBuilder, Generator generator) {
-        String parameters = generator.methodsInfo().stream().map(mi -> mi.name() + "()").collect(Collectors.joining(", "));
+        var parameters = generator.methodsInfo().stream().map(mi -> mi.name() + "()").collect(Collectors.joining(", "));
         // @formatter:off
-        MethodSpec hashCode =
+        var hashCode =
             MethodSpec.methodBuilder(CALCULATE_HASH_CODE_METHOD)
                 .addModifiers(Modifier.PRIVATE)
                 .returns(int.class)
