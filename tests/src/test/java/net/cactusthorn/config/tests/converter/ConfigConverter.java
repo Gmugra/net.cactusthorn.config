@@ -36,31 +36,31 @@ import net.cactusthorn.config.core.converter.ConverterClass;
 
     @ConverterClass(CustomURIConverter.class) Optional<URI> ourl();
 
-    @ConverterClass(CustomURIConverter.class) Optional<List<URI>> listURI();
+    @ConverterClass(CustomURIConverter.class) List<URI> listURI();
 
-    Optional<List<Path>> listPath();
+    List<Path> listPath();
 
     @Default("https://github.com") URI defaultConverter();
 
     @ConverterClass(MyInterfaceConverter.class) Optional<MyInterface> myInterface();
 
-    @ConverterClass(MyInterfaceConverter.class) Optional<List<MyInterface>> myInterfaceList();
+    @ConverterClass(MyInterfaceConverter.class) List<MyInterface> myInterfaceList();
 
     @ConverterClass(MyAbstractClassConverter.class) Optional<MyAbstractClass> myAbstractClass();
 
-    @ConverterClass(MyAbstractClassConverter.class) Optional<List<MyAbstractClass>> myAbstractClassList();
+    @ConverterClass(MyAbstractClassConverter.class) List<MyAbstractClass> myAbstractClassList();
 
-    Optional<Map<URL, URI>> defaulConvertersMap();
+    Map<URL, URI> defaulConvertersMap();
 
-    Optional<Map<Path, URI>> defaulConvertersPathMap();
+    Map<Path, URI> defaulConvertersPathMap();
 
-    Optional<Map<URI, Path>> defaulConvertersPathMap2();
+    Map<URI, Path> defaulConvertersPathMap2();
 
-    @ConverterClass(MyInterfaceConverter.class) Optional<Map<String, MyInterface>> myInterfaceMap();
+    @ConverterClass(MyInterfaceConverter.class) Map<String, MyInterface> myInterfaceMap();
 
-    @ConverterClass(MyInterfaceConverter.class) Optional<Map<Path, MyInterface>> myInterfaceMap2();
+    @ConverterClass(MyInterfaceConverter.class) Map<Path, MyInterface> myInterfaceMap2();
 
-    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<String, MyAbstractClass>> myAbstractClassMap();
+    @ConverterClass(MyAbstractClassConverter.class) Map<String, MyAbstractClass> myAbstractClassMap();
 
-    @ConverterClass(MyAbstractClassConverter.class) Optional<Map<Path, MyAbstractClass>> myAbstractClassMap2();
+    @ConverterClass(MyAbstractClassConverter.class) Map<Path, MyAbstractClass> myAbstractClassMap2();
 }

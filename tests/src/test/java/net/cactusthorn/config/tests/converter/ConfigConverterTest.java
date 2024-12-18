@@ -49,13 +49,13 @@ class ConfigConverterTest {
     @Test void list() throws MalformedURLException {
         var properties = Map.of("url", "https://www.google.com", "listURI", "https://www.bing.com,https://www.google.com"); 
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(2, config.listURI().get().size());
+        assertEquals(2, config.listURI().size());
     }
 
     @Test void listPath() throws MalformedURLException {
         var properties = Map.of("url", "https://www.google.com", "listPath", "my/home,some/dir"); 
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(2, config.listPath().get().size());
+        assertEquals(2, config.listPath().size());
     }
 
     @Test void defaultUrl() throws MalformedURLException {
@@ -75,7 +75,7 @@ class ConfigConverterTest {
 
     @Test void myInterfaceList() {
         var config = ConfigFactory.builder().setSource(Map.of("myInterfaceList", "?")).build().create(ConfigConverter.class);
-        assertEquals("MY_VALUE", config.myInterfaceList().get().get(0).getValue());
+        assertEquals("MY_VALUE", config.myInterfaceList().get(0).getValue());
     }
 
     @Test void myAbstractClass() {
@@ -85,45 +85,45 @@ class ConfigConverterTest {
 
     @Test void myAbstractClassList() {
         var config = ConfigFactory.builder().setSource(Map.of("myAbstractClassList", "?")).build().create(ConfigConverter.class);
-        assertEquals("MY_A_VALUE", config.myAbstractClassList().get().get(0).getValue());
+        assertEquals("MY_A_VALUE", config.myAbstractClassList().get(0).getValue());
     }
 
     @Test void defaulConvertersMap() throws MalformedURLException {
         var properties = Map.of("defaulConvertersMap", "https://www.bing.com|https://www.google.com");
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersMap().get().get(new URL("https://www.bing.com")));
+        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersMap().get(new URL("https://www.bing.com")));
     }
 
     @Test void defaulConvertersPathMap() {
         var properties = Map.of("defaulConvertersPathMap", "my/home|https://www.google.com");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersPathMap().get().get(Paths.get("my/home")));
+        assertEquals(URI.create("https://www.google.com"), config.defaulConvertersPathMap().get(Paths.get("my/home")));
     }
 
     @Test void defaulConvertersPathMap2() {
         var properties = Map.of("defaulConvertersPathMap2", "https://www.google.com|my/home");
         ConfigConverter config = ConfigFactory.builder().setSource(properties).build().create(ConfigConverter.class);
-        assertEquals(Paths.get("my/home"), config.defaulConvertersPathMap2().get().get(URI.create("https://www.google.com")));
+        assertEquals(Paths.get("my/home"), config.defaulConvertersPathMap2().get(URI.create("https://www.google.com")));
     }
 
     @Test void myInterfaceMap() {
         var config = ConfigFactory.builder().setSource(Map.of("myInterfaceMap", "A|?")).build().create(ConfigConverter.class);
-        assertEquals("MY_VALUE", config.myInterfaceMap().get().get("A").getValue());
+        assertEquals("MY_VALUE", config.myInterfaceMap().get("A").getValue());
     }
 
     @Test void myInterfaceMap2() {
         var config = ConfigFactory.builder().setSource(Map.of("myInterfaceMap2", "my/home|?")).build().create(ConfigConverter.class);
-        assertEquals("MY_VALUE", config.myInterfaceMap2().get().get(Paths.get("my/home")).getValue());
+        assertEquals("MY_VALUE", config.myInterfaceMap2().get(Paths.get("my/home")).getValue());
     }
 
     @Test void myAbstractClassMap() {
         var config = ConfigFactory.builder().setSource(Map.of("myAbstractClassMap", "A|?")).build().create(ConfigConverter.class);
-        assertEquals("MY_A_VALUE", config.myAbstractClassMap().get().get("A").getValue());
+        assertEquals("MY_A_VALUE", config.myAbstractClassMap().get("A").getValue());
     }
 
     @Test void myAbstractClassMap2() {
         var config = ConfigFactory.builder().setSource(Map.of("myAbstractClassMap2", "my/home|?")).build()
             .create(ConfigConverter.class);
-        assertEquals("MY_A_VALUE", config.myAbstractClassMap2().get().get(Paths.get("my/home")).getValue());
+        assertEquals("MY_A_VALUE", config.myAbstractClassMap2().get(Paths.get("my/home")).getValue());
     }
 }

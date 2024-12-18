@@ -45,9 +45,9 @@ class SplitOnMethodTest {
     }
 
     @Test void list2() {
-        assertEquals(3, config.list2().get().size());
-        assertEquals("X", config.list2().get().get(0));
-        assertEquals("Y", config.list2().get().get(1));
-        assertEquals("Z", config.list2().get().get(2));
+        assertEquals(3, config.list2().size());
+        assertEquals("X", config.list2().get(0));
+        assertEquals("Y", config.list2().get(1));
+        assertEquals("Z", config.list2().get(2));
     }
 }

@@ -23,18 +23,23 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
-
+import javax.annotation.processing.Generated;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.ReloadEvent;
 import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
+@Generated(
+    value = "net.cactusthorn.config.compiler.ConfigProcessor",
+    comments = "https://github.com/Gmugra/net.cactusthorn.config"
+)
 public final class Config_TestConfig implements TestConfig {
   private static final List<ReloadListener> LISTENERS = new ArrayList<>();
 
@@ -58,7 +63,7 @@ public final class Config_TestConfig implements TestConfig {
   }
 
   private String generate__To__String() {
-    var buf = new StringJoiner(", ", "[", "]");
+    StringJoiner buf = new StringJoiner(", ", "[", "]");
     buf.add("aaa" + '=' + VALUES.get("aaa"));
     buf.add("dlist" + '=' + VALUES.get("test.dlist"));
     buf.add("dlist2" + '=' + VALUES.get("test.dlist2"));
@@ -150,38 +155,38 @@ public final class Config_TestConfig implements TestConfig {
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<List<String>> olist() {
-    return (Optional<List<String>>)VALUES.get("test.olist");
+  public List<String> olist() {
+    return (List<String>)VALUES.get("test.olist");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<List<String>> olist2() {
-    return (Optional<List<String>>)VALUES.get("test.olist2");
+  public List<String> olist2() {
+    return (List<String>)VALUES.get("test.olist2");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<Set<String>> oset() {
-    return (Optional<Set<String>>)VALUES.get("test.oset");
+  public Set<String> oset() {
+    return (Set<String>)VALUES.get("test.oset");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<Set<String>> oset2() {
-    return (Optional<Set<String>>)VALUES.get("test.oset2");
+  public Set<String> oset2() {
+    return (Set<String>)VALUES.get("test.oset2");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<SortedSet<String>> osort() {
-    return (Optional<SortedSet<String>>)VALUES.get("test.osort");
+  public SortedSet<String> osort() {
+    return (SortedSet<String>)VALUES.get("test.osort");
   }
 
   @Override
   @SuppressWarnings("unchecked")
-  public Optional<SortedSet<String>> osort2() {
-    return (Optional<SortedSet<String>>)VALUES.get("test.osort2");
+  public SortedSet<String> osort2() {
+    return (SortedSet<String>)VALUES.get("test.osort2");
   }
 
   @Override
@@ -232,7 +237,7 @@ public final class Config_TestConfig implements TestConfig {
   public boolean equals(Object o) {
     if (o == this) return true;
     if (!(o instanceof Config_TestConfig)) return false;
-    var other = (Config_TestConfig) o;
+    Config_TestConfig other = (Config_TestConfig) o;
     return Objects.equals(aaa(), other.aaa()) && Objects.equals(dlist(), other.dlist()) && Objects.equals(dlist2(), other.dlist2()) && Objects.equals(dset(), other.dset()) && Objects.equals(dset2(), other.dset2()) && Objects.equals(dsort(), other.dsort()) && Objects.equals(dsort2(), other.dsort2()) && Objects.equals(dstr(), other.dstr()) && Objects.equals(dstr2(), other.dstr2()) && Objects.equals(duration(), other.duration()) && Objects.equals(list(), other.list()) && Objects.equals(olist(), other.olist()) && Objects.equals(olist2(), other.olist2()) && Objects.equals(oset(), other.oset()) && Objects.equals(oset2(), other.oset2()) && Objects.equals(osort(), other.osort()) && Objects.equals(osort2(), other.osort2()) && Objects.equals(ostr(), other.ostr()) && Objects.equals(ostr1(), other.ostr1()) && Objects.equals(set(), other.set()) && Objects.equals(sort(), other.sort()) && Objects.equals(str(), other.str()) && Objects.equals(testconverter(), other.testconverter());
   }
 
@@ -243,8 +248,8 @@ public final class Config_TestConfig implements TestConfig {
 
   @Override
   public void reload() {
-    var old = new HashMap<>(VALUES);
-    var reloaded = INITIALIZER.initialize();
+    Map<String, Object> old = new HashMap<>(VALUES);
+    Map<String, Object> reloaded = INITIALIZER.initialize();
     VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
     VALUES.putAll(reloaded);
     hashCode = calculate__Hash__Code();

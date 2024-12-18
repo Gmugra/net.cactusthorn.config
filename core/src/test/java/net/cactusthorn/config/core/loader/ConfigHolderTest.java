@@ -134,8 +134,8 @@ class ConfigHolderTest {
     }
 
     @Test void list() {
-        var list = holder.getOptionalList(UUID::fromString, "list", ",");
-        assertEquals(2, list.get().size());
+        var list = holder.getList(UUID::fromString, "list", ",");
+        assertEquals(2, list.size());
     }
 
     @Test void getNotExist() {
@@ -150,7 +150,7 @@ class ConfigHolderTest {
     @Test void getMap() {
         var result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
         assertEquals(10, result.get("A"));
-        assertThrows(IllegalArgumentException.class, () -> holder.getMap(s -> s, Integer::valueOf, "notExists", ","));
+        assertTrue(holder.getMap(s -> s, Integer::valueOf, "notExists", ",").isEmpty());
     }
 
     @Test void getMapDefault() {
@@ -161,15 +161,15 @@ class ConfigHolderTest {
     }
 
     @Test void getOptionalMap() {
-        var result = holder.getOptionalMap(s -> s, Integer::valueOf, "map", ",");
-        assertEquals(10, result.get().get("A"));
-        assertFalse(holder.getOptionalMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
+        var result = holder.getMap(s -> s, Integer::valueOf, "map", ",");
+        assertEquals(10, result.get("A"));
+        assertTrue(holder.getMap(s -> s, Integer::valueOf, "notExists", ",").isEmpty());
     }
 
     @Test void getSortedMap() {
         var result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
         assertEquals(50, result.get("A"));
-        assertThrows(IllegalArgumentException.class, () -> holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ","));
+        assertTrue(holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ",").isEmpty());
     }
 
     @Test void getSortedMapDefault() {
@@ -180,8 +180,8 @@ class ConfigHolderTest {
     }
 
     @Test void getOptionalSortedMap() {
-        var result = holder.getOptionalSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
-        assertEquals(50, result.get().get("A"));
-        assertFalse(holder.getOptionalSortedMap(s -> s, Integer::valueOf, "notExists", ",").isPresent());
+        var result = holder.getSortedMap(s -> s, Integer::valueOf, "sortedMap", ",");
+        assertEquals(50, result.get("A"));
+        assertTrue(holder.getSortedMap(s -> s, Integer::valueOf, "notExists", ",").isEmpty());
     }
 }

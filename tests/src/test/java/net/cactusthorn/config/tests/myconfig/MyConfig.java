@@ -22,7 +22,7 @@ package net.cactusthorn.config.tests.myconfig;
 import static net.cactusthorn.config.core.Disable.Feature.PREFIX;
 
 import java.net.URI;
-import java.util.Optional;
+
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
@@ -45,7 +45,7 @@ import net.cactusthorn.config.core.converter.LocalDateParser;
 
     URI uri();
 
-    @Disable(PREFIX) Optional<List<UUID>> ids();
+    @Disable(PREFIX) List<UUID> ids();
 
     @Split("[,:;]") @Default("DAYS:HOURS") Set<TimeUnit> units();
 

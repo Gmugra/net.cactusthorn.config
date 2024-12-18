@@ -25,11 +25,12 @@ import static net.cactusthorn.config.compiler.CompilerMessages.msg;
 import static net.cactusthorn.config.compiler.CompilerMessages.Key.*;
 
 import java.util.Locale;
+import java.util.NavigableMap;
 
 import com.google.testing.compile.Compiler;
 import com.google.testing.compile.JavaFileObjects;
 
-import net.cactusthorn.config.compiler.methodvalidator.InterfaceTypeValidator;
+import java.util.AbstractList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -56,7 +57,7 @@ class MethodValidatorTest {
 
     @Test void abstractReturn() {
         var compilation = compiler().compile(JavaFileObjects.forResource("test/AbstractReturn.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_ABSTRACT, "java.util.AbstractList"));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_ABSTRACT, AbstractList.class.getName()));
     }
 
     @Test void stringMethods() {
@@ -71,7 +72,7 @@ class MethodValidatorTest {
 
     @Test void wrongInterface() {
         var compilation = compiler().compile(JavaFileObjects.forResource("test/WrongInterface.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACE, NavigableMap.class.getName()));
     }
 
     @Test void wrongInterfaceArgEmpty() {
@@ -111,7 +112,7 @@ class MethodValidatorTest {
 
     @Test void wrongOptionalArgWrongInterface() {
         var compilation = compiler().compile(JavaFileObjects.forResource("test/WrongOptionalArgWrongInterface.java"));
-        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACES, InterfaceTypeValidator.INTERFACES));
+        assertThat(compilation).hadErrorContaining(msg(RETURN_INTERFACE, NavigableMap.class.getName()));
     }
 
     @Test void wrongOptionalDefaultAnnotation() {

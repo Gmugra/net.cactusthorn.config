@@ -20,7 +20,7 @@
 package net.cactusthorn.config.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.Optional;
@@ -40,7 +40,7 @@ class GonfigBuilderGeneratedTest {
         properties.put("ddd", "125");
         properties.put("fromStringEnum", "xyz");
         properties.put("intValue", "124");
-        // properties.put("list", "?"); is optional
+        // properties.put("list", "?"); is empty
         properties.put("set", "46400000-8cc0-11bd-b43e-10d46e4ef14d");
         properties.put("simpleEnum", "AAA");
         properties.put("sorted", "126,300");
@@ -65,7 +65,7 @@ class GonfigBuilderGeneratedTest {
     }
 
     @Test void list() {
-        assertFalse(config.list().isPresent());
+        assertTrue(config.list().isEmpty());
     }
 
     @Test void set() {

@@ -22,14 +22,20 @@ package net.cactusthorn.config.core;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.annotation.processing.Generated;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.loader.ReloadEvent;
 import net.cactusthorn.config.core.loader.ReloadListener;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
+@Generated(
+    value = "net.cactusthorn.config.compiler.ConfigProcessor",
+    comments = "https://github.com/Gmugra/net.cactusthorn.config"
+)
 public final class Config_DisabledAutoReload implements DisabledAutoReload {
   private static final List<ReloadListener> LISTENERS = new ArrayList<>();
 
@@ -53,7 +59,7 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
   }
 
   private String generate__To__String() {
-    var buf = new StringJoiner(", ", "[", "]");
+    StringJoiner buf = new StringJoiner(", ", "[", "]");
     buf.add("aaa" + '=' + VALUES.get("aaa"));
     return buf.toString();
   }
@@ -76,10 +82,8 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
   @Override
   public boolean equals(Object o) {
     if (o == this) return true;
-    if (!(o instanceof Config_DisabledAutoReload)) {
-      return false;
-    }
-    var other = (Config_DisabledAutoReload) o;
+    if (!(o instanceof Config_DisabledAutoReload)) return false;
+    Config_DisabledAutoReload other = (Config_DisabledAutoReload) o;
     return Objects.equals(aaa(), other.aaa());
   }
 
@@ -90,13 +94,13 @@ public final class Config_DisabledAutoReload implements DisabledAutoReload {
 
   @Override
   public void reload() {
-    var old = new HashMap<>(VALUES);
-    var reloaded = INITIALIZER.initialize();
+    Map<String, Object> old = new HashMap<>(VALUES);
+    Map<String, Object> reloaded = INITIALIZER.initialize();
     VALUES.entrySet().removeIf(e -> !reloaded.containsKey(e.getKey()));
     VALUES.putAll(reloaded);
     hashCode = calculate__Hash__Code();
     toString = generate__To__String();
-    var event = new ReloadEvent(this, old, VALUES);
+    ReloadEvent event = new ReloadEvent(this, old, VALUES);
     LISTENERS.forEach(l -> l.reloadPerformed(event));
   }
 

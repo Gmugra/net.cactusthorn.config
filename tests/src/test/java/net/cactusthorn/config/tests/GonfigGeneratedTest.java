@@ -53,7 +53,7 @@ class GonfigGeneratedTest {
 
     @Test void toStr() {
         assertEquals(
-                "[ddd=125.0, fromStringEnum=AAA, intValue=124, list=Optional.empty, myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
+                "[ddd=125.0, fromStringEnum=AAA, intValue=124, list=[], myChar=Y, set=[46400000-8cc0-11bd-b43e-10d46e4ef14d], simpleEnum=AAA, sorted=[126.0], superInterface=SI, uuid=Optional[46400000-8cc0-11bd-b43e-10d46e4ef14d], value=simpleString]",
                 config.toString());
     }
 
@@ -74,7 +74,7 @@ class GonfigGeneratedTest {
     }
 
     @Test void list() {
-        assertFalse(config.list().isPresent());
+        assertTrue(config.list().isEmpty());
     }
 
     @Test void set() {

@@ -24,6 +24,7 @@ import static net.cactusthorn.config.core.util.ApiMessages.Key.VALUE_NOT_FOUND;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -245,79 +246,55 @@ public final class ConfigHolder {
     public <T> List<T> getList(Function<String, T> convert, String key, String splitRegEx) {
         var value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+            return List.of();
         }
-        return (List<T>) asCollection(convert, ArrayList::new, value, splitRegEx);
+        return asCollection(convert, ArrayList::new, value, splitRegEx);
     }
 
     public <T> List<T> getList(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
         var value = properties.get(key);
         if (value == null) {
-            return (List<T>) asCollection(convert, ArrayList::new, defaultValue, splitRegEx);
+            return asCollection(convert, ArrayList::new, defaultValue, splitRegEx);
         }
-        return (List<T>) asCollection(convert, ArrayList::new, value, splitRegEx);
-    }
-
-    public <T> Optional<List<T>> getOptionalList(Function<String, T> convert, String key, String splitRegEx) {
-        var value = properties.get(key);
-        if (value == null) {
-            return Optional.empty();
-        }
-        return Optional.of((List<T>) asCollection(convert, ArrayList::new, value, splitRegEx));
+        return asCollection(convert, ArrayList::new, value, splitRegEx);
     }
 
     public <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx) {
         var value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+            return Set.of();
         }
-        return (Set<T>) asCollection(convert, HashSet::new, value, splitRegEx);
+        return asCollection(convert, HashSet::new, value, splitRegEx);
     }
 
     public <T> Set<T> getSet(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
         var value = properties.get(key);
         if (value == null) {
-            return (Set<T>) asCollection(convert, HashSet::new, defaultValue, splitRegEx);
+            return asCollection(convert, HashSet::new, defaultValue, splitRegEx);
         }
-        return (Set<T>) asCollection(convert, HashSet::new, value, splitRegEx);
-    }
-
-    public <T> Optional<Set<T>> getOptionalSet(Function<String, T> convert, String key, String splitRegEx) {
-        var value = properties.get(key);
-        if (value == null) {
-            return Optional.empty();
-        }
-        return Optional.of((Set<T>) asCollection(convert, HashSet::new, value, splitRegEx));
+        return asCollection(convert, HashSet::new, value, splitRegEx);
     }
 
     public <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx) {
         var value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+            return Collections.emptySortedSet();
         }
-        return (SortedSet<T>) asCollection(convert, TreeSet::new, value, splitRegEx);
+        return asCollection(convert, TreeSet::new, value, splitRegEx);
     }
 
     public <T> SortedSet<T> getSortedSet(Function<String, T> convert, String key, String splitRegEx, String defaultValue) {
         var value = properties.get(key);
         if (value == null) {
-            return (SortedSet<T>) asCollection(convert, TreeSet::new, defaultValue, splitRegEx);
+            return asCollection(convert, TreeSet::new, defaultValue, splitRegEx);
         }
-        return (SortedSet<T>) asCollection(convert, TreeSet::new, value, splitRegEx);
-    }
-
-    public <T> Optional<SortedSet<T>> getOptionalSortedSet(Function<String, T> convert, String key, String splitRegEx) {
-        var value = properties.get(key);
-        if (value == null) {
-            return Optional.empty();
-        }
-        return Optional.of((SortedSet<T>) asCollection(convert, TreeSet::new, value, splitRegEx));
+        return asCollection(convert, TreeSet::new, value, splitRegEx);
     }
 
     public <K, V> Map<K, V> getMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key, String splitRegEx) {
         var value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+            return Map.of();
         }
         return asMap(keyConvert, valueConvert, HashMap::new, value, splitRegEx);
     }
@@ -331,51 +308,33 @@ public final class ConfigHolder {
         return asMap(keyConvert, valueConvert, HashMap::new, value, splitRegEx);
     }
 
-    public <K, V> Optional<Map<K, V>> getOptionalMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
-            String splitRegEx) {
-        var value = properties.get(key);
-        if (value == null) {
-            return Optional.empty();
-        }
-        return Optional.of(asMap(keyConvert, valueConvert, HashMap::new, value, splitRegEx));
-    }
-
     public <K, V> SortedMap<K, V> getSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
             String splitRegEx) {
         var value = properties.get(key);
         if (value == null) {
-            throw new IllegalArgumentException(msg(VALUE_NOT_FOUND, key));
+            return Collections.emptySortedMap();
         }
-        return (SortedMap<K, V>) asMap(keyConvert, valueConvert, TreeMap::new, value, splitRegEx);
+        return asMap(keyConvert, valueConvert, TreeMap::new, value, splitRegEx);
     }
 
     public <K, V> SortedMap<K, V> getSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert, String key,
             String splitRegEx, String defaultValue) {
         var value = properties.get(key);
         if (value == null) {
-            return (SortedMap<K, V>) asMap(keyConvert, valueConvert, TreeMap::new, defaultValue, splitRegEx);
+            return asMap(keyConvert, valueConvert, TreeMap::new, defaultValue, splitRegEx);
         }
-        return (SortedMap<K, V>) asMap(keyConvert, valueConvert, TreeMap::new, value, splitRegEx);
+        return asMap(keyConvert, valueConvert, TreeMap::new, value, splitRegEx);
     }
 
-    public <K, V> Optional<SortedMap<K, V>> getOptionalSortedMap(Function<String, K> keyConvert, Function<String, V> valueConvert,
-            String key, String splitRegEx) {
-        var value = properties.get(key);
-        if (value == null) {
-            return Optional.empty();
-        }
-        return Optional.of((SortedMap<K, V>) asMap(keyConvert, valueConvert, TreeMap::new, value, splitRegEx));
-    }
-
-    private <T, C extends Collection<T>> Collection<T> asCollection(Function<String, T> convert, Supplier<C> collectionFactory,
+    private <T, C extends Collection<T>> C asCollection(Function<String, T> convert, Supplier<C> collectionFactory,
             String value, String splitRegEx) {
         return Stream.of(value.split(splitRegEx)).map(convert::apply).collect(Collectors.toCollection(collectionFactory));
     }
 
     private static final Pattern MAP_SPLIT = Pattern.compile("\\|");
 
-    private <K, V> Map<K, V> asMap(Function<String, K> keyConvert, Function<String, V> valueConvert,
-            Supplier<? extends Map<K, V>> mapFactory, String value, String splitRegEx) {
+    private <K, V, M extends Map<K, V>> M asMap(Function<String, K> keyConvert, Function<String, V> valueConvert,
+            Supplier<M> mapFactory, String value, String splitRegEx) {
         // @formatter:off
         return
             Stream.of(value.split(splitRegEx))

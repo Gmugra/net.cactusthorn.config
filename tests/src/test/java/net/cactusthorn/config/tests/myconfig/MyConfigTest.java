@@ -49,7 +49,7 @@ class MyConfigTest {
 
     @Test void toml() {
         var myConfig = ConfigFactory.builder().addSource("classpath:myconfig.toml").build().create(MyConfig.class);
-        assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), myConfig.ids().get().get(1));
+        assertEquals(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), myConfig.ids().get(1));
         assertEquals(LocalDate.of(2005, 11, 12), myConfig.date());
     }
 

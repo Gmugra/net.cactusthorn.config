@@ -41,7 +41,7 @@ import java.time.Instant;
 
     Optional<UUID> uuid();
 
-    @Split(",") Optional<List<Integer>> list();
+    @Split(",") List<Integer> list();
 
     @Default("46400000-8cc0-11bd-b43e-10d46e4ef14d") Set<UUID> set();
 
@@ -51,23 +51,23 @@ import java.time.Instant;
 
     @Key("ddd") @Disable(Disable.Feature.PREFIX) Double ddd();
 
-    @Default("A,B,C") List<String> listNoOptional();
+    @Default("A,B,C") List<String> listWithDefault();
 
-    Optional<SortedSet<Float>> sortedOptional();
+    SortedSet<Float> sortedEmpty();
 
-    Optional<Set<Float>> setOptional();
+    Set<Float> setEmpty();
 
     Float boxedPrimitive();
 
     char myChar();
 
-    Optional<Map<String, UUID>> map();
+    Map<String, UUID> map();
 
-    Optional<SortedMap<String, UUID>> sortedMap();
+    SortedMap<String, UUID> sortedMap();
 
-    Optional<List<Character>> charList();
+    List<Character> charList();
 
-    Optional<Map<Instant, String>> defaultConverterKey();
+    Map<Instant, String> defaultConverterKey();
 
     Map<Instant, String> requredMap();
 

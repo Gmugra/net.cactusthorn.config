@@ -42,7 +42,7 @@ import net.cactusthorn.config.compiler.methodinfo.MethodInfo;
 import net.cactusthorn.config.compiler.methodvalidator.AbstractTypeValidator;
 import net.cactusthorn.config.compiler.methodvalidator.ConverterValidator;
 import net.cactusthorn.config.compiler.methodvalidator.DefaultConverterValidator;
-import net.cactusthorn.config.compiler.methodvalidator.InterfaceTypeValidator;
+import net.cactusthorn.config.compiler.methodvalidator.InterfaceOrCollectionTypeValidator;
 import net.cactusthorn.config.compiler.methodvalidator.MethodValidator;
 import net.cactusthorn.config.compiler.methodvalidator.MethodValidatorChain;
 import net.cactusthorn.config.compiler.methodvalidator.OptionalTypeValidator;
@@ -85,7 +85,7 @@ public class ConfigClassesGenerator implements ClassesGenerator {
         typeValidator =
             MethodValidatorChain.builder(processingEnv, WithoutParametersValidator.class)
             .next(ReturnVoidValidator.class)
-            .next(InterfaceTypeValidator.class)
+            .next(InterfaceOrCollectionTypeValidator.class)
             .next(AbstractTypeValidator.class)
             .next(OptionalTypeValidator.class)
             .next(ConverterValidator.class)

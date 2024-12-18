@@ -65,10 +65,10 @@ The inspiring idea for the project comes from [OWNER](https://github.com/lviggia
 
 So, this project is providing library with similar with *OWNER* API, but
 -   Based not on Reflection, but on compile-time Code Generation (Java Annotation Processing).
--   Required at least Java 8, as result it support "more fresh" language features.
+-   Required at least Java 11, as result it support "more fresh" language features.
 
 ## Features
--   Core is plain Java 8 without any external dependencies (except [slf4j-api](https://www.slf4j.org))
+-   Core is plain Java 11 without any external dependencies (except [slf4j-api](https://www.slf4j.org))
 
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
 
@@ -160,13 +160,13 @@ public interface MyConfig {
     @Key("number")
     int intVal();
 
-    URI uri();
+    Optional<URI> uri();
 
     @Disable(PREFIX)
-    Optional<List<UUID>> ids();
+    List<UUID> ids();
 
     @Split("[,:;]")
-    @Default("DAYS:HOURS")
+    @Default("DAYS;HOURS")
     Set<TimeUnit> units();
 
     @LocalDateParser({ "dd.MM.yyyy", "yyyy-MM-dd" })
@@ -209,7 +209,7 @@ e.g. "myconfig.xml" (properties style xml):
     <entry key="app.number">10</entry>
     <entry key="app.uri">http://java.sun.com/j2se/1.3/</entry>
     <entry key="ids">f8c3de3d-1fea-4d7c-a8b0-29f63c4c3454,123e4567-e89b-12d3-a456-556642440000</entry>
-    <entry key="app.units">DAYS:HOURS;MICROSECONDS</entry>
+    <entry key="app.units">DAYS;HOURS;MICROSECONDS</entry>
     <entry key="app.date">12.11.2005</entry>
 </properties>
 ```
@@ -220,7 +220,7 @@ e.g. "myconfig-owner.xml" ([OWNER](http://owner.aeonbits.org/docs/xml-support/) 
     <val>ABC</val>
     <number>10</number>
     <uri>http://java.sun.com/j2se/1.3/</uri>
-    <units>DAYS:HOURS;MICROSECONDS</units>
+    <units>DAYS;HOURS;MICROSECONDS</units>
     <date>12.11.2005</date>
 </app>
 ```
@@ -315,6 +315,8 @@ There are three ways for dealing with properties that are not found in sources:
 2.  If method return type is `Optional` ->  method will return `Optional.empty()`
 
 3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type default value.
+
+4.  If method return type is List, Set, SortedSet, Map, SortedMap -> method will return empty collection or map.
 
 FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
 
@@ -526,7 +528,7 @@ The return type of the interface methods must either:
     -   **V** satisfies 2, 3 or 4 above.
     -   The resulting map is read-only.
 
-7.  Be `Optional<T>`, where **T** satisfies 2, 3, 4, 5 or 6 above
+7.  Be `Optional<T>`, where **T** satisfies 2, 3 or 4 above
 
 ### Maps
 Maps support is limited to two restrictions:

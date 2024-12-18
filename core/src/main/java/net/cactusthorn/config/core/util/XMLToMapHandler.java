@@ -48,9 +48,8 @@ public final class XMLToMapHandler extends DefaultHandler2 {
     private static final String PROPS_DTD_URI = "http://java.sun.com/dtd/properties.dtd";
     private static final String PROPS_DTD;
     static {
-        final var is = XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd");
-        final var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        try (is; reader) {
+        try (var is = XMLToMapHandler.class.getClassLoader().getResourceAsStream("properties.dtd");
+             var reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
             PROPS_DTD = reader.lines().collect(Collectors.joining("\n"));
         } catch (IOException e) {
             throw new UncheckedIOException(e);

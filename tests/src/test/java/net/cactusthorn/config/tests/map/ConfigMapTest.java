@@ -39,13 +39,13 @@ class ConfigMapTest {
         var result = config.map();
         assertEquals(10, result.get("A"));
         assertEquals(20, result.get("BBB"));
-        assertFalse(config.map2().isPresent());
+        assertTrue(config.map2().isEmpty());
     }
 
     @Test void optionalMap() {
         var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "map2", "10000|10;20000|20");
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        var result = config.map2().get();
+        var result = config.map2();
         assertEquals((byte) 10, result.get(10000));
         assertEquals((byte) 20, result.get(20000));
     }
@@ -62,13 +62,13 @@ class ConfigMapTest {
         var result = config.sortedMap();
         assertEquals(50, result.get("A"));
         assertEquals(60, result.get("BBB"));
-        assertFalse(config.map2().isPresent());
+        assertTrue(config.map2().isEmpty());
     }
 
     @Test void optionalSortedMap() {
         var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "sortedMap2", "10000|50;20000|60");
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        var result = config.sortedMap2().get();
+        var result = config.sortedMap2();
         assertEquals((byte) 50, result.get(10000));
         assertEquals((byte) 60, result.get(20000));
     }
@@ -82,6 +82,6 @@ class ConfigMapTest {
     @Test void defaultKeyConverter() {
         var properties = Map.of("map", "A|10,BBB|20", "sortedMap", "A|50,BBB|60", "defaultKeyConverter", "2007-12-03T10:15:30.00Z|Test");
         var config = ConfigFactory.builder().setSource(properties).build().create(ConfigMap.class);
-        assertEquals("Test", config.defaultKeyConverter().get().get(Instant.parse("2007-12-03T10:15:30.00Z")));
+        assertEquals("Test", config.defaultKeyConverter().get(Instant.parse("2007-12-03T10:15:30.00Z")));
     }
 }

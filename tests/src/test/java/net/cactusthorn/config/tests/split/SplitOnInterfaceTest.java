@@ -45,7 +45,7 @@ class SplitOnInterfaceTest {
     }
 
     @Test void list2() {
-        assertEquals(1, config.list2().get().size());
-        assertEquals("Z", config.list2().get().iterator().next());
+        assertEquals(1, config.list2().size());
+        assertEquals("Z", config.list2().iterator().next());
     }
 }

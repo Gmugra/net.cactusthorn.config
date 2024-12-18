@@ -44,19 +44,22 @@ class ConfigFactoryTest {
     @Test void listNoDefault() {
         var properties =  Map.of("test.string", "TEST", "test.set", "A,B,C,C", "test.sort", "A,B,C,C");
         var factory = ConfigFactory.builder().setSource(properties).build();
-        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
+        var testConfig = factory.create(TestConfig.class);
+        assertTrue(testConfig.list().isEmpty());
     }
 
     @Test void setNoDefault() {
         var properties =  Map.of("test.string", "TEST", "test.list", "A,B,C", "test.sort", "A,B,C,C");
         var factory = ConfigFactory.builder().setSource(properties).build();
-        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
+        var testConfig = factory.create(TestConfig.class);
+        assertTrue(testConfig.set().isEmpty());
     }
 
     @Test void sortNoDefault() {
         var properties =  Map.of("test.string", "TEST", "test.list", "A,B,C", "test.set", "A,B,C,C");
         var factory = ConfigFactory.builder().setSource(properties).build();
-        assertThrows(IllegalArgumentException.class, () -> factory.create(TestConfig.class));
+        var testConfig = factory.create(TestConfig.class);
+        assertTrue(testConfig.sort().isEmpty());
     }
 
     @Test void classpath() {

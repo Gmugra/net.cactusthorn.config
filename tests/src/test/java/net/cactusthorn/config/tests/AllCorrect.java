@@ -49,7 +49,7 @@ import java.util.*;
 
     Optional<UUID> uuid();
 
-    Optional<List<Integer>> list();
+    List<Integer> list();
 
     Set<UUID> set();
 

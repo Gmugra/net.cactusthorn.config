@@ -29,7 +29,9 @@ import java.util.SortedSet;
 
 import net.cactusthorn.config.core.converter.ConverterClass;
 
-@Config @Prefix("test") public interface TestConfig extends Reloadable {
+@Config
+@Prefix("test")
+public interface TestConfig extends Reloadable {
 
     @Disable(PREFIX) @Default("ddd") String aaa();
 
@@ -45,9 +47,9 @@ import net.cactusthorn.config.core.converter.ConverterClass;
 
     List<String> list();
 
-    Optional<List<String>> olist();
+    List<String> olist();
 
-    Optional<List<String>> olist2();
+    List<String> olist2();
 
     @Default("A,A") List<String> dlist();
 
@@ -55,9 +57,9 @@ import net.cactusthorn.config.core.converter.ConverterClass;
 
     Set<String> set();
 
-    Optional<Set<String>> oset();
+    Set<String> oset();
 
-    Optional<Set<String>> oset2();
+    Set<String> oset2();
 
     @Default("A,A") Set<String> dset();
 
@@ -65,9 +67,9 @@ import net.cactusthorn.config.core.converter.ConverterClass;
 
     SortedSet<String> sort();
 
-    Optional<SortedSet<String>> osort();
+    SortedSet<String> osort();
 
-    Optional<SortedSet<String>> osort2();
+    SortedSet<String> osort2();
 
     @Default("A,A") SortedSet<String> dsort();
 

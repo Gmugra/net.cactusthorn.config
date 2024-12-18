@@ -117,21 +117,7 @@ public class InitializePart implements GeneratorPart {
     private CodeBlock.Builder findGetMethod(MethodInfo mi) {
         var builder = CodeBlock.builder().add("$L.", CONFIG_HOLDER);
         if (mi.returnOptional()) {
-            return builder.add(mi.returnInterface().map(t -> {
-                if (t == List.class) {
-                    return "getOptionalList";
-                }
-                if (t == Set.class) {
-                    return "getOptionalSet";
-                }
-                if (t == Map.class) {
-                    return "getOptionalMap";
-                }
-                if (t == SortedMap.class) {
-                    return "getOptionalSortedMap";
-                }
-                return "getOptionalSortedSet";
-            }).orElse("getOptional"));
+            return builder.add("getOptional");
         }
         return builder.add(mi.returnInterface().map(t -> {
             if (t == List.class) {

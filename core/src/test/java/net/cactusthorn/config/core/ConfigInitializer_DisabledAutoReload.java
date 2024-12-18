@@ -21,11 +21,16 @@ package net.cactusthorn.config.core;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import javax.annotation.processing.Generated;
+import net.cactusthorn.config.core.loader.ConfigHolder;
 import net.cactusthorn.config.core.loader.LoadStrategy;
 import net.cactusthorn.config.core.loader.Loaders;
 import net.cactusthorn.config.core.util.ConfigInitializer;
 
+@Generated(
+    value = "net.cactusthorn.config.compiler.ConfigProcessor",
+    comments = "https://github.com/Gmugra/net.cactusthorn.config"
+)
 public final class ConfigInitializer_DisabledAutoReload extends ConfigInitializer {
   private static final String[] URIS = new String[] {""};
 
@@ -35,8 +40,8 @@ public final class ConfigInitializer_DisabledAutoReload extends ConfigInitialize
 
   @Override
   public Map<String, Object> initialize() {
-    var ch = loaders().load(Config_DisabledAutoReload.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
-    var values = new HashMap<String,Object>();
+    ConfigHolder ch = loaders().load(Config_DisabledAutoReload.class.getClassLoader(), LoadStrategy.UNKNOWN, URIS);
+    Map<String,Object> values = new HashMap<>();
     values.put("aaa", ch.get(s -> s, expandKey(globalPrefix("aaa"))));
     return values;
   }
