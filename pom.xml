@@ -52,7 +52,7 @@
         <copy-build-resources.skip>true</copy-build-resources.skip>
         <license.skip>true</license.skip><!-- license-maven-plugin -->
 
-        <dependency.junit>5.11.3</dependency.junit>
+        <dependency.junit>5.11.4</dependency.junit>
         <dependency.compile-testing>0.21.0</dependency.compile-testing>
         <dependency.javapoet>1.13.0</dependency.javapoet>
         <dependency.jasypt>1.9.3</dependency.jasypt>
