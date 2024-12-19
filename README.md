@@ -68,7 +68,7 @@ So, this project is providing library with similar with *OWNER* API, but
 -   Required at least Java 11, as result it support "more fresh" language features.
 
 ## Features
--   Core is plain Java 11 without any external dependencies (except [slf4j-api](https://www.slf4j.org))
+-   Core is plain Java 11 without any external dependencies
 
 -   Uses no reflection or runtime bytecode generation; generates plain Java source code.
 
@@ -316,9 +316,9 @@ There are three ways for dealing with properties that are not found in sources:
 
 3.  If method return type is not `Optional`, but the method do annotated with `@Default` -> method will return converted to return type default value.
 
-4.  If method return type is List, Set, SortedSet, Map, SortedMap -> method will return empty collection or map.
-
-FYI: The `@Default` annotation can't be used with a method that returns `Optional`.
+FYI:
+-   The `@Default` annotation can't be used with a method that returns `Optional`.
+-   If method return type is List, Set, SortedSet, Map, SortedMap -> method will return empty collection or map.
 
 ### `@Config` annotation parameters
 There are two *optional* parameters `sources` and `loadStrategy` which can be used to override these settings from [`ConfigFactory`](#the-configfactory).
@@ -496,6 +496,7 @@ The return type of the interface methods must either:
 3.  Have a public static method named `valueOf` or `fromString` that accepts a single `String` argument
     -   e.g. [Integer.valueOf](https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html#valueOf-java.lang.String-)
     -   e.g. [UUID.fromString](https://docs.oracle.com/javase/8/docs/api/java/util/UUID.html#fromString-java.lang.String-)
+    -   e.g. any `enum`
     -   If both methods are present then `valueOf` used unless the type is an `enum` in which case `fromString` used.
 
 4.  Be
@@ -916,6 +917,12 @@ FYI: The method always reload *not cached* sources, even if they not changed (se
 -   **[yaml](https://github.com/Gmugra/net.cactusthorn.config/tree/main/yaml)** : provide loaders for files in [YAML](https://yaml.org) format
 -   **[hjson](https://github.com/Gmugra/net.cactusthorn.config/tree/main/hjson)** : provide loaders for files in [Hjson](https://hjson.github.io) format
 -   **[zookeeper](https://github.com/Gmugra/net.cactusthorn.config/tree/main/zookeeper)** : provide loader for properties from [Apache ZooKeeper](https://zookeeper.apache.org)
+
+### Logging
+The runtime part of the library is using [System.Logger](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/System.Logger.html).
+This way, you can use any logging library you prefer:
+-   Apache Log4j 2 -> org.apache.logging.log4j:log4j-jpl
+-   SLF4J -> org.slf4j:slf4j-jdk-platform-logging
 
 ### Profiles
 There is no specific support for profiles, but it is easy to achieve similar behavior using *System properties and/or environment variables* in sources URIs,

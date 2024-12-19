@@ -30,12 +30,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class ClasspathLoader implements Loader {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final System.Logger log = System.getLogger(getClass().getName());
 
     protected static final String CLASSPATH_SCHEME = "classpath";
 
@@ -52,7 +49,7 @@ public abstract class ClasspathLoader implements Loader {
                 var buffer = new BufferedReader(reader)) {
             return load(buffer);
         } catch (Exception e) {
-            log.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
+            log.log(System.Logger.Level.INFO, msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
         }
     }

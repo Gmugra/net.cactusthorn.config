@@ -61,8 +61,8 @@
         <dependency.hjson>3.1.0</dependency.hjson>
         <dependency.snakeyaml>2.3</dependency.snakeyaml>
         <dependency.curator>5.7.1</dependency.curator>
-        <dependency.logback>1.2.11</dependency.logback>
-        <dependency.slf4j>1.7.36</dependency.slf4j>
+
+        <dependency.slf4j>2.0.16</dependency.slf4j>
 
         <plugin.compiler>3.13.0</plugin.compiler>
         <plugin.jar>3.4.2</plugin.jar>
@@ -174,19 +174,6 @@
                 <groupId>org.apache.curator</groupId>
                 <artifactId>curator-framework</artifactId>
                 <version>${dependency.curator}</version>
-                <exclusions>
-                    <!-- exclude it to avoid security warning -->
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${dependency.slf4j}</version>
             </dependency>
 
             <dependency>
@@ -219,11 +206,6 @@
                 <version>${dependency.curator}</version>
                 <scope>test</scope>
                 <exclusions>
-                    <!-- exclude it to avoid security warning -->
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-api</artifactId>
-                    </exclusion>
                     <!-- exclude it to avoid FOSSA warning -->
                     <exclusion>
                         <groupId>com.google.guava</groupId>
@@ -232,9 +214,15 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${dependency.logback}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk-platform-logging</artifactId>
+                <version>${dependency.slf4j}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${dependency.slf4j}</version>
                 <scope>test</scope>
             </dependency>
 

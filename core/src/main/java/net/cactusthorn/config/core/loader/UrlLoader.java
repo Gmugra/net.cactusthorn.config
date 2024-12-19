@@ -32,12 +32,9 @@ import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public abstract class UrlLoader implements Loader {
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private final System.Logger log = System.getLogger(getClass().getName());
 
     protected static final String FILE_SCHEME = "file";
 
@@ -60,7 +57,7 @@ public abstract class UrlLoader implements Loader {
                 var buffer = new BufferedReader(reader)) {
             return load(buffer);
         } catch (Exception e) {
-            log.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
+            log.log(System.Logger.Level.INFO, msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
         }
     }

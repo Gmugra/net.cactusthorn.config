@@ -31,14 +31,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.cactusthorn.config.core.loader.Loader;
 
 public class ClasspathJarManifestLoader implements Loader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ClasspathJarManifestLoader.class);
+    private static final System.Logger LOG  = System.getLogger(ClasspathJarManifestLoader.class.getName());
 
     private static final String SUB_PREFIX = "jar:manifest?";
     private static final String PREFIX = "classpath:" + SUB_PREFIX;
@@ -67,15 +64,15 @@ public class ClasspathJarManifestLoader implements Loader {
                }
            }
         } catch (IOException e) {
-            LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
+            LOG.log(System.Logger.Level.INFO, msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
         }
 
         if (value != null) {
-            LOG.info(msg(MANIFEST_NOT_FOUND_1, name, value));
+            LOG.log(System.Logger.Level.INFO, msg(MANIFEST_NOT_FOUND_1, name, value));
             return Collections.emptyMap();
         }
-        LOG.info(msg(MANIFEST_NOT_FOUND_2, name));
+        LOG.log(System.Logger.Level.INFO, msg(MANIFEST_NOT_FOUND_2, name));
         return Collections.emptyMap();
     }
 
