@@ -28,15 +28,12 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import net.cactusthorn.config.core.loader.Loader;
 import net.cactusthorn.config.extras.zookeeper.util.ZNodeToMapParser;
 
 public class ZooKeeperLoader implements Loader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ZooKeeperLoader.class);
+    private static final System.Logger LOG = System.getLogger(ZooKeeperLoader.class.getName());
 
     private static final String SCHEME = "zookeeper";
 
@@ -67,7 +64,7 @@ public class ZooKeeperLoader implements Loader {
             var bucMaxWaitTimeMs = Integer.parseInt(parameters.getOrDefault(BUC_MAX_WAIT_TIME_MS_PARAM, BUC_MAX_WAIT_TIME_DEFAULT));
             return PARSER.parse(connectString, sessionTimeoutMs, connectionTimeoutMs, bucMaxWaitTimeMs, basePath);
         } catch (Exception e) {
-            LOG.info(msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
+            LOG.log(System.Logger.Level.INFO, msg(CANT_LOAD_RESOURCE, uri.toString(), e.toString()));
             return Collections.emptyMap();
         }
     }
