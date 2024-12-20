@@ -271,6 +271,7 @@
                 <configuration>
                     <logViolationsToConsole>true</logViolationsToConsole>
                     <configLocation>${project.basedir}/../checkstyle_checks.xml</configLocation>
+                    <excludes>**/module-info.java</excludes>
                 </configuration>
                 <executions>
                     <execution>

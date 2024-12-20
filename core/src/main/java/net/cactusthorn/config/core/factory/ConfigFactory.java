@@ -178,6 +178,8 @@ public final class ConfigFactory extends ConfigFactoryAncestor {
                 loaders().register((Reloadable) configImpl);
             }
             return configImpl;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Throwable e) {
             throw new IllegalArgumentException(msg(CANT_INVOKE_CONFIGBUILDER, sourceInterface.getName()), e);
         }
