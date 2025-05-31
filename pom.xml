@@ -68,7 +68,7 @@
         <plugin.jar>3.4.2</plugin.jar>
         <plugin.resources>3.3.1</plugin.resources>
         <plugin.test>3.5.3</plugin.test>
-        <plugin.clean>3.4.1</plugin.clean>
+        <plugin.clean>3.5.0</plugin.clean>
         <plugin.install>3.1.4</plugin.install>
         <plugin.dependency>3.8.1</plugin.dependency>
         <plugin.source>3.3.1</plugin.source>
