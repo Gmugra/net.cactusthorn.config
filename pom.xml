@@ -60,7 +60,7 @@
         <dependency.gson>2.13.1</dependency.gson>
         <dependency.hjson>3.1.0</dependency.hjson>
         <dependency.snakeyaml>2.4</dependency.snakeyaml>
-        <dependency.curator>5.8.0</dependency.curator>
+        <dependency.curator>5.9.0</dependency.curator>
 
         <dependency.slf4j>2.0.17</dependency.slf4j>
 
