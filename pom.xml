@@ -75,7 +75,7 @@
         <plugin.javadoc>3.12.0</plugin.javadoc>
         <plugin.enforcer>3.6.2</plugin.enforcer>
         <plugin.deploy>3.1.4</plugin.deploy>
-        <plugin.release>3.1.1</plugin.release>
+        <plugin.release>3.2.0</plugin.release>
         <plugin.flatten>1.7.3</plugin.flatten>
         <plugin.jxr>3.6.0</plugin.jxr>
         <plugin.gpg>3.2.8</plugin.gpg>
