@@ -89,7 +89,7 @@
         <plugin.jacoco>0.8.14</plugin.jacoco>
         <plugin.pmd>3.27.0</plugin.pmd>
             <dependency.pmd>7.17.0</dependency.pmd>
-        <plugin.spotbugs>4.9.5.0</plugin.spotbugs>
+        <plugin.spotbugs>4.9.8.2</plugin.spotbugs>
             <dependency.spotbugs>4.9.4</dependency.spotbugs>
         <plugin.coveralls>4.3.0</plugin.coveralls>
             <dependency.jaxb-runtime>2.3.9</dependency.jaxb-runtime>
