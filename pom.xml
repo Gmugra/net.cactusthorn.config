@@ -80,7 +80,7 @@
         <plugin.jxr>3.6.0</plugin.jxr>
         <plugin.gpg>3.2.8</plugin.gpg>
         <plugin.nexus-staging>1.7.0</plugin.nexus-staging>
-        <plugin.bnd>6.4.0</plugin.bnd>
+        <plugin.bnd>7.2.1</plugin.bnd>
         <plugin.bundle>6.0.0</plugin.bundle>
             <dependency.bndlib>6.4.1</dependency.bndlib>
 
