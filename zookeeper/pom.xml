@@ -43,7 +43,7 @@
         <copy-build-resources.skip>false</copy-build-resources.skip>
         <license.skip>false</license.skip><!-- license-maven-plugin -->
 
-        <dependency.logback>1.5.22</dependency.logback>
+        <dependency.logback>1.5.27</dependency.logback>
     </properties>
 
     <dependencies>
