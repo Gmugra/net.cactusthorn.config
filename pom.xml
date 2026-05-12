@@ -62,7 +62,7 @@
         <dependency.snakeyaml>2.6</dependency.snakeyaml>
         <dependency.curator>5.9.0</dependency.curator>
 
-        <dependency.slf4j>2.0.17</dependency.slf4j>
+        <dependency.slf4j>2.0.18</dependency.slf4j>
 
         <plugin.compiler>3.15.0</plugin.compiler>
         <plugin.jar>3.5.0</plugin.jar>
